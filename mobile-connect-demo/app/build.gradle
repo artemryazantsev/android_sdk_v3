@@ -36,6 +36,17 @@ android {
     }
 }
 
+sonarqube {
+    properties {
+        property "sonar.binaries", "build/intermediates/classes/release"
+        property "sonar.java.binaries", "build/intermediates/classes/release"
+        property "sonar.java.test.binaries", "build/intermediates/classes/test/release"
+        property "sonar.sources", "src"
+        property "sonar.junit.reportsPath", "build/test-results/release"
+        property "sonar.java.junit.reportsPath", "build/test-results/release"
+        property "sonar.android.lint.report", "build/outputs/lint-results.xml"
+    }
+}
 
 dependencies {
 
