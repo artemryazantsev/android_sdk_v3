@@ -14,7 +14,6 @@ android {
         multiDexEnabled true
     }
 
-
     buildTypes {
         release {
             minifyEnabled false
@@ -30,6 +29,10 @@ android {
         flatDir {
             dirs 'libs'
         }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 }
 
