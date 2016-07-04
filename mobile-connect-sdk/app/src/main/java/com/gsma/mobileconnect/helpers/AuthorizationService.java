@@ -92,7 +92,7 @@ public class AuthorizationService extends BaseService
 
     /**
      * This method is called via the redirect from the operator authorization page.
-     * <p>
+     * <p/>
      * The values encoded in the URL are used to obtain an authorization token from the operator.
      *
      * @param config            The config to be used.
@@ -165,7 +165,7 @@ public class AuthorizationService extends BaseService
         }
         catch (OIDCException ex)
         {
-            ex.printStackTrace();
+            Log.e("authorize redirect", ex.getMessage());
             return MobileConnectStatus.error("Failed to obtain a token.",
                                              "Failed to obtain an authentication token from the operator.",
                                              ex);
@@ -198,7 +198,7 @@ public class AuthorizationService extends BaseService
 
     /**
      * Test whether the state values in the Authorization request and the Authorization response match.
-     * <p>
+     * <p/>
      * States match if both are null or the values equal each other.
      *
      * @param responseState The state contained in the response.
@@ -314,7 +314,7 @@ public class AuthorizationService extends BaseService
         }
         catch (NoFieldException e)
         {
-            e.printStackTrace();
+            Log.e("authorize", e.getMessage());
         }
         Log.d(TAG, "clientId = " + clientId);
 
@@ -324,7 +324,7 @@ public class AuthorizationService extends BaseService
         }
         catch (NoFieldException e)
         {
-            e.printStackTrace();
+            Log.e("authorize", e.getMessage());
         }
         Log.d(TAG, "clientSecret = " + clientSecret);
 
