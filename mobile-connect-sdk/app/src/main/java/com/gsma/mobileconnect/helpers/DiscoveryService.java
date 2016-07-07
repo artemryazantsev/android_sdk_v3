@@ -47,10 +47,6 @@ import java.net.URISyntaxException;
  */
 public class DiscoveryService extends BaseService
 {
-    private static final String TAG = DiscoveryService.class.getName();
-
-    private String name = "";
-
     private IDiscovery discovery;
 
     public DiscoveryService()
@@ -59,21 +55,11 @@ public class DiscoveryService extends BaseService
         discovery = new AndroidDiscoveryImpl(null, client);
     }
 
-    private static final String MOBILE_CONNECT_SESSION_LOCK = "gsma:mc:session_lock";
-
-    private static final String MOBILE_CONNECT_SESSION_KEY = "gsma:mc:session_key";
-
-    private static final Object LOCK_OBJECT = new Object();
-
-    private static final String X_FORWARDED_FOR_HEADER = "X-FORWARDED-FOR";
-
-    private static final String SET_COOKIE_HEADER = "set-cookie";
-
     private static final String INTERNAL_ERROR_CODE = "internal error";
 
     /**
      * This method is called to initiate the Mobile Connect process.
-     * <p/>
+     * <p>
      * The return is either an 'error', 'operator selection is required' or 'authorization can start' (the operator
      * has been identified).
      *
@@ -129,7 +115,7 @@ public class DiscoveryService extends BaseService
     /**
      * This method is called to extract the response from the operator selection process and then determine what to
      * do next.
-     * <p/>
+     * <p>
      *
      * @param config Mobile Connect Configuration instance
      * @return A status object
