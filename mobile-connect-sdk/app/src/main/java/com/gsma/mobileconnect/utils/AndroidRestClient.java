@@ -31,22 +31,29 @@ import java.util.TimerTask;
  * An Android specific version which overrides the incompatible aspects of the Java API.
  * Created by nick.copley on 26/02/2016.
  */
-public class AndroidRestClient extends RestClient {
+public class AndroidRestClient extends RestClient
+{
 
     @Override
-    public HttpClientContext getHttpClientContext(String username, String password, URI uriForRealm) {
+    public HttpClientContext getHttpClientContext(String username, String password, URI uriForRealm)
+    {
         String host = uriForRealm.getHost();
         int port = uriForRealm.getPort();
-        if(port == -1) {
-            if("http".equalsIgnoreCase(uriForRealm.getScheme())) {
+        if (port == -1)
+        {
+            if ("http".equalsIgnoreCase(uriForRealm.getScheme()))
+            {
                 port = 80;
-            } else if("https".equalsIgnoreCase(uriForRealm.getScheme())) {
+            }
+            else if ("https".equalsIgnoreCase(uriForRealm.getScheme()))
+            {
                 port = 443;
             }
         }
 
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(new AuthScope(host, port), new UsernamePasswordCredentials(username, password));
+        credentialsProvider.setCredentials(new AuthScope(host, port),
+                                           new UsernamePasswordCredentials(username, password));
         BasicAuthCache authCache = new BasicAuthCache();
         authCache.put(new HttpHost(host, port, uriForRealm.getScheme()), new BasicScheme());
         HttpClientContext context = HttpClientContext.create();
@@ -56,45 +63,73 @@ public class AndroidRestClient extends RestClient {
     }
 
     @Override
-    public RestResponse callRestEndPoint(final HttpRequestBase httpRequest, HttpClientContext context, int timeout, List<KeyValuePair> cookiesToProxy) throws RestException, IOException {
+    public RestResponse callRestEndPoint(final HttpRequestBase httpRequest,
+                                         HttpClientContext context,
+                                         int timeout,
+                                         List<KeyValuePair> cookiesToProxy) throws RestException, IOException
+    {
         CookieStore cookieStore = this.buildCookieStore(httpRequest.getURI().getHost(), cookiesToProxy);
 
         RestResponse restResponse;
-        try(CloseableHttpClient closeableHttpClient = this.getHttpClient(cookieStore)) {
-
+        CloseableHttpClient closeableHttpClient = null;
+        try
+        {
+            closeableHttpClient = this.getHttpClient(cookieStore);
             Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                public void run() {
+            timer.schedule(new TimerTask()
+            {
+                public void run()
+                {
                     httpRequest.abort();
                 }
             }, (long) timeout);
-            RequestConfig localConfig = RequestConfig.custom().setConnectionRequestTimeout(timeout).setConnectTimeout(timeout).setSocketTimeout(timeout).setCookieSpec("standard").build();
+            RequestConfig localConfig = RequestConfig.custom()
+                                                     .setConnectionRequestTimeout(timeout)
+                                                     .setConnectTimeout(timeout)
+                                                     .setSocketTimeout(timeout)
+                                                     .setCookieSpec("standard")
+                                                     .build();
             context.setRequestConfig(localConfig);
 
             CloseableHttpResponse httpResponse = closeableHttpClient.execute(httpRequest, context);
             restResponse = this.buildRestResponse(httpRequest, httpResponse);
             checkRestResponse(restResponse);
         }
-        catch (IOException ioe) {
-                String requestUri = httpRequest.getURI().toString();
-                if(httpRequest.isAborted()) {
-                    throw new RestException("Rest end point did not respond", requestUri);
-                } else {
-                    throw new RestException("Rest call failed", requestUri, ioe);
-                }
+        catch (IOException ioe)
+        {
+            String requestUri = httpRequest.getURI().toString();
+            if (httpRequest.isAborted())
+            {
+                throw new RestException("Rest end point did not respond", requestUri);
             }
+            else
+            {
+                throw new RestException("Rest call failed", requestUri, ioe);
+            }
+        }
+        finally
+        {
+            if (closeableHttpClient != null)
+            {
+                closeableHttpClient.close();
+            }
+        }
 
         return restResponse;
     }
 
-
-    private CookieStore buildCookieStore(String host, List<KeyValuePair> cookiesToProxy) {
+    private CookieStore buildCookieStore(String host, List<KeyValuePair> cookiesToProxy)
+    {
         BasicCookieStore cookieStore = new BasicCookieStore();
-        if(cookiesToProxy == null) {
+        if (cookiesToProxy == null)
+        {
             return cookieStore;
-        } else {
+        }
+        else
+        {
 
-            for(KeyValuePair cookieToProxy : cookiesToProxy) {
+            for (KeyValuePair cookieToProxy : cookiesToProxy)
+            {
                 BasicClientCookie cookie = new BasicClientCookie(cookieToProxy.getKey(), cookieToProxy.getValue());
                 cookie.setDomain(host);
                 cookieStore.addCookie(cookie);
@@ -104,19 +139,22 @@ public class AndroidRestClient extends RestClient {
         }
     }
 
-    private CloseableHttpClient getHttpClient(CookieStore cookieStore) {
+    private CloseableHttpClient getHttpClient(CookieStore cookieStore)
+    {
         CloseableHttpClient httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
         return httpClient;
     }
 
-
-    private RestResponse buildRestResponse(HttpRequestBase request, CloseableHttpResponse closeableHttpResponse) throws IOException {
+    private RestResponse buildRestResponse(HttpRequestBase request, CloseableHttpResponse closeableHttpResponse) throws
+                                                                                                                 IOException
+    {
         String requestUri = request.getURI().toString();
         int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
         HeaderIterator headers = closeableHttpResponse.headerIterator();
         ArrayList headerList = new ArrayList(3);
 
-        while(headers.hasNext()) {
+        while (headers.hasNext())
+        {
             Header httpEntity = headers.nextHeader();
             headerList.add(new KeyValuePair(httpEntity.getName(), httpEntity.getValue()));
         }
@@ -126,8 +164,10 @@ public class AndroidRestClient extends RestClient {
         return new RestResponse(requestUri, statusCode, headerList, responseData);
     }
 
-    private static void checkRestResponse(RestResponse response) throws RestException {
-        if(!response.isJsonContent()) {
+    private static void checkRestResponse(RestResponse response) throws RestException
+    {
+        if (!response.isJsonContent())
+        {
             throw new RestException("Invalid response", response);
         }
     }
