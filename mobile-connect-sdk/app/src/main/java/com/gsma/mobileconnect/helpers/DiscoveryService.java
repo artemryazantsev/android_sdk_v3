@@ -19,6 +19,7 @@ package com.gsma.mobileconnect.helpers;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -72,7 +73,7 @@ public class DiscoveryService extends BaseService
 
     /**
      * This method is called to initiate the Mobile Connect process.
-     * <p>
+     * <p/>
      * The return is either an 'error', 'operator selection is required' or 'authorization can start' (the operator
      * has been identified).
      *
@@ -128,7 +129,7 @@ public class DiscoveryService extends BaseService
     /**
      * This method is called to extract the response from the operator selection process and then determine what to
      * do next.
-     * <p>
+     * <p/>
      *
      * @param config Mobile Connect Configuration instance
      * @return A status object
@@ -216,8 +217,12 @@ public class DiscoveryService extends BaseService
                                        final String operatorUrl)
     {
 
+        final ViewGroup nullParent = null;
+
         RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(context)
-                                                                      .inflate(R.layout.layout_web_view, null);
+                                                                      .inflate(R.layout.layout_web_view,
+                                                                               nullParent,
+                                                                               false);
 
         final InteractableWebView webView = (InteractableWebView) webViewLayout.findViewById(R.id.web_view);
         final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);

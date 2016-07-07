@@ -373,8 +373,12 @@ public class AuthorizationService extends BaseService
                 }
             }
 
+            final ViewGroup nullParent = null;
+
             RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(context)
-                                                                          .inflate(R.layout.layout_web_view, null);
+                                                                          .inflate(R.layout.layout_web_view,
+                                                                                   nullParent,
+                                                                                   false);
 
             final InteractableWebView webView = (InteractableWebView) webViewLayout.findViewById(R.id.web_view);
             final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
