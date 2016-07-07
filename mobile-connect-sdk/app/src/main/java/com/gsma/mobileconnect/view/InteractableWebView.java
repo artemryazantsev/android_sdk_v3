@@ -1,5 +1,6 @@
 package com.gsma.mobileconnect.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -30,6 +31,7 @@ public class InteractableWebView extends WebView
         initialise(context);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initialise(Context context)
     {
         if (!isInEditMode())
