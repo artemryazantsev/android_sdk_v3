@@ -1,4 +1,14 @@
 apply plugin: 'com.android.library'
+apply plugin: 'jacoco-android'
+
+def APP_VERSION = "2.1.1"
+ext.set('AppVersion', APP_VERSION)
+
+jacocoAndroidUnitTestReport {
+    csv.enabled false
+    html.enabled true
+    xml.enabled true
+}
 
 android {
     compileSdkVersion 24
@@ -10,17 +20,18 @@ android {
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 3
-        versionName "2.1.1"
+        versionName APP_VERSION
         archivesBaseName = "mobile-connect-android-sdk"
     }
 
     buildTypes {
         release {
+            testCoverageEnabled = true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        } 
+        }
         debug {
-            testCoverageEnabled true
+            testCoverageEnabled = true
         }
     }
 
@@ -41,9 +52,10 @@ sonarqube {
         property "sonar.java.binaries", "build/intermediates/classes/release"
         property "sonar.java.test.binaries", "build/intermediates/classes/test/release"
         property "sonar.sources", "src"
-        property "sonar.junit.reportsPath", "build/test-results/release"
-        property "sonar.java.junit.reportsPath", "build/test-results/release"
+        property "sonar.junit.reportsPath", "build/reports/tests/release"
+        property "sonar.java.junit.reportsPath", "build/reports/tests/release"
         property "sonar.android.lint.report", "build/outputs/lint-results.xml"
+        property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/testReleaseUnitTest.exec"
     }
 }
 
