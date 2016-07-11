@@ -1,27 +1,15 @@
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
-
-jacoco {
-    toolVersion = "0.7.8.201607051106"
-}
-
-def APP_VERSION = "2.1.1"
-ext.set('AppVersion', APP_VERSION)
 
 android {
     compileSdkVersion 24
     buildToolsVersion "23.0.3"
     useLibrary 'org.apache.http.legacy'
 
-    jacoco {
-        version = "0.7.8.201607051106"
-    }
-
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 3
-        versionName APP_VERSION
+        versionName "2.1.1"
         archivesBaseName = "mobile-connect-android-sdk"
     }
 
@@ -58,42 +46,6 @@ sonarqube {
         property "sonar.android.lint.report", "build/outputs/lint-results.xml"
         property "sonar.jacoco.reportPath", "build/jacoco/testDebugUnitTest.exec"
     }
-}
-
-task jacocoTestReport(type: JacocoReport) {
-
-    def coverageSourceDirs = [
-            'src/main/java'
-    ]
-
-    group = "Reporting"
-    description = "Generates Jacoco coverage reports"
-    reports {
-        xml{
-            enabled = true
-            destination "${buildDir}/reports/jacoco/jacocoTestDebugUnitTestReport/jacoco.xml"
-        }
-        csv.enabled false
-        html{
-            enabled true
-            destination "${buildDir}/jacocoHtml"
-        }
-    }
-
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes',
-            excludes: ['**/R.class',
-                       '**/R$*.class',
-                       '**/BuildConfig.*',
-                       '**/Manifest*.*',
-                       '**/*Activity*.*',
-                       '**/*Fragment*.*'
-            ]
-    )
-
-    sourceDirectories = files(coverageSourceDirs)
-    additionalSourceDirs = files(coverageSourceDirs)
-    executionData = files('build/outputs/code-coverage/connected/coverage.ec')
 }
 
 dependencies {
