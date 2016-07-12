@@ -59,7 +59,7 @@ public class DiscoveryService extends BaseService
 
     /**
      * This method is called to initiate the Mobile Connect process.
-     * <p>
+     * <p/>
      * The return is either an 'error', 'operator selection is required' or 'authorization can start' (the operator
      * has been identified).
      *
@@ -115,7 +115,7 @@ public class DiscoveryService extends BaseService
     /**
      * This method is called to extract the response from the operator selection process and then determine what to
      * do next.
-     * <p>
+     * <p/>
      *
      * @param config Mobile Connect Configuration instance
      * @return A status object

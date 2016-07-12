@@ -13,6 +13,16 @@ android {
         archivesBaseName = "mobile-connect-android-sdk"
     }
 
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -22,16 +32,6 @@ android {
         debug {
             testCoverageEnabled = true
         }
-    }
-
-    lintOptions {
-        disable 'InvalidPackage'
-    }
-
-    packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
     }
 }
 

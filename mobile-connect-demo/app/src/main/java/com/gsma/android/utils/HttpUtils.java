@@ -1,17 +1,5 @@
 package com.gsma.android.utils;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
@@ -35,298 +23,357 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+
 /**
  * Helper functions for HTTP networking.
  */
-public class HttpUtils {
+public class HttpUtils
+{
 
-	// connection timeout period (mS)
-	public static final int REGISTRATION_TIMEOUT = 15 * 1000; 
-	// socket timeout period (mS)
-	public static final int WAIT_TIMEOUT = 30 * 1000; 
+    // connection timeout period (mS)
+    public static final int REGISTRATION_TIMEOUT = 15 * 1000;
 
-	/**
-	 * 
-	 * This function adds support for pre-emptive HTTP Authentication for an HttpClient.
-	 * 
-	 * @param httpClient
-	 */
-	public static void makeAuthenticationPreemptive(HttpClient httpClient) {
-		HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor() {
-			public void process(final HttpRequest request,final HttpContext context) throws HttpException,IOException{
-				AuthState authState = (AuthState) context
-						.getAttribute(ClientContext.TARGET_AUTH_STATE);
-				CredentialsProvider credsProvider = (CredentialsProvider) context
-						.getAttribute(ClientContext.CREDS_PROVIDER);
-				HttpHost targetHost = (HttpHost) context
-						.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
+    // socket timeout period (mS)
+    public static final int WAIT_TIMEOUT = 30 * 1000;
 
-				if (authState.getAuthScheme() == null) {
-					AuthScope authScope = new AuthScope(targetHost.getHostName(), targetHost.getPort());
-					Credentials creds = credsProvider.getCredentials(authScope);
-					if (creds != null) {
-						authState.setAuthScheme(new BasicScheme());
-						authState.setCredentials(creds);
-					}
-				}
-			}
-		};
+    /**
+     * This function adds support for pre-emptive HTTP Authentication for an HttpClient.
+     *
+     * @param httpClient
+     */
+    public static void makeAuthenticationPreemptive(HttpClient httpClient)
+    {
+        HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor()
+        {
+            public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException
+            {
+                AuthState authState = (AuthState) context.getAttribute(ClientContext.TARGET_AUTH_STATE);
+                CredentialsProvider credsProvider = (CredentialsProvider) context.getAttribute(ClientContext
+                                                                                                       .CREDS_PROVIDER);
+                HttpHost targetHost = (HttpHost) context.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
 
-		((AbstractHttpClient) httpClient).addRequestInterceptor(preemptiveAuth,0);
-	}
+                if (authState.getAuthScheme() == null)
+                {
+                    AuthScope authScope = new AuthScope(targetHost.getHostName(), targetHost.getPort());
+                    Credentials creds = credsProvider.getCredentials(authScope);
+                    if (creds != null)
+                    {
+                        authState.setAuthScheme(new BasicScheme());
+                        authState.setCredentials(creds);
+                    }
+                }
+            }
+        };
 
-	/**
-	 * Extract the domain and if specified the port number to create an
-	 * authorization scope to use with HTTP Request authorization.
-	 * 
-	 * @param serviceUri
-	 * @return AuthScope
-	 * @throws NumberFormatException
-	 */
-	public static AuthScope getAuthscopeFor(String serviceUri) {
-		int defaultPort = 80;
-		if (serviceUri.startsWith("https://")) {
-			defaultPort = 443;
-		}
-		String[] phase1 = serviceUri.split("://", 2);
-		String[] phase2 = phase1[1].split("/", 2);
-		String[] phase3 = phase2[0].split(":", 2);
-		String domain = phase3[0];
-		if (phase3.length == 2) {
-			try {
-				int port = Integer.parseInt(phase3[1]);
-				if (port > 0)
-					defaultPort = port;
-			} catch (NumberFormatException nfe) {
-			}
-		}
-		return new AuthScope(domain, defaultPort);
-	}
+        ((AbstractHttpClient) httpClient).addRequestInterceptor(preemptiveAuth, 0);
+    }
 
-	/**
-	 * Create an instance of an HttpClient with default settings.
-	 * 
-	 * @param serviceUri
-	 * @param consumerKey
-	 * @return HttpClient
-	 */
-	public static HttpClient getHttpClient(String serviceUri, String consumerKey) {
-		return getHttpAuthorizationClient(serviceUri, consumerKey, null, "plain", null);
-	}
+    /**
+     * Extract the domain and if specified the port number to create an
+     * authorization scope to use with HTTP Request authorization.
+     *
+     * @param serviceUri
+     * @return AuthScope
+     * @throws NumberFormatException
+     */
+    public static AuthScope getAuthscopeFor(String serviceUri)
+    {
+        int defaultPort = 80;
+        if (serviceUri.startsWith("https://"))
+        {
+            defaultPort = 443;
+        }
+        String[] phase1 = serviceUri.split("://", 2);
+        String[] phase2 = phase1[1].split("/", 2);
+        String[] phase3 = phase2[0].split(":", 2);
+        String domain = phase3[0];
+        if (phase3.length == 2)
+        {
+            try
+            {
+                int port = Integer.parseInt(phase3[1]);
+                if (port > 0)
+                {
+                    defaultPort = port;
+                }
+            }
+            catch (NumberFormatException nfe)
+            {
+            }
+        }
+        return new AuthScope(domain, defaultPort);
+    }
 
-	/**
-	 * Create an instance of an HttpClient with default settings.
-	 * 
-	 * @param serviceUri
-	 * @param consumerKey
-	 * @param consumerSecret
-	 * @param credentials (none, plain, sha256)
-	 * @param httpRequest
-	 * @return HttpClient
-	 * @throws NoSuchAlgorithmException
-	 * @throws UnsupportedEncodingException
-	 */
-	public static HttpClient getHttpAuthorizationClient(String serviceUri,String consumerKey, String consumerSecret, String credentials, HttpRequestBase httpRequest) {
-		HttpClient httpClient = new DefaultHttpClient();
+    /**
+     * Create an instance of an HttpClient with default settings.
+     *
+     * @param serviceUri
+     * @param consumerKey
+     * @return HttpClient
+     */
+    public static HttpClient getHttpClient(String serviceUri, String consumerKey)
+    {
+        return getHttpAuthorizationClient(serviceUri, consumerKey, null, "plain", null);
+    }
 
-		HttpParams httpParams = httpClient.getParams();
+    /**
+     * Create an instance of an HttpClient with default settings.
+     *
+     * @param serviceUri
+     * @param consumerKey
+     * @param consumerSecret
+     * @param credentials    (none, plain, sha256)
+     * @param httpRequest
+     * @return HttpClient
+     * @throws NoSuchAlgorithmException
+     * @throws UnsupportedEncodingException
+     */
+    public static HttpClient getHttpAuthorizationClient(String serviceUri,
+                                                        String consumerKey,
+                                                        String consumerSecret,
+                                                        String credentials,
+                                                        HttpRequestBase httpRequest)
+    {
+        HttpClient httpClient = new DefaultHttpClient();
 
-		HttpConnectionParams.setConnectionTimeout(httpParams,REGISTRATION_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(httpParams, WAIT_TIMEOUT);
-		ConnManagerParams.setTimeout(httpParams, WAIT_TIMEOUT);
+        HttpParams httpParams = httpClient.getParams();
 
-		httpParams.setBooleanParameter("http.protocol.handle-redirects", false);
+        HttpConnectionParams.setConnectionTimeout(httpParams, REGISTRATION_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(httpParams, WAIT_TIMEOUT);
+        ConnManagerParams.setTimeout(httpParams, WAIT_TIMEOUT);
 
-		if (credentials.equals("plain")) {
-			UsernamePasswordCredentials creds = new UsernamePasswordCredentials(
-					consumerKey, consumerSecret != null ? consumerSecret : "");
+        httpParams.setBooleanParameter("http.protocol.handle-redirects", false);
 
-			((AbstractHttpClient) httpClient).getCredentialsProvider()
-					.setCredentials(HttpUtils.getAuthscopeFor(serviceUri),
-							creds);
-			HttpUtils.makeAuthenticationPreemptive(httpClient);
-		} else {
-			try {
-				String auth = consumerKey + ":" + consumerSecret;
-				MessageDigest digest = MessageDigest.getInstance("SHA-256");
-				digest.reset();
-				String authCode = bin2hex(digest.digest(auth.getBytes("UTF-8")));
-				String authHeader = "Basic " + authCode;
-				httpRequest.addHeader("Authorization", authHeader);
-			} catch (NoSuchAlgorithmException e1) {
-				e1.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}
+        if (credentials.equals("plain"))
+        {
+            UsernamePasswordCredentials creds = new UsernamePasswordCredentials(consumerKey,
+                                                                                consumerSecret != null ?
+                                                                                consumerSecret :
+                                                                                "");
 
-		return httpClient;
-	}
+            ((AbstractHttpClient) httpClient).getCredentialsProvider()
+                                             .setCredentials(HttpUtils.getAuthscopeFor(serviceUri), creds);
+            HttpUtils.makeAuthenticationPreemptive(httpClient);
+        }
+        else
+        {
+            try
+            {
+                String auth = consumerKey + ":" + consumerSecret;
+                MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                digest.reset();
+                String authCode = bin2hex(digest.digest(auth.getBytes("UTF-8")));
+                String authHeader = "Basic " + authCode;
+                httpRequest.addHeader("Authorization", authHeader);
+            }
+            catch (NoSuchAlgorithmException e1)
+            {
+                e1.printStackTrace();
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+            }
+        }
 
-	/**
-	 * Create an instance of an HttpClient with default settings.
-	 * 
-	 * @param serviceUri
-	 * @return HttpClient
-	 */
-	@Deprecated
-	public static HttpClient getHttpClient(String serviceUri) {
-		return getHttpClient();
-	}
+        return httpClient;
+    }
 
-	/**
-	 * Create an instance of an HttpClient with default settings.
-	 * 
-	 * @return HttpClient
-	 */
-	public static HttpClient getHttpClient() {
-		HttpClient httpClient = new DefaultHttpClient();
+    /**
+     * Create an instance of an HttpClient with default settings.
+     *
+     * @param serviceUri
+     * @return HttpClient
+     */
+    @Deprecated
+    public static HttpClient getHttpClient(String serviceUri)
+    {
+        return getHttpClient();
+    }
 
-		HttpParams httpParams = httpClient.getParams();
+    /**
+     * Create an instance of an HttpClient with default settings.
+     *
+     * @return HttpClient
+     */
+    public static HttpClient getHttpClient()
+    {
+        HttpClient httpClient = new DefaultHttpClient();
 
-		HttpConnectionParams.setConnectionTimeout(httpParams,REGISTRATION_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(httpParams, WAIT_TIMEOUT);
-		ConnManagerParams.setTimeout(httpParams, WAIT_TIMEOUT);
+        HttpParams httpParams = httpClient.getParams();
 
-		httpParams.setBooleanParameter("http.protocol.handle-redirects", false);
+        HttpConnectionParams.setConnectionTimeout(httpParams, REGISTRATION_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(httpParams, WAIT_TIMEOUT);
+        ConnManagerParams.setTimeout(httpParams, WAIT_TIMEOUT);
 
-		return httpClient;
-	}
+        httpParams.setBooleanParameter("http.protocol.handle-redirects", false);
 
-	/**
-	 * Read the text contents from an InputStream.
-	 * 
-	 * @param inputstream
-	 * @return String 
-	 * @throws IOException
-	 */
-	public static String getContentsFromInputStream(InputStream is) throws IOException {
+        return httpClient;
+    }
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    /**
+     * Read the text contents from an InputStream.
+     *
+     * @param inputstream
+     * @return String
+     * @throws IOException
+     */
+    public static String getContentsFromInputStream(InputStream is) throws IOException
+    {
 
-		if (is != null) {
-			byte[] readbuf = new byte[1024];
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-			int n;
+        if (is != null)
+        {
+            byte[] readbuf = new byte[1024];
 
-			while ((n = is.read(readbuf)) >= 0) {
-				baos.write(readbuf, 0, n);
-			}
-		}
+            int n;
 
-		return baos.toString();
-	}
+            while ((n = is.read(readbuf)) >= 0)
+            {
+                baos.write(readbuf, 0, n);
+            }
+        }
 
-	/**
-	 * Check if the contentType header indicates JSON content.
-	 * 
-	 * @param contentType
-	 * @return boolean
-	 */
-	public static boolean isJSON(String contentType) {
-		return (contentType != null && contentType.toLowerCase().startsWith("application/json"));
-	}
+        return baos.toString();
+    }
 
-	/**
-	 * Check if the contentType header indicates HTML content.
-	 * 
-	 * @param contentType
-	 * @return boolean
-	 */
-	public static boolean isHTML(String contentType) {
-		return (contentType != null && contentType.toLowerCase().startsWith("text/html"));
-	}
+    /**
+     * Check if the contentType header indicates JSON content.
+     *
+     * @param contentType
+     * @return boolean
+     */
+    public static boolean isJSON(String contentType)
+    {
+        return (contentType != null && contentType.toLowerCase().startsWith("application/json"));
+    }
 
-	/**
-	 * Read the headers of an HTTP response and return. Note that header names
-	 * are forced to lower case.
-	 * 
-	 * @param httpResponse
-	 * @return HashMap<String, String>
-	 */
-	public static HashMap<String, String> getHeaders(HttpResponse httpResponse) {
-		HashMap<String, String> headerMap = new HashMap<String, String>();
+    /**
+     * Check if the contentType header indicates HTML content.
+     *
+     * @param contentType
+     * @return boolean
+     */
+    public static boolean isHTML(String contentType)
+    {
+        return (contentType != null && contentType.toLowerCase().startsWith("text/html"));
+    }
 
-		Header[] responseHeaders = httpResponse.getAllHeaders();
+    /**
+     * Read the headers of an HTTP response and return. Note that header names
+     * are forced to lower case.
+     *
+     * @param httpResponse
+     * @return HashMap<String, String>
+     */
+    public static HashMap<String, String> getHeaders(HttpResponse httpResponse)
+    {
+        HashMap<String, String> headerMap = new HashMap<String, String>();
 
-		if (responseHeaders != null) {
-			for (Header headerName : responseHeaders) {
-				String name = headerName.getName();
-				String value = headerName.getValue();
+        Header[] responseHeaders = httpResponse.getAllHeaders();
 
-				headerMap.put(name.toLowerCase(), value);
-			}
-		}
+        if (responseHeaders != null)
+        {
+            for (Header headerName : responseHeaders)
+            {
+                String name = headerName.getName();
+                String value = headerName.getValue();
 
-		return headerMap;
-	}
+                headerMap.put(name.toLowerCase(), value);
+            }
+        }
 
-	/**
-	 * Encode UTF-8 method.
-	 * 
-	 * @param parameter
-	 * @return String 
-	 * @throws UnsupportedEncodingException
-	 */
-	public static String encodeUriParameter(String parameter) {
-		String encoded;
-		try {
-			encoded = URLEncoder.encode(parameter, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			encoded = "";
-		}
-		return encoded;
-	}
+        return headerMap;
+    }
 
-	/**
-	 * This method allows to add parameters to the Uri indicated.
-	 * 
-	 * @param baseUrl
-	 * @param paramName
-	 * @param paramValue
-	 * @return String
-	 */
-	public static String addUriParameter(String baseUrl, String paramName, String paramValue) {
-		String url = baseUrl;
-		if (paramName != null && paramValue != null) {
-			if (url.indexOf("?") > -1) {
-				url = url + "&" + encodeUriParameter(paramName) + "="
-						+ encodeUriParameter(paramValue);
-			} else {
-				url = url + "?" + encodeUriParameter(paramName) + "="
-						+ encodeUriParameter(paramValue);
-			}
-		}
-		return url;
-	}
+    /**
+     * Encode UTF-8 method.
+     *
+     * @param parameter
+     * @return String
+     * @throws UnsupportedEncodingException
+     */
+    public static String encodeUriParameter(String parameter)
+    {
+        String encoded;
+        try
+        {
+            encoded = URLEncoder.encode(parameter, "UTF-8");
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            encoded = "";
+        }
+        return encoded;
+    }
 
-	/**
-	 * Read the text contents from HttpResponse.
-	 * 
-	 * @param httpResponse
-	 * @return String 
-	 * @throws IOException
-	 */
-	public static String getContentsFromHttpResponse(HttpResponse httpResponse) throws IOException {
-		InputStream inputStream = httpResponse.getEntity().getContent();
-		StringBuffer jsonResponse = new StringBuffer();
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-		String line = null;
-		while ((line = bufferedReader.readLine()) != null) {
-			jsonResponse.append(line);
-		}
-		inputStream.close();
-		return jsonResponse.toString();
-	}
-	
-	/**
-	 * Conversion method.
-	 * @param data
-	 * @return String 
-	 */
-	public static String bin2hex(byte[] data) {
-		return String.format("%0" + (data.length * 2) + "X", new BigInteger(1,
-				data));
-	}
+    /**
+     * This method allows to add parameters to the Uri indicated.
+     *
+     * @param baseUrl
+     * @param paramName
+     * @param paramValue
+     * @return String
+     */
+    public static String addUriParameter(String baseUrl, String paramName, String paramValue)
+    {
+        String url = baseUrl;
+        if (paramName != null && paramValue != null)
+        {
+            if (url.indexOf("?") > -1)
+            {
+                url = url + "&" + encodeUriParameter(paramName) + "=" + encodeUriParameter(paramValue);
+            }
+            else
+            {
+                url = url + "?" + encodeUriParameter(paramName) + "=" + encodeUriParameter(paramValue);
+            }
+        }
+        return url;
+    }
+
+    /**
+     * Read the text contents from HttpResponse.
+     *
+     * @param httpResponse
+     * @return String
+     * @throws IOException
+     */
+    public static String getContentsFromHttpResponse(HttpResponse httpResponse) throws IOException
+    {
+        InputStream inputStream = httpResponse.getEntity().getContent();
+        StringBuffer jsonResponse = new StringBuffer();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = null;
+        while ((line = bufferedReader.readLine()) != null)
+        {
+            jsonResponse.append(line);
+        }
+        inputStream.close();
+        return jsonResponse.toString();
+    }
+
+    /**
+     * Conversion method.
+     *
+     * @param data
+     * @return String
+     */
+    public static String bin2hex(byte[] data)
+    {
+        return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
+    }
 
 }

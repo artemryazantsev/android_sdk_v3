@@ -13,13 +13,13 @@ public class AuthModel
 
     private static AuthModel ourInstance = new AuthModel();
 
-    public static AuthModel getInstance() {
+    public static AuthModel getInstance()
+    {
         return ourInstance;
     }
 
-    private AuthModel() {
+    private AuthModel()
+    {
     }
-
-
 
 }

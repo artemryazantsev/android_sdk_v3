@@ -19,29 +19,38 @@ import java.util.List;
  * but overrides code that is incompatible with Android.
  * Created by nick.copley on 26/02/2016.
  */
-public class AndroidDiscoveryImpl extends DiscoveryImpl implements IDiscovery{
+public class AndroidDiscoveryImpl extends DiscoveryImpl implements IDiscovery
+{
 
-    public AndroidDiscoveryImpl(IDiscoveryCache discoveryCache, RestClient restClient) {
+    public AndroidDiscoveryImpl(IDiscoveryCache discoveryCache, RestClient restClient)
+    {
         super(discoveryCache, restClient);
     }
 
     @Override
-    public void parseDiscoveryRedirect(String redirectURL, IParsedDiscoveryRedirectCallback callback) throws URISyntaxException {
+    public void parseDiscoveryRedirect(String redirectURL, IParsedDiscoveryRedirectCallback callback) throws
+                                                                                                      URISyntaxException
+    {
         ValidationUtils.validateParameter(redirectURL, "redirectURL");
         ValidationUtils.validateParameter(callback, "callback");
         URI uri = new URI(redirectURL);
         String query = uri.getQuery();
-        if(query == null) {
+        if (query == null)
+        {
             callback.completed(new ParsedDiscoveryRedirect(null, null, null));
-        } else {
+        }
+        else
+        {
             List parameters = URLEncodedUtils.parse(uri, "UTF-8");
             String mcc_mnc = HttpUtils.getParameterValue(parameters, "mcc_mnc");
             String subscriber_id = HttpUtils.getParameterValue(parameters, "subscriber_id");
             String mcc = null;
             String mnc = null;
-            if(mcc_mnc != null) {
+            if (mcc_mnc != null)
+            {
                 String[] parts = mcc_mnc.split("_");
-                if(parts.length == 2) {
+                if (parts.length == 2)
+                {
                     mcc = parts[0];
                     mnc = parts[1];
                 }

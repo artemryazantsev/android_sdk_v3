@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.gsma.mobileconnect.oidc.ParsedIdToken;
 import com.gsma.mobileconnect.oidc.RequestTokenResponse;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -32,7 +33,11 @@ import org.robolectric.RobolectricTestRunner;
 import java.io.IOException;
 import java.util.Calendar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class JsonUtilsTest
@@ -123,10 +128,10 @@ public class JsonUtilsTest
         String expectedErrorDescription = "EXPECTED ERROR_DESCRIPTION";
         String expectedDescription = "EXPECTED DESCRIPTION";
         String expectedErrorUri = "EXPECTED ERROR_URI";
-        String json = "{ \"error\": \""+ expectedError +"\", "
-            + "\"error_description\": \"" + expectedErrorDescription+ "\", "
-            + "\"description\": \"" + expectedDescription+ "\", "
-            + "\"error_uri\": \"" + expectedErrorUri + "\" }";
+        String json =
+                "{ \"error\": \"" + expectedError + "\", " + "\"error_description\": \"" + expectedErrorDescription +
+                "\", " + "\"description\": \"" + expectedDescription + "\", " + "\"error_uri\": \"" + expectedErrorUri +
+                "\" }";
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(json);
 
@@ -144,10 +149,8 @@ public class JsonUtilsTest
     public void getErrorResponse_withNoError_shouldReturnNull() throws IOException
     {
         // GIVEN
-        String json = "{ \"no-error\": \"value\", "
-                + "\"error_description\": \"error_description\", "
-                + "\"description\": \"description\", "
-                + "\"error_uri\": \"error_uri\" }";
+        String json = "{ \"no-error\": \"value\", " + "\"error_description\": \"error_description\", " +
+                      "\"description\": \"description\", " + "\"error_uri\": \"error_uri\" }";
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(json);
 
@@ -165,9 +168,9 @@ public class JsonUtilsTest
         String expectedError = "EXPECTED ERROR";
         String expectedDescription = "EXPECTED DESCRIPTION";
         String expectedErrorUri = "EXPECTED ERROR_URI";
-        String json = "{ \"error\": \""+ expectedError +"\", "
-                + "\"description\": \"" + expectedDescription+ "\", "
-                + "\"error_uri\": \"" + expectedErrorUri + "\" }";
+        String json =
+                "{ \"error\": \"" + expectedError + "\", " + "\"description\": \"" + expectedDescription + "\", " +
+                "\"error_uri\": \"" + expectedErrorUri + "\" }";
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(json);
 
@@ -188,9 +191,9 @@ public class JsonUtilsTest
         String expectedError = "EXPECTED ERROR";
         String expectedErrorDescription = "EXPECTED ERROR_DESCRIPTION";
         String expectedErrorUri = "EXPECTED ERROR_URI";
-        String json = "{ \"error\": \""+ expectedError +"\", "
-                + "\"error_description\": \"" + expectedErrorDescription+ "\", "
-                + "\"error_uri\": \"" + expectedErrorUri + "\" }";
+        String json =
+                "{ \"error\": \"" + expectedError + "\", " + "\"error_description\": \"" + expectedErrorDescription +
+                "\", " + "\"error_uri\": \"" + expectedErrorUri + "\" }";
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(json);
 
@@ -246,7 +249,8 @@ public class JsonUtilsTest
     }
 
     @Test
-    public void parseOperatorIdentifiedDiscoveryResult_withValidOperatorIdentifiedDiscoveryResult_shouldSucceed() throws IOException
+    public void parseOperatorIdentifiedDiscoveryResult_withValidOperatorIdentifiedDiscoveryResult_shouldSucceed() throws
+                                                                                                                  IOException
     {
         // GIVEN
         String expectedClientId = "EXPECTED CLIENT_ID";
@@ -255,26 +259,20 @@ public class JsonUtilsTest
         String expectedTokenHref = "EXPECTED TOKEN_HREF";
         String expectedUserInfoHref = "EXPECTED USER_INFO_HREF";
         String expectedPremiumInfoHref = "EXPECTED PREMIUM_INFO_HREF";
-        String jsonStr = "{ \"response\": {"
-                + " \"client_id\": \"" + expectedClientId + "\", "
-                + " \"client_secret\": \"" + expectedClientSecret + "\", "
-                + " \"apis\": {"
-                + " \"operatorid\": {"
-                + " \"link\": ["
-                + " { \"rel\": \"authorization\", "
-                + " \"href\": \"" + expectedAuthorizationHref + "\"}, "
-                + " { \"rel\": \"token\", "
-                + " \"href\": \"" + expectedTokenHref + "\"}, "
-                + " { \"rel\": \"userinfo\", "
-                + " \"href\": \"" + expectedUserInfoHref + "\"}, "
-                + " { \"rel\": \"premiuminfo\", "
-                + " \"href\": \"" + expectedPremiumInfoHref + "\"} "
-                + "]}}}}";
+        String jsonStr =
+                "{ \"response\": {" + " \"client_id\": \"" + expectedClientId + "\", " + " \"client_secret\": \"" +
+                expectedClientSecret + "\", " + " \"apis\": {" + " \"operatorid\": {" + " \"link\": [" +
+                " { \"rel\": \"authorization\", " + " \"href\": \"" + expectedAuthorizationHref + "\"}, " +
+                " { \"rel\": \"token\", " + " \"href\": \"" + expectedTokenHref + "\"}, " +
+                " { \"rel\": \"userinfo\", " + " \"href\": \"" + expectedUserInfoHref + "\"}, " +
+                " { \"rel\": \"premiuminfo\", " + " \"href\": \"" + expectedPremiumInfoHref + "\"} " + "]}}}}";
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(jsonStr);
 
         // WHEN
-        ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils.parseOperatorIdentifiedDiscoveryResult(root);
+        ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
+                .parseOperatorIdentifiedDiscoveryResult(
+                root);
 
         // THEN
         assertNotNull(parsedOperatorIdentifiedDiscoveryResult);
@@ -287,29 +285,24 @@ public class JsonUtilsTest
     }
 
     @Test
-    public void parseOperatorIdentifiedDiscoveryResult_withInvalidOperatorIdentifiedDiscoveryResult_shouldReturnNull() throws IOException
+    public void parseOperatorIdentifiedDiscoveryResult_withInvalidOperatorIdentifiedDiscoveryResult_shouldReturnNull
+            () throws
+                                                                                                                       IOException
     {
         // GIVEN
-        String jsonStr = "{ \"response\": {"
-                + " \"client_id\": \"XXX\", "
-                + " \"client_secret\": \"XXX\", "
-                + " \"apis\": {"
-                + " \"operatorid\": {"
-                + " \"not-link\": ["
-                + " { \"rel\": \"authorization\", "
-                + " \"href\": \"XXX\"}, "
-                + " { \"rel\": \"token\", "
-                + " \"href\": \"XXX\"}, "
-                + " { \"rel\": \"userinfo\", "
-                + " \"href\": \"XXX\"}, "
-                + " { \"rel\": \"premiuminfo\", "
-                + " \"href\": \"XXX\"} "
-                + "]}}}}";
+        String jsonStr =
+                "{ \"response\": {" + " \"client_id\": \"XXX\", " + " \"client_secret\": \"XXX\", " + " \"apis\": {" +
+                " \"operatorid\": {" + " \"not-link\": [" + " { \"rel\": \"authorization\", " +
+                " \"href\": \"XXX\"}, " + " { \"rel\": \"token\", " + " \"href\": \"XXX\"}, " +
+                " { \"rel\": \"userinfo\", " + " \"href\": \"XXX\"}, " + " { \"rel\": \"premiuminfo\", " +
+                " \"href\": \"XXX\"} " + "]}}}}";
         ObjectMapper mapper = new ObjectMapper();
         JsonNode root = mapper.readTree(jsonStr);
 
         // WHEN
-        ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils.parseOperatorIdentifiedDiscoveryResult(root);
+        ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
+                .parseOperatorIdentifiedDiscoveryResult(
+                root);
 
         // THEN
         assertNull(parsedOperatorIdentifiedDiscoveryResult);
@@ -322,16 +315,16 @@ public class JsonUtilsTest
         String expectedAccessToken = "EXPECTED ACCESS_TOKEN";
         String expectedTokenType = "EXPECTED TOKEN_TYPE";
         String expectedRefreshToken = "EXPECTED REFRESH_TOKEN";
-        Integer expectedExpiresIn = new Integer("3600");
-        String expectedIdToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJub25jZSI6Im5vbmNlXzAucDNvd3pxbmR5dyIsInN1YiI6ImMwY2Q3NjFmZDA3ZTVlMTk3NDk3NmZiMzVkYzA2MmRlIiwiYW1yIjoiU01TX1VSTCIsImF1dGhfdGltZSI6MTQ1MDg4NDczNCwiYWNyIjoiMiIsImF6cCI6IjBjOWRmMjE5IiwiaWF0IjoxNDUwODg0NzMzLCJleHAiOjE0NTA4ODgzMzMsImF1ZCI6WyIwYzlkZjIxOSJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Lm1vYmlsZWNvbm5lY3QuaW8vb2lkYy9hY2Nlc3N0b2tlbiJ9.wlkZgNtN8ezAia6dZ8l2dYQBryB9skcIVN_6XzZn2mI";
-        String expectedJsonStr = "{ \"access_token\": \"" + expectedAccessToken + "\", "
-            + " \"token_type\": \"" + expectedTokenType + "\", "
-            + " \"expires_in\": \"" + expectedExpiresIn + "\", "
-            + " \"refresh_token\": \"" + expectedRefreshToken + "\", "
-            + " \"id_token\": \"" + expectedIdToken + "\"}";
+        Integer expectedExpiresIn = Integer.valueOf("3600");
+        String expectedIdToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9" +
+                                 ".eyJub25jZSI6Im5vbmNlXzAucDNvd3pxbmR5dyIsInN1YiI6ImMwY2Q3NjFmZDA3ZTVlMTk3NDk3NmZiMzVkYzA2MmRlIiwiYW1yIjoiU01TX1VSTCIsImF1dGhfdGltZSI6MTQ1MDg4NDczNCwiYWNyIjoiMiIsImF6cCI6IjBjOWRmMjE5IiwiaWF0IjoxNDUwODg0NzMzLCJleHAiOjE0NTA4ODgzMzMsImF1ZCI6WyIwYzlkZjIxOSJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Lm1vYmlsZWNvbm5lY3QuaW8vb2lkYy9hY2Nlc3N0b2tlbiJ9.wlkZgNtN8ezAia6dZ8l2dYQBryB9skcIVN_6XzZn2mI";
+        String expectedJsonStr =
+                "{ \"access_token\": \"" + expectedAccessToken + "\", " + " \"token_type\": \"" + expectedTokenType +
+                "\", " + " \"expires_in\": \"" + expectedExpiresIn + "\", " + " \"refresh_token\": \"" +
+                expectedRefreshToken + "\", " + " \"id_token\": \"" + expectedIdToken + "\"}";
 
         Calendar expectedTime = Calendar.getInstance();
-        Calendar expectedExpires = (Calendar)expectedTime.clone();
+        Calendar expectedExpires = (Calendar) expectedTime.clone();
         expectedExpires.add(Calendar.SECOND, expectedExpiresIn);
 
         // WHEN
@@ -356,8 +349,9 @@ public class JsonUtilsTest
         // GIVEN
         String expectedError = "EXPECTED ERROR";
         String expectedErrorDescription = "EXPECTED ERROR_DESCRIPTION";
-        String expectedJsonStr = "{ \"error\": \"" + expectedError + "\", "
-                + " \"error_description\": \"" + expectedErrorDescription + "\"}";
+        String expectedJsonStr =
+                "{ \"error\": \"" + expectedError + "\", " + " \"error_description\": \"" + expectedErrorDescription +
+                "\"}";
 
         Calendar expectedTime = Calendar.getInstance();
 
@@ -375,7 +369,8 @@ public class JsonUtilsTest
     public void createParsedIdToken_withValidToken_shouldSucceed() throws IOException
     {
         // GIVEN
-        String expectedIdToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJub25jZSI6Im5vbmNlXzAucDNvd3pxbmR5dyIsInN1YiI6ImMwY2Q3NjFmZDA3ZTVlMTk3NDk3NmZiMzVkYzA2MmRlIiwiYW1yIjoiU01TX1VSTCIsImF1dGhfdGltZSI6MTQ1MDg4NDczNCwiYWNyIjoiMiIsImF6cCI6IjBjOWRmMjE5IiwiaWF0IjoxNDUwODg0NzMzLCJleHAiOjE0NTA4ODgzMzMsImF1ZCI6WyIwYzlkZjIxOSJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Lm1vYmlsZWNvbm5lY3QuaW8vb2lkYy9hY2Nlc3N0b2tlbiJ9.wlkZgNtN8ezAia6dZ8l2dYQBryB9skcIVN_6XzZn2mI";
+        String expectedIdToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9" +
+                                 ".eyJub25jZSI6Im5vbmNlXzAucDNvd3pxbmR5dyIsInN1YiI6ImMwY2Q3NjFmZDA3ZTVlMTk3NDk3NmZiMzVkYzA2MmRlIiwiYW1yIjoiU01TX1VSTCIsImF1dGhfdGltZSI6MTQ1MDg4NDczNCwiYWNyIjoiMiIsImF6cCI6IjBjOWRmMjE5IiwiaWF0IjoxNDUwODg0NzMzLCJleHAiOjE0NTA4ODgzMzMsImF1ZCI6WyIwYzlkZjIxOSJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Lm1vYmlsZWNvbm5lY3QuaW8vb2lkYy9hY2Nlc3N0b2tlbiJ9.wlkZgNtN8ezAia6dZ8l2dYQBryB9skcIVN_6XzZn2mI";
         String expectedPcr = "c0cd761fd07e5e1974976fb35dc062de";
         String expectedNonce = "nonce_0.p3owzqndyw";
 
@@ -393,7 +388,8 @@ public class JsonUtilsTest
     public void createParsedIdToken_withInvalidToken_shouldThrowException() throws IOException
     {
         // GIVEN
-        String expectedIdToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9eyJub25jZSI6Im5vbmNlXzAucDNvd3pxbmR5dyIsInN1YiI6ImMwY2Q3NjFmZDA3ZTVlMTk3NDk3NmZiMzVkYzA2MmRlIiwiYW1yIjoiU01TX1VSTCIsImF1dGhfdGltZSI6MTQ1MDg4NDczNCwiYWNyIjoiMiIsImF6cCI6IjBjOWRmMjE5IiwiaWF0IjoxNDUwODg0NzMzLCJleHAiOjE0NTA4ODgzMzMsImF1ZCI6WyIwYzlkZjIxOSJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Lm1vYmlsZWNvbm5lY3QuaW8vb2lkYy9hY2Nlc3N0b2tlbiJ9.wlkZgNtN8ezAia6dZ8l2dYQBryB9skcIVN_6XzZn2mI";
+        String expectedIdToken =
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9eyJub25jZSI6Im5vbmNlXzAucDNvd3pxbmR5dyIsInN1YiI6ImMwY2Q3NjFmZDA3ZTVlMTk3NDk3NmZiMzVkYzA2MmRlIiwiYW1yIjoiU01TX1VSTCIsImF1dGhfdGltZSI6MTQ1MDg4NDczNCwiYWNyIjoiMiIsImF6cCI6IjBjOWRmMjE5IiwiaWF0IjoxNDUwODg0NzMzLCJleHAiOjE0NTA4ODgzMzMsImF1ZCI6WyIwYzlkZjIxOSJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Lm1vYmlsZWNvbm5lY3QuaW8vb2lkYy9hY2Nlc3N0b2tlbiJ9.wlkZgNtN8ezAia6dZ8l2dYQBryB9skcIVN_6XzZn2mI";
 
         // THEN
         thrown.expect(IllegalArgumentException.class);
@@ -406,7 +402,8 @@ public class JsonUtilsTest
     public void createParsedIdToken_withInvalidPayload_shouldThrowException() throws IOException
     {
         // GIVEN
-        String expectedIdToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.XXXeyJub25jZSI6Im5vbmNlXzAucDNvd3pxbmR5dyIsInN1YiI6ImMwY2Q3NjFmZDA3ZTVlMTk3NDk3NmZiMzVkYzA2MmRlIiwiYW1yIjoiU01TX1VSTCIsImF1dGhfdGltZSI6MTQ1MDg4NDczNCwiYWNyIjoiMiIsImF6cCI6IjBjOWRmMjE5IiwiaWF0IjoxNDUwODg0NzMzLCJleHAiOjE0NTA4ODgzMzMsImF1ZCI6WyIwYzlkZjIxOSJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Lm1vYmlsZWNvbm5lY3QuaW8vb2lkYy9hY2Nlc3N0b2tlbiJ9.wlkZgNtN8ezAia6dZ8l2dYQBryB9skcIVN_6XzZn2mI";
+        String expectedIdToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9" +
+                                 ".XXXeyJub25jZSI6Im5vbmNlXzAucDNvd3pxbmR5dyIsInN1YiI6ImMwY2Q3NjFmZDA3ZTVlMTk3NDk3NmZiMzVkYzA2MmRlIiwiYW1yIjoiU01TX1VSTCIsImF1dGhfdGltZSI6MTQ1MDg4NDczNCwiYWNyIjoiMiIsImF6cCI6IjBjOWRmMjE5IiwiaWF0IjoxNDUwODg0NzMzLCJleHAiOjE0NTA4ODgzMzMsImF1ZCI6WyIwYzlkZjIxOSJdLCJpc3MiOiJodHRwOi8vb3BlcmF0b3JfYS5zYW5kYm94Lm1vYmlsZWNvbm5lY3QuaW8vb2lkYy9hY2Nlc3N0b2tlbiJ9.wlkZgNtN8ezAia6dZ8l2dYQBryB9skcIVN_6XzZn2mI";
 
         // THEN
         thrown.expect(IOException.class);

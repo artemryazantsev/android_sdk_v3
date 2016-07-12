@@ -97,9 +97,8 @@ public class RetrieveUserinfoTask extends AsyncTask<Void, Void, UserInfo>
             }
             else
             {
-                Log.d(TAG,
-                      "Non successful response code [" + restResponse.getStatusCode() + "] " +
-                      restResponse.getResponse());
+                Log.d(TAG, "Non successful response code [" + restResponse.getStatusCode() + "] " +
+                           restResponse.getResponse());
             }
 
         }

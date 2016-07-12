@@ -7,7 +7,7 @@ import android.view.WindowManager;
 
 /**
  * A simple {@link Dialog} which simply expands to the size of the parent window.
- * <p>
+ * <p/>
  * A singleton instance is provided which should be used when using
  * {@link com.gsma.mobileconnect.helpers.DiscoveryService} and {@link com.gsma.mobileconnect.helpers.AuthorizationService} as they both require a {@link Dialog} for the same purpose.
  * Created by Usmaan.Dad on 6/17/2016.

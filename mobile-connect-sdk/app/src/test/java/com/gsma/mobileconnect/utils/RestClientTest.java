@@ -17,31 +17,17 @@
 
 package com.gsma.mobileconnect.utils;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.config.SocketConfig;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
+import java.io.IOException;
+
 //import org.apache.http.impl.bootstrap.HttpServer;
 //import org.apache.http.impl.bootstrap.ServerBootstrap;
-import org.apache.http.protocol.*;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import static org.junit.Assert.*;
 
 public class RestClientTest
 {
     class RequestTracker
     {
         private boolean receivedRequest;
+
         private boolean completedRequest;
 
         public boolean isReceivedRequest()
@@ -82,7 +68,8 @@ public class RestClientTest
             throws IOException
     {
         HttpRequestHandler requestHandler = new HttpRequestHandler() {
-            public void handle(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws HttpException, IOException {
+            public void handle(HttpRequest httpRequest, HttpResponse httpResponse, HttpContext httpContext) throws
+            HttpException, IOException {
                 requestTracker.setReceivedRequest(true);
                 if(sleep > 0)
                 {

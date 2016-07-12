@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    tools:context=".xoperatorapidemo.activity.AuthorizationCompleteActivity" >
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                tools:context=".xoperatorapidemo.activity.AuthorizationCompleteActivity">
 
     <TextView
         android:id="@+id/authorizationCompleteHeading"
@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="@string/authorizationCompleteHeading"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/authorizationCompleteInfo"
@@ -23,7 +23,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:text="@string/authorizationCompleteInfo"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/authorizationCompleteStatus"
@@ -34,7 +34,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
         android:text="@string/authorizationCompleteStatus"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <TextView
         android:id="@+id/authorizationCompleteTokenLabel"
@@ -45,7 +45,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:text="@string/authorizationCompleteTokenLabel"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/authorizationCompleteTokenValue"
@@ -56,7 +56,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
         android:text="@string/authorizationCompleteTokenValue"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <TextView
         android:id="@+id/authorizationCompletePCRLabel"
@@ -67,7 +67,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="15dp"
         android:text="@string/authorizationCompletePCRLabel"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     <TextView
         android:id="@+id/authorizationCompletePCRValue"
@@ -78,7 +78,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="5dp"
         android:text="@string/authorizationCompletePCRValue"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 
     <Button
@@ -90,6 +90,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:onClick="home"
-        android:text="@string/authorizationCompleteRestart" />
-    
+        android:text="@string/authorizationCompleteRestart"/>
+
 </RelativeLayout>

@@ -19,11 +19,13 @@ package com.gsma.mobileconnect.utils;
 
 import org.apache.http.NameValuePair;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HttpUtilsTest
 {
@@ -36,13 +38,13 @@ public class HttpUtilsTest
 
         KeyValuePair kvp = new KeyValuePair("key1", "value");
         currentCookies.add(kvp);
-        kvp = new KeyValuePair( "Most-Recent-Selected-Operator-Expiry", "value");
+        kvp = new KeyValuePair("Most-Recent-Selected-Operator-Expiry", "value");
         currentCookies.add(kvp);
         expectedCookies.add(kvp);
-        kvp = new KeyValuePair( "Most-Recent-Selected-Operator", "value");
+        kvp = new KeyValuePair("Most-Recent-Selected-Operator", "value");
         currentCookies.add(kvp);
         expectedCookies.add(kvp);
-        kvp = new KeyValuePair( "Enum-Nonce", "value");
+        kvp = new KeyValuePair("Enum-Nonce", "value");
         currentCookies.add(kvp);
         expectedCookies.add(kvp);
         kvp = new KeyValuePair("key2", "value");
@@ -64,11 +66,11 @@ public class HttpUtilsTest
 
         KeyValuePair kvp = new KeyValuePair("key1", "value");
         currentCookies.add(kvp);
-        kvp = new KeyValuePair( "Most-Recent-Selected-Operator-Expiry", "value");
+        kvp = new KeyValuePair("Most-Recent-Selected-Operator-Expiry", "value");
         currentCookies.add(kvp);
-        kvp = new KeyValuePair( "Most-Recent-Selected-Operator", "value");
+        kvp = new KeyValuePair("Most-Recent-Selected-Operator", "value");
         currentCookies.add(kvp);
-        kvp = new KeyValuePair( "Enum-Nonce", "value");
+        kvp = new KeyValuePair("Enum-Nonce", "value");
         currentCookies.add(kvp);
         kvp = new KeyValuePair("key2", "value");
         currentCookies.add(kvp);
@@ -81,8 +83,7 @@ public class HttpUtilsTest
     }
 
     @Test
-    public void extractParameters_withEmptyURL_shouldExtractNoParameters()
-            throws URISyntaxException
+    public void extractParameters_withEmptyURL_shouldExtractNoParameters() throws URISyntaxException
     {
         // GIVEN
         String url = "";
