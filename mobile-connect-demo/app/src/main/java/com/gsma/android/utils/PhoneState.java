@@ -326,6 +326,14 @@ public class PhoneState
     }
 
     /**
+     * @param networkType the networkType to set
+     */
+    public void setNetworkType(int networkType)
+    {
+        this.networkType = networkType;
+    }
+
+    /**
      * @return String
      */
     public String getNetworkTypeValue()
@@ -347,14 +355,6 @@ public class PhoneState
             default:
                 return "unknown";
         }
-    }
-
-    /**
-     * @param networkType the networkType to set
-     */
-    public void setNetworkType(int networkType)
-    {
-        this.networkType = networkType;
     }
 
     /**

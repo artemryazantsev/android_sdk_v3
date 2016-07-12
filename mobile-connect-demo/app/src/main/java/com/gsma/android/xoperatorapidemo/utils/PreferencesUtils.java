@@ -37,7 +37,7 @@ public class PreferencesUtils
         // Read from the /assets directory
         try
         {
-			/*
+            /*
 			 * load the application preferences from file named
 			 * crossoperatorapidemo.properties
 			 */

@@ -28,7 +28,7 @@ public class PhoneUtils
         String msisdn = telephonyMgr.getLine1Number();
 
 		/*
-		 * get the active network
+         * get the active network
 		 */
         NetworkInfo activeNetwork = connectivityMgr.getActiveNetworkInfo();
 

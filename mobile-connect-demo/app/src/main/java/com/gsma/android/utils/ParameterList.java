@@ -12,9 +12,23 @@ import java.util.ArrayList;
  */
 public class ParameterList
 {
+    private static final String TAG = "ParameterList";
+
     ArrayList<KeyValuePair> parameterList = new ArrayList<KeyValuePair>();
 
-    private static final String TAG = "ParameterList";
+    public static ParameterList getKeyValuesFromUrl(String url, int start)
+    {
+        ParameterList parameterList = new ParameterList();
+        parameterList.loadKeyValuesFromUrl(url, start);
+        return parameterList;
+    }
+
+    public static ParameterList getKeyValuesFromUrl(String url)
+    {
+        ParameterList parameterList = new ParameterList();
+        parameterList.loadKeyValuesFromUrl(url, 1);
+        return parameterList;
+    }
 
     public void put(String key, String value)
     {
@@ -189,20 +203,6 @@ public class ParameterList
         }
         Log.d(TAG, "Generated = " + buffer.toString());
         return buffer.toString();
-    }
-
-    public static ParameterList getKeyValuesFromUrl(String url, int start)
-    {
-        ParameterList parameterList = new ParameterList();
-        parameterList.loadKeyValuesFromUrl(url, start);
-        return parameterList;
-    }
-
-    public static ParameterList getKeyValuesFromUrl(String url)
-    {
-        ParameterList parameterList = new ParameterList();
-        parameterList.loadKeyValuesFromUrl(url, 1);
-        return parameterList;
     }
 
     public void loadKeyValuesFromUrl(String url, int start)

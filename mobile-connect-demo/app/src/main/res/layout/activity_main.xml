@@ -1,12 +1,12 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/mainActivity"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                tools:context="com.gsma.android.xoperatorapidemo.activity.MainActivity"
                 android:clickable="true"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:id="@+id/mainActivity"
+                tools:context="com.gsma.android.xoperatorapidemo.activity.MainActivity"
 
     >
 
@@ -16,25 +16,25 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/start_text"/>
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="@string/start_text"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <LinearLayout
         android:id="@+id/servicesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/statusContainer"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/startText"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@+id/startText"
-        android:layout_above="@+id/statusContainer"
         android:background="#dcdcdc"
         android:orientation="vertical">
 
@@ -47,9 +47,9 @@
                 android:id="@+id/startOperatorId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:onClick="startOperatorId"
                 android:text="@string/startOperatorId"/>
         </LinearLayout>
@@ -102,9 +102,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:textStyle="bold"
                 android:text="@string/promptDiscoveryStatus"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/valueDiscoveryStatus"
@@ -128,9 +128,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:textStyle="bold"
                 android:text="@string/promptStatus"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/valueStatus"
@@ -149,20 +149,20 @@
 
             <TextView
                 android:id="@+id/promptMCC"
-                android:layout_height="wrap_content"
                 android:layout_width="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:textStyle="bold"
                 android:text="@string/promptMCC"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/valueMCC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/valueMCC"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
 
@@ -175,20 +175,20 @@
 
             <TextView
                 android:id="@+id/promptMNC"
-                android:layout_height="wrap_content"
                 android:layout_width="80dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:textStyle="bold"
                 android:text="@string/promptMNC"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/valueMNC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:text="@string/valueMNC"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
         </LinearLayout>

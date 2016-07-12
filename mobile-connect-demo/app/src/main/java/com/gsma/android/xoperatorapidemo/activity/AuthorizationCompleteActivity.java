@@ -24,8 +24,10 @@ public class AuthorizationCompleteActivity extends Activity implements UserInfoL
 {
     private static final String TAG = "AuthCompleteActivity";
 
-    AuthorizationCompleteActivity authorizationCompleteActivityInstance; // saved copy of this instance -
+    private static final String NA = "not available";
     // needed when sending an intent
+
+    AuthorizationCompleteActivity authorizationCompleteActivityInstance; // saved copy of this instance -
 
     String authUri = null;
 
@@ -58,8 +60,6 @@ public class AuthorizationCompleteActivity extends Activity implements UserInfoL
     TextView authorizationCompletePCRValue = null;
 
     boolean setEmail = false;
-
-    private static final String NA = "not available";
     //	AuthorizationService service = new AuthorizationService();
 
     /*
@@ -97,7 +97,7 @@ public class AuthorizationCompleteActivity extends Activity implements UserInfoL
         if (extras != null)
         {
             /*
-			 * Extract the parameters from the bundle provided
+             * Extract the parameters from the bundle provided
 			 */
 
             userinfoUri = extras.getString("userinfoUri");

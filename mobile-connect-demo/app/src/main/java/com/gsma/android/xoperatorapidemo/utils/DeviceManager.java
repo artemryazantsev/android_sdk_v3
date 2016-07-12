@@ -14,13 +14,13 @@ public class DeviceManager
 {
     private static DeviceManager ourInstance = new DeviceManager();
 
+    private DeviceManager()
+    {
+    }
+
     public static DeviceManager getInstance()
     {
         return ourInstance;
-    }
-
-    private DeviceManager()
-    {
     }
 
     public void updatePhoneState(Context context, Handler phoneStatusHandler)

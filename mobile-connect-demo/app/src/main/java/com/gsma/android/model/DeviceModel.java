@@ -6,15 +6,14 @@ package com.gsma.android.model;
  */
 public class DeviceModel
 {
-
     private static DeviceModel ourInstance = new DeviceModel();
+
+    private DeviceModel()
+    {
+    }
 
     public static DeviceModel getInstance()
     {
         return ourInstance;
-    }
-
-    private DeviceModel()
-    {
     }
 }
