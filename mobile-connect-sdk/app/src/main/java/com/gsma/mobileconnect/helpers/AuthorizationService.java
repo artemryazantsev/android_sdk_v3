@@ -78,7 +78,7 @@ public class AuthorizationService extends BaseService
 
     /**
      * This method is called via the redirect from the operator authorization page.
-     * <p/>
+     * <p>
      * The values encoded in the URL are used to obtain an authorization token from the operator.
      *
      * @param config            The config to be used.
@@ -151,13 +151,14 @@ public class AuthorizationService extends BaseService
         }
         catch (final OIDCException ex)
         {
-            Log.e("authorize redirect", ex.getMessage());
+            Log.e("authenticate redirect", ex.getMessage());
             return MobileConnectStatus.error("Failed to obtain a token.",
                                              "Failed to obtain an authentication token from the operator.",
                                              ex);
         }
         catch (final DiscoveryResponseExpiredException ex)
         {
+            Log.e("DiscoveryResExpired", ex.getMessage());
             return MobileConnectStatus.startDiscovery();
         }
     }
@@ -184,7 +185,7 @@ public class AuthorizationService extends BaseService
 
     /**
      * Test whether the state values in the Authorization request and the Authorization response match.
-     * <p/>
+     * <p>
      * States match if both are null or the values equal each other.
      *
      * @param responseState The state contained in the response.
@@ -212,7 +213,7 @@ public class AuthorizationService extends BaseService
 
     /**
      * Handles the process between the MNO and the end user for the end user to
-     * sign in/ authorize the application. The application hands over to the
+     * sign in/ authenticate the application. The application hands over to the
      * browser during the authorization step. On completion the MNO redirects to
      * the application sending the completion information as URL parameters.
      *
@@ -230,36 +231,37 @@ public class AuthorizationService extends BaseService
      * @param response    The information captured in the discovery phase.
      * @throws UnsupportedEncodingException
      */
-    public void authorize(final MobileConnectConfig config,
-                          final String authUri,
-                          final String scopes,
-                          final String redirectUri,
-                          final String state,
-                          final String nonce,
-                          final int maxAge,
-                          final String acrValues,
-                          final Activity activity,
-                          final AuthorizationListener listener,
-                          final DiscoveryResponse response) throws UnsupportedEncodingException
+    @SuppressWarnings("unused")
+    public void authenticate(final MobileConnectConfig config,
+                             final String authUri,
+                             final String scopes,
+                             final String redirectUri,
+                             final String state,
+                             final String nonce,
+                             final int maxAge,
+                             final String acrValues,
+                             final Activity activity,
+                             final AuthorizationListener listener,
+                             final DiscoveryResponse response) throws UnsupportedEncodingException
     {
 
-        authorize(config,
-                  authUri,
-                  scopes,
-                  redirectUri,
-                  state,
-                  nonce,
-                  maxAge,
-                  acrValues,
-                  activity,
-                  listener,
-                  response,
-                  null);
+        authenticate(config,
+                     authUri,
+                     scopes,
+                     redirectUri,
+                     state,
+                     nonce,
+                     maxAge,
+                     acrValues,
+                     activity,
+                     listener,
+                     response,
+                     null);
     }
 
     /**
      * Handles the process between the MNO and the end user for the end user to
-     * sign in/ authorize the application. The application hands over to the
+     * sign in/ authenticate the application. The application hands over to the
      * browser during the authorization step. On completion the MNO redirects to
      * the application sending the completion information as URL parameters.
      *
@@ -278,18 +280,18 @@ public class AuthorizationService extends BaseService
      * @param hmapExtraOptions A HashMap containing additional authorization options
      * @throws UnsupportedEncodingException
      */
-    public void authorize(final MobileConnectConfig config,
-                           String authUri,
-                           final String scopes,
-                           final String redirectUri,
-                           final String state,
-                           final String nonce,
-                           final int maxAge,
-                           final String acrValues,
-                           final Context context,
-                           final AuthorizationListener listener,
-                           final DiscoveryResponse response,
-                           final HashMap<String, Object> hmapExtraOptions) throws UnsupportedEncodingException
+    public void authenticate(final MobileConnectConfig config,
+                             String authUri,
+                             final String scopes,
+                             final String redirectUri,
+                             final String state,
+                             final String nonce,
+                             final int maxAge,
+                             final String acrValues,
+                             final Context context,
+                             final AuthorizationListener listener,
+                             final DiscoveryResponse response,
+                             final HashMap<String, Object> hmapExtraOptions) throws UnsupportedEncodingException
     {
         final JsonNode discoveryResponseWrapper = response.getResponseData();
         final JsonNode discoveryResponseJsonNode = discoveryResponseWrapper.get("response");
@@ -303,7 +305,7 @@ public class AuthorizationService extends BaseService
         }
         catch (final NoFieldException e)
         {
-            Log.e("authorize", e.getMessage());
+            Log.e("authenticate", e.getMessage());
         }
         Log.d(TAG, "clientId = " + clientId);
 
@@ -313,7 +315,7 @@ public class AuthorizationService extends BaseService
         }
         catch (final NoFieldException e)
         {
-            Log.e("authorize", e.getMessage());
+            Log.e("authenticate", e.getMessage());
         }
         Log.d(TAG, "clientSecret = " + clientSecret);
 
@@ -366,8 +368,8 @@ public class AuthorizationService extends BaseService
 
             final RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(context)
                                                                                 .inflate(R.layout.layout_web_view,
-                                                                                   nullParent,
-                                                                                   false);
+                                                                                         nullParent,
+                                                                                         false);
 
             final MobileConnectWebView webView = (MobileConnectWebView) webViewLayout.findViewById(R.id.web_view);
             final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);

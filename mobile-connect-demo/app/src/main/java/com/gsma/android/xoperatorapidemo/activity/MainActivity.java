@@ -392,7 +392,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
                     authorizationService = new AuthorizationService();
 
                     Log.d(TAG, "Starting OpenIDConnect authorization");
-                    authorizationService.authorize(config,
+                    authorizationService.authenticate(config,
                                                    authorizationHref,
                                                    openIDConnectScopes,
                                                    returnUri,
