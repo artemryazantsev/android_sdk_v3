@@ -3,10 +3,14 @@ package com.gsma.android.xoperatorapidemo.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.gsma.android.R;
+import com.gsma.mobileconnect.helpers.RetrieveUserinfoTask;
+import com.gsma.mobileconnect.helpers.UserInfo;
+import com.gsma.mobileconnect.helpers.UserInfoListener;
 
 /*
  * initiate the process of sign-in using the OperatorID API. 
@@ -16,7 +20,7 @@ import com.gsma.android.R;
  * details on using an external browser are not finalised therefore at the moment
  * this uses a WebView
  */
-public class AuthorizationCompleteActivity extends Activity //implements UserInfoListener
+public class AuthorizationCompleteActivity extends Activity implements UserInfoListener
 {
     private static final String TAG = "AuthCompleteActivity";
 
@@ -134,10 +138,10 @@ public class AuthorizationCompleteActivity extends Activity //implements UserInf
             if (authorized)
             {
                 //MobileConnectConfig config,String userinfoUri, String accessToken, UserInfoListener listener
-                //                RetrieveUserinfoTask task = new RetrieveUserinfoTask(userinfoUri, code, clientId,
-                // clientSecret, this);
-                //                task.execute();
+                RetrieveUserinfoTask task = new RetrieveUserinfoTask(userinfoUri, code, clientId, clientSecret, this);
+                task.execute();
             }
+
         }
     }
 
@@ -150,9 +154,9 @@ public class AuthorizationCompleteActivity extends Activity //implements UserInf
         startActivity(intent);
     }
 
-    //    @Override
-    //    public void userReceived(UserInfo userInfo)
-    //    {
-    //        Log.d(TAG, "userInfo" + userInfo);
-    //    }
+    @Override
+    public void userReceived(UserInfo userInfo)
+    {
+        Log.d(TAG, "userInfo" + userInfo);
+    }
 }

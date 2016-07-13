@@ -50,11 +50,11 @@ public class RetrieveUserinfoTask extends AsyncTask<Void, Void, UserInfo>
      * @param secret      Application client secret
      * @param listener    Listener for callbacks
      */
-    public RetrieveUserinfoTask(String userinfoUri,
-                                String accessToken,
-                                String clientId,
-                                String secret,
-                                UserInfoListener listener)
+    public RetrieveUserinfoTask(final String userinfoUri,
+                                final String accessToken,
+                                final String clientId,
+                                final String secret,
+                                final UserInfoListener listener)
     {
         this.userinfoUri = userinfoUri;
         this.accessToken = accessToken;
@@ -66,40 +66,39 @@ public class RetrieveUserinfoTask extends AsyncTask<Void, Void, UserInfo>
     }
 
     @Override
-    protected UserInfo doInBackground(Void... params)
+    protected UserInfo doInBackground(final Void... params)
     {
         JSONObject json = null;
         UserInfo userInfo = null;
 
-        HttpGet httpRequest = new HttpGet(userinfoUri);
+        final HttpGet httpRequest = new HttpGet(this.userinfoUri);
 
         httpRequest.addHeader("Accept", "application/json");
-        httpRequest.addHeader("Authorization", "Bearer " + accessToken);
+        httpRequest.addHeader("Authorization", "Bearer " + this.accessToken);
 
-        URI uri = URI.create(userinfoUri);
+        final URI uri = URI.create(this.userinfoUri);
 
-        HttpParams httpParams = httpRequest.getParams();
+        final HttpParams httpParams = httpRequest.getParams();
         httpParams.setParameter(ClientPNames.HANDLE_REDIRECTS, Boolean.TRUE);
         httpRequest.setParams(httpParams);
 
         try
         {
-            HttpClientContext context = restClient.getHttpClientContext(clientId, secret, uri);
-            RestResponse restResponse = restClient.callRestEndPoint(httpRequest,
-                                                                    context,
-                                                                    3000,
-                                                                    new ArrayList<KeyValuePair>());
+            final HttpClientContext context = this.restClient.getHttpClientContext(this.clientId, this.secret, uri);
+            final RestResponse restResponse = this.restClient.callRestEndPoint(httpRequest,
+                                                                               context,
+                                                                               3000,
+                                                                               new ArrayList<KeyValuePair>());
             if (200 == restResponse.getStatusCode())
             {
-                String response = restResponse.getResponse();
+                final String response = restResponse.getResponse();
                 Log.d(TAG, response);
                 userInfo = AndroidJsonUtils.parseUserInfo(response);
             }
             else
             {
-                Log.d(TAG,
-                      "Non successful response code [" + restResponse.getStatusCode() + "] " +
-                      restResponse.getResponse());
+                Log.d(TAG, "Non successful response code [" + restResponse.getStatusCode() + "] " +
+                           restResponse.getResponse());
             }
 
         }
@@ -111,10 +110,10 @@ public class RetrieveUserinfoTask extends AsyncTask<Void, Void, UserInfo>
     }
 
     @Override
-    protected void onPostExecute(UserInfo userInfo)
+    protected void onPostExecute(final UserInfo userInfo)
     {
         Log.d(TAG, "onPostExecute for " + userInfo);
-        listener.userReceived(userInfo);
+        this.listener.userReceived(userInfo);
     }
 
 }

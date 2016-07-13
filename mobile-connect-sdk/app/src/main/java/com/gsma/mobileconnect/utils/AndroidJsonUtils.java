@@ -17,9 +17,12 @@
 
 package com.gsma.mobileconnect.utils;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.BaseEncoding;
+import com.gsma.mobileconnect.helpers.UserInfo;
 import com.gsma.mobileconnect.oidc.ParsedIdToken;
 import com.gsma.mobileconnect.oidc.RequestTokenResponse;
 import com.gsma.mobileconnect.oidc.RequestTokenResponseData;
@@ -33,9 +36,11 @@ import java.util.Iterator;
  */
 public final class AndroidJsonUtils
 {
+    private static final String TAG = AndroidJsonUtils.class.getSimpleName();
+
     /**
      * Extract an error response from the discovery response if any.
-     * <p/>
+     * <p>
      * A discovery response has an error if the error field is present.
      *
      * @param jsonDoc The discovery response to examine.
@@ -80,7 +85,7 @@ public final class AndroidJsonUtils
 
     /**
      * Parse an Operator Identified Discovery Result.
-     * <p/>
+     * <p>
      * If the discovery result looks like an Operator Identified result a ParsedOperatorIdentifiedDiscoveryResult is
      * returned.
      *
@@ -154,7 +159,7 @@ public final class AndroidJsonUtils
 
     /**
      * Parse the response from a request token call.
-     * <p/>
+     * <p>
      * The json is expected to be either an error or a successful request token response.
      *
      * @param timeReceived The time the response was received, used to timestamp the returned object.
@@ -162,8 +167,8 @@ public final class AndroidJsonUtils
      * @return The parsed response.
      * @throws IOException
      */
-    public static RequestTokenResponse parseRequestTokenResponse(final Calendar timeReceived, final String jsonStr) throws
-                                                                                                        IOException
+    public static RequestTokenResponse parseRequestTokenResponse(final Calendar timeReceived,
+                                                                 final String jsonStr) throws IOException
     {
         final RequestTokenResponse requestTokenResponse = new RequestTokenResponse();
 
@@ -319,7 +324,7 @@ public final class AndroidJsonUtils
 
     /**
      * Return the string value of an optional child node.
-     * <p/>
+     * <p>
      * Check the parent node for the named child, if found return the string contents of the child node, return null
      * otherwise.
      *
@@ -342,7 +347,7 @@ public final class AndroidJsonUtils
 
     /**
      * Return the integer value of an optional child node.
-     * <p/>
+     * <p>
      * Check the parent node for the named child, if found return the integer contents of the child node, return null
      * otherwise.
      *
@@ -365,7 +370,7 @@ public final class AndroidJsonUtils
 
     /**
      * Return the long value of an optional child node.
-     * <p/>
+     * <p>
      * Check the parent node for the named child, if found return the long contents of the child node, return null
      * otherwise.
      *
@@ -386,4 +391,45 @@ public final class AndroidJsonUtils
         }
     }
 
+    /**
+     * Return the ttl field in the Json object.
+     *
+     * @param node The Json object to examine.
+     * @return The ttl value if present, null otherwise.
+     */
+    static public Long getDiscoveryResponseTtl(JsonNode node)
+    {
+        return getOptionalLongValue(node, Constants.TTL_FIELD_NAME);
+    }
+
+    /**
+     * Parse the UserInfo object.
+     *
+     * @param response
+     * @return
+     */
+    public static UserInfo parseUserInfo(String response)
+    {
+        UserInfo userInfo = new UserInfo();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonDoc = null;
+        try
+        {
+            jsonDoc = objectMapper.readTree(response);
+            Log.d(TAG, jsonDoc.asText());
+
+        }
+        catch (IOException e)
+        {
+            Log.e("parseUserInfo", e.getMessage());
+        }
+
+        ErrorResponse errorResponse = getErrorResponse(jsonDoc);
+        if (null != errorResponse)
+        {
+
+            return null;
+        }
+        return userInfo;
+    }
 }
