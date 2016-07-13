@@ -2,6 +2,8 @@ package com.gsma.android.utils;
 
 import android.util.Log;
 
+import com.gsma.mobileconnect.utils.KeyValuePair;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -205,13 +207,13 @@ public class ParameterList
         return buffer.toString();
     }
 
-    public void loadKeyValuesFromUrl(String url, int start)
+    public void loadKeyValuesFromUrl(final String url, final int start)
     {
-        String[] urlParts = url.split("[\\?\\&]");
+        final String[] urlParts = url.split("[\\?&]");
         for (int i = start; i < urlParts.length; i++)
         {
-            String part = urlParts[i];
-            String[] kv = part.split("=", 2);
+            final String part = urlParts[i];
+            final String[] kv = part.split("=", 2);
             if (kv.length == 2)
             {
                 String key = kv[0];
