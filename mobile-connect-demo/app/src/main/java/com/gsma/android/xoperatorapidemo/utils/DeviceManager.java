@@ -10,19 +10,23 @@ import com.gsma.android.R;
 /**
  * Created by Michael.Holmes on 22/02/2016.
  */
-public class DeviceManager {
-    private static DeviceManager ourInstance = new DeviceManager();
+public class DeviceManager
+{
+    private static final DeviceManager ourInstance = new DeviceManager();
 
-    public static DeviceManager getInstance() {
+    private DeviceManager()
+    {
+    }
+
+    public static DeviceManager getInstance()
+    {
         return ourInstance;
     }
 
-    private DeviceManager() {
-    }
-
-    public void updatePhoneState(Context context, Handler phoneStatusHandler){
-        TelephonyManager telephonyManager=(TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        ConnectivityManager connectivityManager=(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    public void updatePhoneState(Context context, Handler phoneStatusHandler)
+    {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         PhoneState state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
 
@@ -33,11 +37,16 @@ public class DeviceManager {
         boolean roaming = state.isRoaming(); // Is the device roaming
 
         int status = R.string.statusDisconnected;
-        if (roaming) {
+        if (roaming)
+        {
             status = R.string.statusRoaming;
-        } else if (usingMobileData) {
+        }
+        else if (usingMobileData)
+        {
             status = R.string.statusOnNet;
-        } else if (connected) {
+        }
+        else if (connected)
+        {
             status = R.string.statusOffNet;
         }
         phoneStatusHandler.sendEmptyMessage(status);

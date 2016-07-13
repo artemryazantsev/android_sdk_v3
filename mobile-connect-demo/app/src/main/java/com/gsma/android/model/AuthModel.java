@@ -7,19 +7,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AuthModel
 {
+    private static final AuthModel ourInstance = new AuthModel();
+
     private AtomicBoolean authInProgress;
 
     private String token;
 
-    private static AuthModel ourInstance = new AuthModel();
+    private AuthModel()
+    {
+    }
 
-    public static AuthModel getInstance() {
+    public static AuthModel getInstance()
+    {
         return ourInstance;
     }
-
-    private AuthModel() {
-    }
-
-
 
 }

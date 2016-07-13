@@ -8,6 +8,7 @@ import com.gsma.mobileconnect.utils.HttpUtils;
 import com.gsma.mobileconnect.utils.RestClient;
 import com.gsma.mobileconnect.utils.ValidationUtils;
 
+import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.net.URI;
@@ -19,29 +20,39 @@ import java.util.List;
  * but overrides code that is incompatible with Android.
  * Created by nick.copley on 26/02/2016.
  */
-public class AndroidDiscoveryImpl extends DiscoveryImpl implements IDiscovery{
+public class AndroidDiscoveryImpl extends DiscoveryImpl implements IDiscovery
+{
 
-    public AndroidDiscoveryImpl(IDiscoveryCache discoveryCache, RestClient restClient) {
+    public AndroidDiscoveryImpl(final IDiscoveryCache discoveryCache, final RestClient restClient)
+    {
         super(discoveryCache, restClient);
     }
 
     @Override
-    public void parseDiscoveryRedirect(String redirectURL, IParsedDiscoveryRedirectCallback callback) throws URISyntaxException {
+    public void parseDiscoveryRedirect(final String redirectURL, final IParsedDiscoveryRedirectCallback callback) throws
+                                                                                                                  URISyntaxException
+    {
         ValidationUtils.validateParameter(redirectURL, "redirectURL");
         ValidationUtils.validateParameter(callback, "callback");
-        URI uri = new URI(redirectURL);
-        String query = uri.getQuery();
-        if(query == null) {
+        final URI uri = new URI(redirectURL);
+        final String query = uri.getQuery();
+        if (query == null)
+        {
             callback.completed(new ParsedDiscoveryRedirect(null, null, null));
-        } else {
-            List parameters = URLEncodedUtils.parse(uri, "UTF-8");
-            String mcc_mnc = HttpUtils.getParameterValue(parameters, "mcc_mnc");
-            String subscriber_id = HttpUtils.getParameterValue(parameters, "subscriber_id");
+        }
+        else
+        {
+            final List<NameValuePair> parameters = URLEncodedUtils.parse(uri, "UTF-8");
+
+            final String mcc_mnc = HttpUtils.getParameterValue(parameters, "mcc_mnc");
+            final String subscriber_id = HttpUtils.getParameterValue(parameters, "subscriber_id");
             String mcc = null;
             String mnc = null;
-            if(mcc_mnc != null) {
-                String[] parts = mcc_mnc.split("_");
-                if(parts.length == 2) {
+            if (mcc_mnc != null)
+            {
+                final String[] parts = mcc_mnc.split("_");
+                if (parts.length == 2)
+                {
                     mcc = parts[0];
                     mnc = parts[1];
                 }

@@ -19,7 +19,6 @@ package com.gsma.mobileconnect.helpers;
 
 import com.gsma.mobileconnect.discovery.CompleteSelectedOperatorDiscoveryOptions;
 import com.gsma.mobileconnect.discovery.DiscoveryOptions;
-import com.gsma.mobileconnect.discovery.IPreferences;
 import com.gsma.mobileconnect.oidc.AuthenticationOptions;
 import com.gsma.mobileconnect.oidc.TokenOptions;
 
@@ -39,18 +38,18 @@ public class MobileConnectConfigTest
     public void getDiscoveryOptions_allValuesSetInConfig_allValuesShouldBePopulated()
     {
         // GIVEN
-        String localClientIP = "10.0.0.1";
-        String specifiedClientIP = "127.0.0.1";
-        String identifiedClientIP = "127.0.0.2";
-        String identifiedMCC = "901";
-        String identifiedMNC = "01";
-        int timeout = 40;
-        boolean manuallySelect = true;
-        boolean cookiesEnabled = false;
-        boolean usingMobileData = true;
-        boolean shouldClientIPBeAddedToDiscoveryRequest = true;
+        final String localClientIP = "10.0.0.1";
+        final String specifiedClientIP = "127.0.0.1";
+        final String identifiedClientIP = "127.0.0.2";
+        final String identifiedMCC = "901";
+        final String identifiedMNC = "01";
+        final int timeout = 40;
+        final boolean manuallySelect = true;
+        final boolean cookiesEnabled = false;
+        final boolean usingMobileData = true;
+        final boolean shouldClientIPBeAddedToDiscoveryRequest = true;
 
-        MobileConnectConfig config = new MobileConnectConfig();
+        final MobileConnectConfig config = new MobileConnectConfig();
         config.setLocalClientIP(localClientIP);
         config.setClientIP(specifiedClientIP);
         config.setIdentifiedMCC(identifiedMCC);
@@ -62,7 +61,7 @@ public class MobileConnectConfigTest
         config.setShouldClientIPBeAddedToDiscoveryRequest(shouldClientIPBeAddedToDiscoveryRequest);
 
         // WHEN
-        DiscoveryOptions discoveryOptions = config.getDiscoveryOptions(identifiedClientIP);
+        final DiscoveryOptions discoveryOptions = config.getDiscoveryOptions(identifiedClientIP);
 
         //THEN
         assertEquals(localClientIP, discoveryOptions.getLocalClientIP());
@@ -79,12 +78,12 @@ public class MobileConnectConfigTest
     public void getDiscoveryOptions_noValuesSetInConfig_onlyDefaultValuesSet()
     {
         // GIVEN
-        String identifiedClientIP = "127.0.0.2";
-        int defaultTimeout = 30000;
+        final String identifiedClientIP = "127.0.0.2";
+        final int defaultTimeout = 30000;
 
-        MobileConnectConfig config = new MobileConnectConfig();
+        final MobileConnectConfig config = new MobileConnectConfig();
         // WHEN
-        DiscoveryOptions discoveryOptions = config.getDiscoveryOptions(identifiedClientIP);
+        final DiscoveryOptions discoveryOptions = config.getDiscoveryOptions(identifiedClientIP);
 
         //THEN
         assertNull(discoveryOptions.getLocalClientIP());
@@ -101,14 +100,14 @@ public class MobileConnectConfigTest
     public void getDiscoveryOptions_setClientIPShouldBeAddedToDiscoveryRequest_shouldAddIdentifiedClientIP()
     {
         // GIVEN
-        String identifiedClientIP = "127.0.0.2";
-        boolean shouldClientIPBeAddedToDiscoveryRequest = true;
+        final String identifiedClientIP = "127.0.0.2";
+        final boolean shouldClientIPBeAddedToDiscoveryRequest = true;
 
-        MobileConnectConfig config = new MobileConnectConfig();
+        final MobileConnectConfig config = new MobileConnectConfig();
         config.setShouldClientIPBeAddedToDiscoveryRequest(shouldClientIPBeAddedToDiscoveryRequest);
 
         // WHEN
-        DiscoveryOptions discoveryOptions = config.getDiscoveryOptions(identifiedClientIP);
+        final DiscoveryOptions discoveryOptions = config.getDiscoveryOptions(identifiedClientIP);
 
         //THEN
         assertEquals(identifiedClientIP, discoveryOptions.getClientIP());
@@ -118,36 +117,33 @@ public class MobileConnectConfigTest
     public void shouldProvideIPreferences()
     {
         // GIVEN
-        String clientId = "CLIENT_ID";
-        String clientSecret = "CLIENT_SECRET";
-        String discoveryURL = "DISCOVERY_URL";
+        final String clientId = "CLIENT_ID";
+        final String clientSecret = "CLIENT_SECRET";
+        final String discoveryURL = "DISCOVERY_URL";
 
-        MobileConnectConfig config = new MobileConnectConfig();
+        final MobileConnectConfig config = new MobileConnectConfig();
         config.setClientId(clientId);
         config.setClientSecret(clientSecret);
         config.setDiscoveryURL(discoveryURL);
 
-        // WHEN
-        IPreferences preferences = config;
-
         // THEN
-        assertEquals(clientId, preferences.getClientId());
-        assertEquals(clientSecret, preferences.getClientSecret());
-        assertEquals(discoveryURL, preferences.getDiscoveryURL());
+        assertEquals(clientId, config.getClientId());
+        assertEquals(clientSecret, config.getClientSecret());
+        assertEquals(discoveryURL, config.getDiscoveryURL());
     }
 
     @Test
     public void getCompleteSelectedOperatorDiscoveryOptions_allValuesSetInConfig_allValuesShouldBePopulated()
     {
         // GIVEN
-        boolean cookiesEnabled = false;
-        int timeout = 50;
-        MobileConnectConfig config = new MobileConnectConfig();
+        final boolean cookiesEnabled = false;
+        final int timeout = 50;
+        final MobileConnectConfig config = new MobileConnectConfig();
         config.setCookiesEnabled(cookiesEnabled);
         config.setNetworkTimeout(timeout);
 
         // WHEN
-        CompleteSelectedOperatorDiscoveryOptions options = config.getCompleteSelectedOperatorDiscoveryOptions();
+        final CompleteSelectedOperatorDiscoveryOptions options = config.getCompleteSelectedOperatorDiscoveryOptions();
 
         // THEN
         assertEquals(cookiesEnabled, options.isCookiesEnabled());
@@ -158,11 +154,11 @@ public class MobileConnectConfigTest
     public void getCompleteSelectedOperatorDiscoveryOptions_noValuesSetInConfig_onlyDefaultValuesSet()
     {
         // GIVEN
-        int defaultTimeout = 30000;
-        MobileConnectConfig config = new MobileConnectConfig();
+        final int defaultTimeout = 30000;
+        final MobileConnectConfig config = new MobileConnectConfig();
 
         // WHEN
-        CompleteSelectedOperatorDiscoveryOptions options = config.getCompleteSelectedOperatorDiscoveryOptions();
+        final CompleteSelectedOperatorDiscoveryOptions options = config.getCompleteSelectedOperatorDiscoveryOptions();
 
         // THEN
         assertTrue(options.isCookiesEnabled());
@@ -173,16 +169,16 @@ public class MobileConnectConfigTest
     public void getAuthenticationOptions_withAllValuesSetInConfig_allValuesShouldBePopulated()
     {
         // GIVEN
-        int timeout = 50;
-        String claimsLocales = "CLAIMS-LOCALES";
-        String display = "DISPLAY";
-        String dtbs = "DTBS";
-        String idTokenHint = "ID-TOKEN-HINT";
-        String loginHint = "LOGIN-HINT";
-        String prompt = "PROMPT";
-        String screenMode = "SCREEN-MODE";
-        String uiLocales = "UI-LOCALES";
-        MobileConnectConfig config = new MobileConnectConfig();
+        final int timeout = 50;
+        final String claimsLocales = "CLAIMS-LOCALES";
+        final String display = "DISPLAY";
+        final String dtbs = "DTBS";
+        final String idTokenHint = "ID-TOKEN-HINT";
+        final String loginHint = "LOGIN-HINT";
+        final String prompt = "PROMPT";
+        final String screenMode = "SCREEN-MODE";
+        final String uiLocales = "UI-LOCALES";
+        final MobileConnectConfig config = new MobileConnectConfig();
         config.setAuthorizationTimeout(timeout);
         config.setClaimsLocales(claimsLocales);
         config.setDisplay(display);
@@ -194,7 +190,7 @@ public class MobileConnectConfigTest
         config.setUiLocales(uiLocales);
 
         // WHEN
-        AuthenticationOptions options = config.getAuthenticationOptions();
+        final AuthenticationOptions options = config.getAuthenticationOptions();
 
         // THEN
         assertEquals(timeout, options.getTimeout());
@@ -212,13 +208,13 @@ public class MobileConnectConfigTest
     public void getAuthenticationOptions_withNoValuesSetInConfig_onlyDefaultValuesSet()
     {
         // GIVEN
-        int defaultTimeout = 300000;
-        String defaultDisplay = "page";
-        String defaultScreenMode = "overlay";
-        MobileConnectConfig config = new MobileConnectConfig();
+        final int defaultTimeout = 300000;
+        final String defaultDisplay = "page";
+        final String defaultScreenMode = "overlay";
+        final MobileConnectConfig config = new MobileConnectConfig();
 
         // WHEN
-        AuthenticationOptions options = config.getAuthenticationOptions();
+        final AuthenticationOptions options = config.getAuthenticationOptions();
 
         // THEN
         assertEquals(defaultTimeout, options.getTimeout());
@@ -236,14 +232,14 @@ public class MobileConnectConfigTest
     public void getTokenOptions_withAllValuesSetInConfig_allValuesShouldBePopulated()
     {
         // GIVEN
-        int timeout = 50;
-        boolean idTokenValidationRequired = false;
-        MobileConnectConfig config = new MobileConnectConfig();
+        final int timeout = 50;
+        final boolean idTokenValidationRequired = false;
+        final MobileConnectConfig config = new MobileConnectConfig();
         config.setNetworkTimeout(timeout);
         config.setIdTokenValidationRequired(idTokenValidationRequired);
 
         // WHEN
-        TokenOptions options = config.getTokenOptions();
+        final TokenOptions options = config.getTokenOptions();
 
         // THEN
         assertEquals(timeout, options.getTimeout());
@@ -254,12 +250,12 @@ public class MobileConnectConfigTest
     public void getTokenOptions_withNoValuesSetInConfig_onlyDefaultValuesSet()
     {
         // GIVEN
-        int defaultTimeout = 30000;
-        boolean defaultCheckIdTokenSignature = true;
-        MobileConnectConfig config = new MobileConnectConfig();
+        final int defaultTimeout = 30000;
+        final boolean defaultCheckIdTokenSignature = true;
+        final MobileConnectConfig config = new MobileConnectConfig();
 
         // WHEN
-        TokenOptions options = config.getTokenOptions();
+        final TokenOptions options = config.getTokenOptions();
 
         // THEN
         assertEquals(defaultTimeout, options.getTimeout());

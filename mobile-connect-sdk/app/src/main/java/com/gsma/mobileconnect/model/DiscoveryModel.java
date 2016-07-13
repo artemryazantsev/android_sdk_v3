@@ -3,13 +3,15 @@ package com.gsma.mobileconnect.model;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ * The Model object of the Discovery
+ * <p/>
  * Created by nick.copley on 19/02/2016.
  */
-public class DiscoveryModel {
-
+public class DiscoveryModel
+{
     private AtomicBoolean discoveryInProgress;
 
-    private static DiscoveryModel ourInstance = new DiscoveryModel();
+    private static final DiscoveryModel ourInstance = new DiscoveryModel();
 
     private String mcc;
 
@@ -17,46 +19,55 @@ public class DiscoveryModel {
 
     private String discoveryServiceRedirectedURL;
 
-    private String encryptedMSISDN=null;
+    private String encryptedMSISDN = null;
 
-    public static DiscoveryModel getInstance() {
+    public static DiscoveryModel getInstance()
+    {
         return ourInstance;
     }
 
-    private DiscoveryModel() {
+    private DiscoveryModel()
+    {
     }
 
-    public String getMcc() {
-        return mcc;
+    public String getMcc()
+    {
+        return this.mcc;
     }
 
-    public void setMcc(String mcc) {
+    public void setMcc(final String mcc)
+    {
         this.mcc = mcc;
     }
 
-    public String getMnc() {
-        return mnc;
+    public String getMnc()
+    {
+        return this.mnc;
     }
 
-    public void setMnc(String mnc) {
+    public void setMnc(final String mnc)
+    {
         this.mnc = mnc;
     }
 
-    public String getDiscoveryServiceRedirectedURL() {
-        return discoveryServiceRedirectedURL;
+    public String getDiscoveryServiceRedirectedURL()
+    {
+        return this.discoveryServiceRedirectedURL;
     }
 
-    public void setDiscoveryServiceRedirectedURL(String discoveryServiceRedirectedURL) {
+    public void setDiscoveryServiceRedirectedURL(final String discoveryServiceRedirectedURL)
+    {
         this.discoveryServiceRedirectedURL = discoveryServiceRedirectedURL;
     }
 
-    public String getEncryptedMSISDN() {
-        return encryptedMSISDN;
+    public String getEncryptedMSISDN()
+    {
+        return this.encryptedMSISDN;
     }
 
-    public void setEncryptedMSISDN(String encryptedMSISDN) {
+    public void setEncryptedMSISDN(final String encryptedMSISDN)
+    {
         this.encryptedMSISDN = encryptedMSISDN;
     }
-
 
 }

@@ -21,7 +21,6 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.MissingNode;
 import com.google.common.io.BaseEncoding;
 import com.gsma.mobileconnect.helpers.UserInfo;
 import com.gsma.mobileconnect.oidc.ParsedIdToken;
@@ -35,67 +34,30 @@ import java.util.Iterator;
 /**
  * Class to hold Json utility functions.
  */
-public class AndroidJsonUtils
+public final class AndroidJsonUtils
 {
-    private static final String TAG = AndroidJsonUtils.class.getName();
-
-    /**
-     * Extract the requested URL from the Operator Not Identified Discovery response.
-     *
-     * @param jsonDoc   The json object to check.
-     * @param relToFind The URL to find.
-     * @return The requested URL if present, null otherwise.
-     */
-    public static String extractUrl(JsonNode jsonDoc, String relToFind)
-    {
-        if (null == jsonDoc)
-        {
-            throw new IllegalArgumentException("Missing argument jsonDoc");
-        }
-        if (null == relToFind)
-        {
-            throw new IllegalArgumentException("Missing argument relToFind");
-        }
-
-        JsonNode linksNode = jsonDoc.get(Constants.LINKS_FIELD_NAME);
-        if (null == linksNode)
-        {
-            return null;
-        }
-
-        Iterator<JsonNode> i = linksNode.elements();
-        while (i.hasNext())
-        {
-            JsonNode node = i.next();
-            String rel = getOptionalStringValue(node, Constants.REL_FIELD_NAME);
-            if (relToFind.equals(rel))
-            {
-                return getOptionalStringValue(node, Constants.HREF_FIELD_NAME);
-            }
-        }
-        return null;
-    }
+    private static final String TAG = AndroidJsonUtils.class.getSimpleName();
 
     /**
      * Extract an error response from the discovery response if any.
-     * <p/>
+     * <p>
      * A discovery response has an error if the error field is present.
      *
      * @param jsonDoc The discovery response to examine.
      * @return The error response if present, null otherwise.
      */
-    public static ErrorResponse getErrorResponse(JsonNode jsonDoc)
+    private static ErrorResponse getErrorResponse(final JsonNode jsonDoc)
     {
         if (null == jsonDoc)
         {
             throw new IllegalArgumentException("Missing argument jsonDoc");
         }
 
-        String error = getOptionalStringValue(jsonDoc, Constants.ERROR_NAME);
+        final String error = getOptionalStringValue(jsonDoc, Constants.ERROR_NAME);
         String errorDescription = getOptionalStringValue(jsonDoc, Constants.ERROR_DESCRIPTION_NAME);
         // Sometimes "description" rather than "error_description" is seen
-        String altErrorDescription = getOptionalStringValue(jsonDoc, Constants.ERROR_DESCRIPTION_ALT_NAME);
-        String errorUri = getOptionalStringValue(jsonDoc, Constants.ERROR_URI_NAME);
+        final String altErrorDescription = getOptionalStringValue(jsonDoc, Constants.ERROR_DESCRIPTION_ALT_NAME);
+        final String errorUri = getOptionalStringValue(jsonDoc, Constants.ERROR_URI_NAME);
 
         if (StringUtils.isNullOrEmpty(error))
         {
@@ -114,7 +76,7 @@ public class AndroidJsonUtils
             }
         }
 
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.set_error(error);
         errorResponse.set_error_description(errorDescription);
         errorResponse.set_error_uri(errorUri);
@@ -122,39 +84,15 @@ public class AndroidJsonUtils
     }
 
     /**
-     * Parse the string into a Jackson Tree
-     * <p/>
-     * Returns a missing node if the string is empty.
-     *
-     * @param jsonStr The Json string to parse.
-     * @return The Jackson Json Tree
-     * @throws IOException
-     */
-    public static JsonNode parseJson(String jsonStr) throws IOException
-    {
-        if (StringUtils.isNullOrEmpty(jsonStr))
-        {
-            return MissingNode.getInstance();
-        }
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode root = objectMapper.readTree(jsonStr);
-        if (null == root)
-        {
-            return MissingNode.getInstance();
-        }
-        return root;
-    }
-
-    /**
      * Parse an Operator Identified Discovery Result.
-     * <p/>
+     * <p>
      * If the discovery result looks like an Operator Identified result a ParsedOperatorIdentifiedDiscoveryResult is
      * returned.
      *
      * @param jsonDoc The discovery result to examine.
      * @return The parsed operator discovery result or null.
      */
-    public static ParsedOperatorIdentifiedDiscoveryResult parseOperatorIdentifiedDiscoveryResult(JsonNode jsonDoc)
+    public static ParsedOperatorIdentifiedDiscoveryResult parseOperatorIdentifiedDiscoveryResult(final JsonNode jsonDoc)
     {
         if (null == jsonDoc)
         {
@@ -163,9 +101,9 @@ public class AndroidJsonUtils
 
         try
         {
-            ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = new
+            final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = new
                     ParsedOperatorIdentifiedDiscoveryResult();
-            JsonNode responseNode = getExpectedNode(jsonDoc, Constants.RESPONSE_FIELD_NAME);
+            final JsonNode responseNode = getExpectedNode(jsonDoc, Constants.RESPONSE_FIELD_NAME);
 
             parsedOperatorIdentifiedDiscoveryResult.setClientId(getExpectedStringValue(responseNode,
                                                                                        Constants.CLIENT_ID_FIELD_NAME));
@@ -173,19 +111,19 @@ public class AndroidJsonUtils
                                                                                            Constants
                                                                                                    .CLIENT_SECRET_FIELD_NAME));
 
-            JsonNode linkNode = responseNode.path(Constants.APIS_FIELD_NAME)
-                                            .path(Constants.OPERATORID_FIELD_NAME)
-                                            .path(Constants.LINK_FIELD_NAME);
+            final JsonNode linkNode = responseNode.path(Constants.APIS_FIELD_NAME)
+                                                  .path(Constants.OPERATORID_FIELD_NAME)
+                                                  .path(Constants.LINK_FIELD_NAME);
             if (linkNode.isMissingNode())
             {
                 return null;
             }
 
-            Iterator<JsonNode> i = linkNode.elements();
+            final Iterator<JsonNode> i = linkNode.elements();
             while (i.hasNext())
             {
-                JsonNode node = i.next();
-                String rel = getExpectedStringValue(node, Constants.REL_FIELD_NAME);
+                final JsonNode node = i.next();
+                final String rel = getExpectedStringValue(node, Constants.REL_FIELD_NAME);
                 if (Constants.AUTHORIZATION_REL.equals(rel))
                 {
                     parsedOperatorIdentifiedDiscoveryResult.setAuthorizationHref(getExpectedStringValue(node,
@@ -213,7 +151,7 @@ public class AndroidJsonUtils
             }
             return parsedOperatorIdentifiedDiscoveryResult;
         }
-        catch (NoFieldException ex)
+        catch (final NoFieldException ex)
         {
             return null;
         }
@@ -221,7 +159,7 @@ public class AndroidJsonUtils
 
     /**
      * Parse the response from a request token call.
-     * <p/>
+     * <p>
      * The json is expected to be either an error or a successful request token response.
      *
      * @param timeReceived The time the response was received, used to timestamp the returned object.
@@ -229,22 +167,22 @@ public class AndroidJsonUtils
      * @return The parsed response.
      * @throws IOException
      */
-    public static RequestTokenResponse parseRequestTokenResponse(Calendar timeReceived, String jsonStr) throws
-                                                                                                        IOException
+    public static RequestTokenResponse parseRequestTokenResponse(final Calendar timeReceived,
+                                                                 final String jsonStr) throws IOException
     {
-        RequestTokenResponse requestTokenResponse = new RequestTokenResponse();
+        final RequestTokenResponse requestTokenResponse = new RequestTokenResponse();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonDoc = objectMapper.readTree(jsonStr);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final JsonNode jsonDoc = objectMapper.readTree(jsonStr);
 
-        ErrorResponse errorResponse = getErrorResponse(jsonDoc);
+        final ErrorResponse errorResponse = getErrorResponse(jsonDoc);
         if (null != errorResponse)
         {
             requestTokenResponse.setErrorResponse(getErrorResponse(jsonDoc));
             return requestTokenResponse;
         }
 
-        RequestTokenResponseData responseData = new RequestTokenResponseData();
+        final RequestTokenResponseData responseData = new RequestTokenResponseData();
         requestTokenResponse.setResponseData(responseData);
 
         responseData.setTimeReceived(timeReceived);
@@ -253,12 +191,12 @@ public class AndroidJsonUtils
         responseData.set_access_token(getOptionalStringValue(jsonDoc, Constants.ACCESS_TOKEN_FIELD_NAME));
         responseData.set_token_type(getOptionalStringValue(jsonDoc, Constants.TOKEN_TYPE_FIELD_NAME));
         responseData.set_refresh_token(getOptionalStringValue(jsonDoc, Constants.REFRESH_TOKEN_FIELD_NAME));
-        Integer expiresIn = getOptionalIntegerValue(jsonDoc, Constants.EXPIRES_IN_FIELD_NAME);
+        final Integer expiresIn = getOptionalIntegerValue(jsonDoc, Constants.EXPIRES_IN_FIELD_NAME);
         responseData.set_expires_in(expiresIn);
-        String idTokenStr = getOptionalStringValue(jsonDoc, Constants.ID_TOKEN_FIELD_NAME);
+        final String idTokenStr = getOptionalStringValue(jsonDoc, Constants.ID_TOKEN_FIELD_NAME);
         if (!StringUtils.isNullOrEmpty(idTokenStr))
         {
-            ParsedIdToken parsedIdToken = createParsedIdToken(idTokenStr);
+            final ParsedIdToken parsedIdToken = createParsedIdToken(idTokenStr);
             responseData.setParsedIdToken(parsedIdToken);
         }
         return requestTokenResponse;
@@ -271,11 +209,11 @@ public class AndroidJsonUtils
      * @return A ParsedIdToken.
      * @throws IOException
      */
-    public static ParsedIdToken createParsedIdToken(String idTokenStr) throws IOException
+    public static ParsedIdToken createParsedIdToken(final String idTokenStr) throws IOException
     {
-        IdToken idToken = parseIdToken(idTokenStr);
+        final IdToken idToken = parseIdToken(idTokenStr);
 
-        ParsedIdToken parsedIdToken = new ParsedIdToken();
+        final ParsedIdToken parsedIdToken = new ParsedIdToken();
         parsedIdToken.set_id_token(idTokenStr);
         parsedIdToken.set_pcr(idToken.getPayload().get_sub());
         parsedIdToken.set_nonce(idToken.getPayload().get_nonce());
@@ -292,18 +230,18 @@ public class AndroidJsonUtils
      * @return An IdToken.
      * @throws IOException
      */
-    private static IdToken parseIdToken(String idToken) throws IOException
+    private static IdToken parseIdToken(final String idToken) throws IOException
     {
-        String[] parts = idToken.split("\\.");
+        final String[] parts = idToken.split("\\.");
         if (parts.length != 3)
         {
             throw new IllegalArgumentException("Not an id_token");
         }
 
-        String header = new String(BaseEncoding.base64().decode(parts[0]), "UTF-8");
-        String payload = new String(BaseEncoding.base64().decode(parts[1]), "UTF-8");
+        final String header = new String(BaseEncoding.base64().decode(parts[0]), "UTF-8");
+        final String payload = new String(BaseEncoding.base64().decode(parts[1]), "UTF-8");
 
-        IdToken parsedIdToken = new IdToken();
+        final IdToken parsedIdToken = new IdToken();
         parsedIdToken.setHeader(createJwtHeader(header));
         parsedIdToken.setPayload(createJwtPayload(payload));
         parsedIdToken.setSignature(parts[2]);
@@ -318,12 +256,12 @@ public class AndroidJsonUtils
      * @return A Jwt header.
      * @throws IOException
      */
-    static private JwtHeader createJwtHeader(String header) throws IOException
+    static private JwtHeader createJwtHeader(final String header) throws IOException
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonDoc = objectMapper.readTree(header);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final JsonNode jsonDoc = objectMapper.readTree(header);
 
-        JwtHeader parsedJwtHeader = new JwtHeader();
+        final JwtHeader parsedJwtHeader = new JwtHeader();
         parsedJwtHeader.set_typ(getOptionalStringValue(jsonDoc, Constants.TYP_FIELD_NAME));
         parsedJwtHeader.set_alg(getOptionalStringValue(jsonDoc, Constants.ALG_FIELD_NAME));
 
@@ -337,12 +275,12 @@ public class AndroidJsonUtils
      * @return A JwtPayload.
      * @throws IOException
      */
-    static private JwtPayload createJwtPayload(String payload) throws IOException
+    static private JwtPayload createJwtPayload(final String payload) throws IOException
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonDoc = objectMapper.readTree(payload);
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final JsonNode jsonDoc = objectMapper.readTree(payload);
 
-        JwtPayload parsedJwtPayload = new JwtPayload();
+        final JwtPayload parsedJwtPayload = new JwtPayload();
         parsedJwtPayload.setClaims(jsonDoc);
 
         return parsedJwtPayload;
@@ -356,9 +294,9 @@ public class AndroidJsonUtils
      * @return The child node if found.
      * @throws NoFieldException Thrown if field not found.
      */
-    public static JsonNode getExpectedNode(JsonNode parentNode, String name) throws NoFieldException
+    private static JsonNode getExpectedNode(final JsonNode parentNode, final String name) throws NoFieldException
     {
-        JsonNode childNode = parentNode.get(name);
+        final JsonNode childNode = parentNode.get(name);
         if (null == childNode)
         {
             throw new NoFieldException(name);
@@ -374,9 +312,9 @@ public class AndroidJsonUtils
      * @return The text value of the child node.
      * @throws NoFieldException Thrown if field not found.
      */
-    public static String getExpectedStringValue(JsonNode parentNode, String name) throws NoFieldException
+    public static String getExpectedStringValue(final JsonNode parentNode, final String name) throws NoFieldException
     {
-        JsonNode childNode = parentNode.get(name);
+        final JsonNode childNode = parentNode.get(name);
         if (null == childNode)
         {
             throw new NoFieldException(name);
@@ -386,7 +324,7 @@ public class AndroidJsonUtils
 
     /**
      * Return the string value of an optional child node.
-     * <p/>
+     * <p>
      * Check the parent node for the named child, if found return the string contents of the child node, return null
      * otherwise.
      *
@@ -394,9 +332,9 @@ public class AndroidJsonUtils
      * @param name       Name of the optional child node.
      * @return Text value of child node, if found, null otherwise.
      */
-    public static String getOptionalStringValue(JsonNode parentNode, String name)
+    private static String getOptionalStringValue(final JsonNode parentNode, final String name)
     {
-        JsonNode childNode = parentNode.get(name);
+        final JsonNode childNode = parentNode.get(name);
         if (null == childNode)
         {
             return null;
@@ -409,7 +347,7 @@ public class AndroidJsonUtils
 
     /**
      * Return the integer value of an optional child node.
-     * <p/>
+     * <p>
      * Check the parent node for the named child, if found return the integer contents of the child node, return null
      * otherwise.
      *
@@ -417,9 +355,9 @@ public class AndroidJsonUtils
      * @param name       The name of the optional child.
      * @return Integer value of the child node if present, null otherwise.
      */
-    public static Integer getOptionalIntegerValue(JsonNode parentNode, String name)
+    private static Integer getOptionalIntegerValue(final JsonNode parentNode, final String name)
     {
-        JsonNode childNode = parentNode.get(name);
+        final JsonNode childNode = parentNode.get(name);
         if (null == childNode)
         {
             return null;
@@ -432,7 +370,7 @@ public class AndroidJsonUtils
 
     /**
      * Return the long value of an optional child node.
-     * <p/>
+     * <p>
      * Check the parent node for the named child, if found return the long contents of the child node, return null
      * otherwise.
      *
@@ -440,9 +378,9 @@ public class AndroidJsonUtils
      * @param name       The name of the optional child.
      * @return Long value of the child node if present, null otherwise.
      */
-    public static Long getOptionalLongValue(JsonNode parentNode, String name)
+    private static Long getOptionalLongValue(final JsonNode parentNode, final String name)
     {
-        JsonNode childNode = parentNode.get(name);
+        final JsonNode childNode = parentNode.get(name);
         if (null == childNode)
         {
             return null;

@@ -6,6 +6,5 @@ package com.gsma.mobileconnect.helpers;
  */
 public interface UserInfoListener
 {
-
     void userReceived(UserInfo userInfo);
 }

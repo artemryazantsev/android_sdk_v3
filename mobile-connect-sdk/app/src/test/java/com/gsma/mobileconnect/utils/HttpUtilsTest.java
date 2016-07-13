@@ -19,11 +19,13 @@ package com.gsma.mobileconnect.utils;
 
 import org.apache.http.NameValuePair;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HttpUtilsTest
 {
@@ -31,25 +33,25 @@ public class HttpUtilsTest
     public void getCookiesToProxy_withCookiesEnabled_shouldFilterCookies()
     {
         // GIVEN
-        List<KeyValuePair> currentCookies = new ArrayList<KeyValuePair>(5);
-        List<KeyValuePair> expectedCookies = new ArrayList<KeyValuePair>(3);
+        final List<KeyValuePair> currentCookies = new ArrayList<>(5);
+        final List<KeyValuePair> expectedCookies = new ArrayList<>(3);
 
         KeyValuePair kvp = new KeyValuePair("key1", "value");
         currentCookies.add(kvp);
-        kvp = new KeyValuePair( "Most-Recent-Selected-Operator-Expiry", "value");
+        kvp = new KeyValuePair("Most-Recent-Selected-Operator-Expiry", "value");
         currentCookies.add(kvp);
         expectedCookies.add(kvp);
-        kvp = new KeyValuePair( "Most-Recent-Selected-Operator", "value");
+        kvp = new KeyValuePair("Most-Recent-Selected-Operator", "value");
         currentCookies.add(kvp);
         expectedCookies.add(kvp);
-        kvp = new KeyValuePair( "Enum-Nonce", "value");
+        kvp = new KeyValuePair("Enum-Nonce", "value");
         currentCookies.add(kvp);
         expectedCookies.add(kvp);
         kvp = new KeyValuePair("key2", "value");
         currentCookies.add(kvp);
 
         // WHEN
-        List<KeyValuePair> cookiesToProxy = HttpUtils.getCookiesToProxy(true, currentCookies);
+        final List<KeyValuePair> cookiesToProxy = HttpUtils.getCookiesToProxy(true, currentCookies);
 
         // THEN
         assertEquals(expectedCookies, cookiesToProxy);
@@ -59,36 +61,35 @@ public class HttpUtilsTest
     public void getCookiesToProxy_withoutCookiesEnable_shouldReturnAllCookies()
     {
         // GIVEN
-        List<KeyValuePair> currentCookies = new ArrayList<KeyValuePair>(5);
-        List<KeyValuePair> expectedCookies = new ArrayList<KeyValuePair>(3);
+        final List<KeyValuePair> currentCookies = new ArrayList<>(5);
+        final List<KeyValuePair> expectedCookies = new ArrayList<>(3);
 
         KeyValuePair kvp = new KeyValuePair("key1", "value");
         currentCookies.add(kvp);
-        kvp = new KeyValuePair( "Most-Recent-Selected-Operator-Expiry", "value");
+        kvp = new KeyValuePair("Most-Recent-Selected-Operator-Expiry", "value");
         currentCookies.add(kvp);
-        kvp = new KeyValuePair( "Most-Recent-Selected-Operator", "value");
+        kvp = new KeyValuePair("Most-Recent-Selected-Operator", "value");
         currentCookies.add(kvp);
-        kvp = new KeyValuePair( "Enum-Nonce", "value");
+        kvp = new KeyValuePair("Enum-Nonce", "value");
         currentCookies.add(kvp);
         kvp = new KeyValuePair("key2", "value");
         currentCookies.add(kvp);
 
         // WHEN
-        List<KeyValuePair> cookiesToProxy = HttpUtils.getCookiesToProxy(false, currentCookies);
+        final List<KeyValuePair> cookiesToProxy = HttpUtils.getCookiesToProxy(false, currentCookies);
 
         // THEN
         assertEquals(expectedCookies, cookiesToProxy);
     }
 
     @Test
-    public void extractParameters_withEmptyURL_shouldExtractNoParameters()
-            throws URISyntaxException
+    public void extractParameters_withEmptyURL_shouldExtractNoParameters() throws URISyntaxException
     {
         // GIVEN
-        String url = "";
+        final String url = "";
 
         // WHEN
-        List<NameValuePair> parameters = HttpUtils.extractParameters(url);
+        final List<NameValuePair> parameters = HttpUtils.extractParameters(url);
 
         // THEN
         assertTrue(parameters.isEmpty());

@@ -2,7 +2,7 @@ package com.gsma.mobileconnect.helpers;
 
 /**
  * A Listener which exposes Success and Failure callbacks whilst attempting to perform Discovery.
- * <p/>
+ * <p>
  * Created by Usmaan.Dad on 6/21/2016.
  */
 public interface DiscoveryListener

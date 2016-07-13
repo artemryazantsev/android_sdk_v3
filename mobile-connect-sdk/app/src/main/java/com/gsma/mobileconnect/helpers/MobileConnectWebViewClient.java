@@ -12,17 +12,19 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 /**
+ * A Custom {@link WebViewClient} which handles callbacks from the server and checks for errors or successful callbacks.
+ * <p/>
  * Created by Usmaan.Dad on 6/22/2016.
  */
-public abstract class MobileConnectWebViewClient extends WebViewClient
+abstract class MobileConnectWebViewClient extends WebViewClient
 {
-    protected ProgressBar progressBar;
+    private final ProgressBar progressBar;
 
-    protected Dialog dialog;
+    final Dialog dialog;
 
-    protected String redirectUrl;
+    private final String redirectUrl;
 
-    public MobileConnectWebViewClient(Dialog dialog, ProgressBar progressBar, String redirectUrl)
+    public MobileConnectWebViewClient(final Dialog dialog, final ProgressBar progressBar, final String redirectUrl)
     {
         this.progressBar = progressBar;
         this.dialog = dialog;
@@ -31,35 +33,38 @@ public abstract class MobileConnectWebViewClient extends WebViewClient
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
+    public void onReceivedError(final WebView view,
+                                final int errorCode,
+                                final String description,
+                                final String failingUrl)
     {
         this.handleError(getErrorStatus(failingUrl));
     }
 
     @TargetApi(android.os.Build.VERSION_CODES.M)
     @Override
-    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error)
+    public void onReceivedError(final WebView view, final WebResourceRequest request, final WebResourceError error)
     {
-        dialog.cancel();
+        this.dialog.cancel();
         this.handleError(getErrorStatus(request.getUrl().toString()));
     }
 
-    private MobileConnectStatus getErrorStatus(String url)
+    private MobileConnectStatus getErrorStatus(final String url)
     {
-        UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(url);
-        String error = sanitizer.getValue("error");
-        String errorDescription = sanitizer.getValue("error_description");
+        final UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(url);
+        final String error = sanitizer.getValue("error");
+        final String errorDescription = sanitizer.getValue("error_description");
 
         return MobileConnectStatus.error(error, errorDescription, new Exception(errorDescription));
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String url)
+    public boolean shouldOverrideUrlLoading(final WebView view, final String url)
     {
         Log.d(MobileConnectWebViewClient.class.getSimpleName(), "onPageStarted disco url=" + url);
-        progressBar.setVisibility(View.VISIBLE);
+        this.progressBar.setVisibility(View.VISIBLE);
 
-        if (!url.startsWith(redirectUrl))
+        if (!url.startsWith(this.redirectUrl))
         {
             return false;
         }
@@ -92,10 +97,10 @@ public abstract class MobileConnectWebViewClient extends WebViewClient
     }
 
     @Override
-    public void onPageFinished(WebView view, String url)
+    public void onPageFinished(final WebView view, final String url)
     {
         super.onPageFinished(view, url);
-        progressBar.setVisibility(View.GONE);
+        this.progressBar.setVisibility(View.GONE);
     }
 
     protected abstract boolean qualifyUrl(String url);
