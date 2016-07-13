@@ -12,7 +12,7 @@ import com.gsma.android.R;
  */
 public class DeviceManager
 {
-    private static DeviceManager ourInstance = new DeviceManager();
+    private static final DeviceManager ourInstance = new DeviceManager();
 
     private DeviceManager()
     {

@@ -16,27 +16,27 @@ public class ParameterList
 
     ArrayList<KeyValuePair> parameterList = new ArrayList<KeyValuePair>();
 
-    public static ParameterList getKeyValuesFromUrl(String url, int start)
+    public static ParameterList getKeyValuesFromUrl(final String url, final int start)
     {
-        ParameterList parameterList = new ParameterList();
+        final ParameterList parameterList = new ParameterList();
         parameterList.loadKeyValuesFromUrl(url, start);
         return parameterList;
     }
 
-    public static ParameterList getKeyValuesFromUrl(String url)
+    public static ParameterList getKeyValuesFromUrl(final String url)
     {
-        ParameterList parameterList = new ParameterList();
+        final ParameterList parameterList = new ParameterList();
         parameterList.loadKeyValuesFromUrl(url, 1);
         return parameterList;
     }
 
-    public void put(String key, String value)
+    public void put(final String key, final String value)
     {
-        KeyValuePair kv = new KeyValuePair(key, value);
+        final KeyValuePair kv = new KeyValuePair(key, value);
         parameterList.add(kv);
     }
 
-    public String getValue(String key)
+    public String getValue(final String key)
     {
         boolean found = false;
         String value = null;

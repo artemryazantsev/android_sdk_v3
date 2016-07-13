@@ -27,22 +27,18 @@ import com.gsma.mobileconnect.discovery.IParsedDiscoveryRedirectCallback;
 import com.gsma.mobileconnect.discovery.IPreferences;
 import com.gsma.mobileconnect.discovery.ParsedDiscoveryRedirect;
 import com.gsma.mobileconnect.model.DiscoveryModel;
-import com.gsma.mobileconnect.oidc.AuthenticationOptions;
 import com.gsma.mobileconnect.oidc.DiscoveryResponseExpiredException;
 import com.gsma.mobileconnect.oidc.IOIDC;
 import com.gsma.mobileconnect.oidc.IParseAuthenticationResponseCallback;
 import com.gsma.mobileconnect.oidc.IRequestTokenCallback;
-import com.gsma.mobileconnect.oidc.IStartAuthenticationCallback;
 import com.gsma.mobileconnect.oidc.OIDCException;
 import com.gsma.mobileconnect.oidc.ParsedAuthorizationResponse;
 import com.gsma.mobileconnect.oidc.ParsedIdToken;
 import com.gsma.mobileconnect.oidc.RequestTokenResponse;
 import com.gsma.mobileconnect.oidc.RequestTokenResponseData;
-import com.gsma.mobileconnect.oidc.StartAuthenticationResponse;
 import com.gsma.mobileconnect.oidc.TokenOptions;
 import com.gsma.mobileconnect.utils.ErrorResponse;
 import com.gsma.mobileconnect.utils.KeyValuePair;
-import com.gsma.mobileconnect.utils.MobileConnectState;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +56,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
@@ -72,35 +67,35 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 public class AuthorizationServiceTest
 {
-    MobileConnectConfig config;
+    private MobileConnectConfig config;
 
     @Before
     public void before()
     {
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL("url");
-        config = new MobileConnectConfig();
+        this.config = new MobileConnectConfig();
         // Registered application client id
-        config.setClientId("7854b859-375d-47b9-a9c9-dce2647f1b76");
+        this.config.setClientId("7854b859-375d-47b9-a9c9-dce2647f1b76");
 
         // Registered application client secret
-        config.setClientSecret("cb70b357-8203-4f3f-824c-f9d4990bee99");
+        this.config.setClientSecret("cb70b357-8203-4f3f-824c-f9d4990bee99");
 
         // Registered application url
-        config.setApplicationURL("http://localhost:8080/mobile_connect");
+        this.config.setApplicationURL("http://localhost:8080/mobile_connect");
 
         // URL of the Mobile Connect Discovery End Point
-        config.setDiscoveryURL("http://discovery.sandbox2.mobileconnect.io/v2/discovery");
+        this.config.setDiscoveryURL("http://discovery.sandbox2.mobileconnect.io/v2/discovery");
 
         // URL to inform the Discovery End Point to redirect to, this should route to the "/discovery_redirect"
         // handler below
-        config.setDiscoveryRedirectURL("http://localhost:8080/mobileconnect/discovery_redirect");
+        this.config.setDiscoveryRedirectURL("http://localhost:8080/mobileconnect/discovery_redirect");
 
         // Authorization State would typically set to a unique value
-        config.setAuthorizationState(connect.generateUniqueString("state_"));
+        this.config.setAuthorizationState(connect.generateUniqueString("state_"));
 
         // Authorization Nonce would typically set to a unique value
-        config.setAuthorizationNonce(connect.generateUniqueString("nonce_"));
+        this.config.setAuthorizationNonce(connect.generateUniqueString("nonce_"));
 
     }
 
@@ -109,13 +104,13 @@ public class AuthorizationServiceTest
                                                                                                               DiscoveryException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
-        DiscoveryService service = new DiscoveryService();
-        DiscoveryException expectedException = new DiscoveryException("Test");
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final DiscoveryService service = new DiscoveryService();
+        final DiscoveryException expectedException = new DiscoveryException("Test");
         mockStartAutomatedOperatorDiscoveryThrowException(mockedDiscovery, expectedException);
         service.setDiscovery(mockedDiscovery);
         // WHEN
-        MobileConnectStatus status = service.callMobileConnectForStartDiscovery(config);
+        final MobileConnectStatus status = service.callMobileConnectForStartDiscovery(this.config);
 
         // THEN
         assertTrue(status.isError());
@@ -129,21 +124,21 @@ public class AuthorizationServiceTest
                                                                                                              DiscoveryException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
         // return error from startAutomatedOperatorDiscovery
-        int responseCode = 404;
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, responseCode, null, null);
+        final int responseCode = 404;
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, responseCode, null, null);
         mockStartAutomatedOperatorDiscoverySuccess(mockedDiscovery, expectedDiscoveryResponse);
 
         // set up return of getErrorResponse
-        String expectedError = "ERROR";
-        String expectedErrorDescription = "ERROR-DESCRIPTION";
+        final String expectedError = "ERROR";
+        final String expectedErrorDescription = "ERROR-DESCRIPTION";
         mockGetErrorResponse(mockedDiscovery, expectedDiscoveryResponse, expectedError, expectedErrorDescription);
         connect.setDiscovery(mockedDiscovery);
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectForStartDiscovery(config);
+        final MobileConnectStatus status = connect.callMobileConnectForStartDiscovery(this.config);
 
         // THEN
         assertTrue(status.isError());
@@ -158,22 +153,22 @@ public class AuthorizationServiceTest
                                                                                                                                          DiscoveryException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
 
         // success discovery response
-        DiscoveryResponse discoveryResponse = new DiscoveryResponse(false, null, 202, null, null);
+        final DiscoveryResponse discoveryResponse = new DiscoveryResponse(false, null, 202, null, null);
         mockStartAutomatedOperatorDiscoverySuccess(mockedDiscovery, discoveryResponse);
 
         // set up return of extractOperatorSelectionURL
-        String expectedUrl = "EXPECTED-URL";
+        final String expectedUrl = "EXPECTED-URL";
         mockExtractOperatorSelectionURL(mockedDiscovery, expectedUrl);
 
         connect.setDiscovery(mockedDiscovery);
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectForStartDiscovery(config);
+        final MobileConnectStatus status = connect.callMobileConnectForStartDiscovery(this.config);
 
         // THEN
         assertTrue(status.isOperatorSelection());
@@ -186,19 +181,19 @@ public class AuthorizationServiceTest
                                                                                                                              DiscoveryException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
         connect.setDiscovery(mockedDiscovery);
         // success discovery response
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
         mockStartAutomatedOperatorDiscoverySuccess(mockedDiscovery, expectedDiscoveryResponse);
 
         // set up return of extractOperatorSelectionURL
         mockExtractOperatorSelectionURL(mockedDiscovery, "");
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectForStartDiscovery(config);
+        final MobileConnectStatus status = connect.callMobileConnectForStartDiscovery(this.config);
 
         // THEN
         assertTrue(status.isStartAuthorization());
@@ -212,16 +207,16 @@ public class AuthorizationServiceTest
                                                                                                                    URISyntaxException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
         // set up exception
-        URISyntaxException expectedException = new URISyntaxException("URI", "URI");
+        final URISyntaxException expectedException = new URISyntaxException("URI", "URI");
         mockParseDiscoveryRedirectThrowsException(mockedDiscovery, expectedException);
         connect.setDiscovery(mockedDiscovery);
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(config);
+        final MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(this.config);
 
         // THEN
         assertTrue(status.isError());
@@ -237,16 +232,16 @@ public class AuthorizationServiceTest
                                                                                                                              URISyntaxException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
 
         // set up empty ParsedDiscoveryRedirect
-        ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect(null, null, null);
+        final ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect(null, null, null);
         mockParseDiscoveryRedirectSuccess(mockedDiscovery, parsedDiscoveryRedirect);
         DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL("url");
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(config);
+        final MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(this.config);
 
         // THEN
         assertTrue(status.isStartDiscovery());
@@ -259,20 +254,20 @@ public class AuthorizationServiceTest
                                                                                                                                                  URISyntaxException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
 
         // set up a valid ParsedDiscoveryRedirect
-        ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect("901", "01", null);
+        final ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect("901", "01", null);
         mockParseDiscoveryRedirectSuccess(mockedDiscovery, parsedDiscoveryRedirect);
         connect.setDiscovery(mockedDiscovery);
         // set up exception
-        DiscoveryException expectedException = new DiscoveryException("Test");
+        final DiscoveryException expectedException = new DiscoveryException("Test");
         mockCompleteSelectedOperatorDiscoveryThrowsException(mockedDiscovery, expectedException);
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(config);
+        final MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(this.config);
 
         // THEN
         assertTrue(status.isError());
@@ -288,26 +283,26 @@ public class AuthorizationServiceTest
                                                                                                                                        URISyntaxException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
 
         // set up valid ParsedDiscoveryRedirect
-        ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect("901", "01", null);
+        final ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect("901", "01", null);
         mockParseDiscoveryRedirectSuccess(mockedDiscovery, parsedDiscoveryRedirect);
 
         // Set up error discovery response
-        int responseCode = 404;
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, responseCode, null, null);
+        final int responseCode = 404;
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, responseCode, null, null);
         mockCompleteSelectedOperatorDiscoverySuccess(mockedDiscovery, expectedDiscoveryResponse);
 
         // Set up error response
-        String expectedError = "ERROR";
-        String expectedErrorDescription = "ERROR-DESCRIPTION";
+        final String expectedError = "ERROR";
+        final String expectedErrorDescription = "ERROR-DESCRIPTION";
         mockGetErrorResponse(mockedDiscovery, expectedDiscoveryResponse, expectedError, expectedErrorDescription);
         connect.setDiscovery(mockedDiscovery);
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(config);
+        final MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(this.config);
 
         // THEN
         assertTrue(status.isError());
@@ -323,23 +318,23 @@ public class AuthorizationServiceTest
                                                                                                                                                                 URISyntaxException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
 
         // set up valid ParsedDiscoveryRedirect
-        ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect("901", "01", null);
+        final ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect("901", "01", null);
         mockParseDiscoveryRedirectSuccess(mockedDiscovery, parsedDiscoveryRedirect);
 
         // set up empty response
-        DiscoveryResponse discoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
+        final DiscoveryResponse discoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
         mockCompleteSelectedOperatorDiscoverySuccess(mockedDiscovery, discoveryResponse);
 
         // set up operator selection required
         mockIsOperatorSelectionRequired(mockedDiscovery, discoveryResponse, true);
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(config);
+        final MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(this.config);
 
         // THEN
         assertTrue(status.isStartDiscovery());
@@ -352,23 +347,23 @@ public class AuthorizationServiceTest
                                                                                                                                                             URISyntaxException
     {
         // GIVEN
-        IDiscovery mockedDiscovery = mock(IDiscovery.class);
+        final IDiscovery mockedDiscovery = mock(IDiscovery.class);
 
-        DiscoveryService connect = new DiscoveryService();
+        final DiscoveryService connect = new DiscoveryService();
 
         // set up valid ParsedDiscoveryRedirect
-        ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect("901", "01", null);
+        final ParsedDiscoveryRedirect parsedDiscoveryRedirect = new ParsedDiscoveryRedirect("901", "01", null);
         mockParseDiscoveryRedirectSuccess(mockedDiscovery, parsedDiscoveryRedirect);
 
         // set up cached (valid) response
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(true, null, 0, null, null);
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(true, null, 0, null, null);
         mockCompleteSelectedOperatorDiscoverySuccess(mockedDiscovery, expectedDiscoveryResponse);
 
         // set up operator identified
         mockIsOperatorSelectionRequired(mockedDiscovery, expectedDiscoveryResponse, false);
         connect.setDiscovery(mockedDiscovery);
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(config);
+        final MobileConnectStatus status = connect.callMobileConnectOnDiscoveryRedirect(this.config);
 
         // THEN
         assertTrue(status.isStartAuthorization());
@@ -381,13 +376,11 @@ public class AuthorizationServiceTest
                                                                                                                          OIDCException
     {
         // GIVEN
-        IOIDC mockedOIDC = mock(IOIDC.class);
-
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
 
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(config, null);
+        final MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(this.config, null);
 
         // THEN
         assertTrue(status.isStartDiscovery());
@@ -401,26 +394,24 @@ public class AuthorizationServiceTest
                                                                                                                                DiscoveryResponseExpiredException
     {
         // GIVEN
-        IOIDC mockedOIDC = mock(IOIDC.class);
+        final IOIDC mockedOIDC = mock(IOIDC.class);
 
-        AuthorizationService connect = new AuthorizationService(mockedOIDC);
+        final AuthorizationService connect = new AuthorizationService(mockedOIDC);
 
         // set up valid session
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
-        MobileConnectState sessionState = new MobileConnectState(expectedDiscoveryResponse, null, null, null);
-
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
 
         // set up error ParsedAuthorizationResponse
-        ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
-        String expectedError = "ERROR";
-        String expectedErrorDescription = "ERROR-DESCRIPTION";
+        final ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
+        final String expectedError = "ERROR";
+        final String expectedErrorDescription = "ERROR-DESCRIPTION";
         parsedAuthorizationResponse.set_error(expectedError);
         parsedAuthorizationResponse.set_error_description(expectedErrorDescription);
         mockParseAuthenticationResponseSuccess(mockedOIDC, parsedAuthorizationResponse);
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(config,
-                                                                                      expectedDiscoveryResponse);
+        final MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(this.config,
+                                                                                            expectedDiscoveryResponse);
 
         // THEN
         assertTrue(status.isError());
@@ -434,23 +425,21 @@ public class AuthorizationServiceTest
                                                                                                             DiscoveryResponseExpiredException
     {
         // GIVEN
-        IOIDC mockedOIDC = mock(IOIDC.class);
+        final IOIDC mockedOIDC = mock(IOIDC.class);
 
-        AuthorizationService connect = new AuthorizationService(mockedOIDC);
+        final AuthorizationService connect = new AuthorizationService(mockedOIDC);
 
         // set up valid session
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
-        MobileConnectState sessionState = new MobileConnectState(expectedDiscoveryResponse, null, "VALUE1", null);
-
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
 
         // set up valid ParsedAuthorizationResponse
-        ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
+        final ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
         parsedAuthorizationResponse.set_state("VALUE2");
         mockParseAuthenticationResponseSuccess(mockedOIDC, parsedAuthorizationResponse);
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(config,
-                                                                                      expectedDiscoveryResponse);
+        final MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(this.config,
+                                                                                            expectedDiscoveryResponse);
 
         // THEN
         assertTrue(status.isError());
@@ -465,18 +454,16 @@ public class AuthorizationServiceTest
                                                                                                                                          DiscoveryResponseExpiredException
     {
         // GIVEN
-        IOIDC mockedOIDC = mock(IOIDC.class);
+        final IOIDC mockedOIDC = mock(IOIDC.class);
 
-        AuthorizationService connect = new AuthorizationService(mockedOIDC);
+        final AuthorizationService connect = new AuthorizationService(mockedOIDC);
 
         // set up valid session
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
-        String state = config.getAuthorizationState();
-        MobileConnectState sessionState = new MobileConnectState(expectedDiscoveryResponse, null, state, null);
-
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
+        final String state = this.config.getAuthorizationState();
 
         // set up valid ParsedAuthorizationResponse
-        ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
+        final ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
         parsedAuthorizationResponse.set_state(state);
         mockParseAuthenticationResponseSuccess(mockedOIDC, parsedAuthorizationResponse);
 
@@ -484,8 +471,8 @@ public class AuthorizationServiceTest
         mockRequestTokenThrowsException(mockedOIDC, new DiscoveryResponseExpiredException("TEST"));
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(config,
-                                                                                      expectedDiscoveryResponse);
+        final MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(this.config,
+                                                                                            expectedDiscoveryResponse);
 
         // THEN
         assertTrue(status.isStartDiscovery());
@@ -498,28 +485,26 @@ public class AuthorizationServiceTest
                                                                                                                       DiscoveryResponseExpiredException
     {
         // GIVEN
-        IOIDC mockedOIDC = mock(IOIDC.class);
+        final IOIDC mockedOIDC = mock(IOIDC.class);
 
-        AuthorizationService connect = new AuthorizationService(mockedOIDC);
+        final AuthorizationService connect = new AuthorizationService(mockedOIDC);
 
         // set up valid session
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
-        String state = config.getAuthorizationState();
-        MobileConnectState sessionState = new MobileConnectState(expectedDiscoveryResponse, null, state, null);
-
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
+        final String state = this.config.getAuthorizationState();
 
         // set up valid ParsedAuthorizationResponse
-        ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
+        final ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
         parsedAuthorizationResponse.set_state(state);
         mockParseAuthenticationResponseSuccess(mockedOIDC, parsedAuthorizationResponse);
 
         // set up OIDCException
-        OIDCException expectedException = new OIDCException("TEST");
+        final OIDCException expectedException = new OIDCException("TEST");
         mockRequestTokenThrowsException(mockedOIDC, expectedException);
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(config,
-                                                                                      expectedDiscoveryResponse);
+        final MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(this.config,
+                                                                                            expectedDiscoveryResponse);
 
         // THEN
         assertTrue(status.isError());
@@ -535,36 +520,34 @@ public class AuthorizationServiceTest
                                                                                                               DiscoveryResponseExpiredException
     {
         // GIVEN
-        IOIDC mockedOIDC = mock(IOIDC.class);
+        final IOIDC mockedOIDC = mock(IOIDC.class);
 
-        AuthorizationService connect = new AuthorizationService(mockedOIDC);
+        final AuthorizationService connect = new AuthorizationService(mockedOIDC);
 
         // set up valid session
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
-        String state = config.getAuthorizationState();
-        MobileConnectState sessionState = new MobileConnectState(expectedDiscoveryResponse, null, state, null);
-
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
+        final String state = this.config.getAuthorizationState();
 
         // set up ParsedAuthorizationResponse
-        ParsedAuthorizationResponse expectedParsedAuthorizationResponse = new ParsedAuthorizationResponse();
+        final ParsedAuthorizationResponse expectedParsedAuthorizationResponse = new ParsedAuthorizationResponse();
         expectedParsedAuthorizationResponse.set_state(state);
         mockParseAuthenticationResponseSuccess(mockedOIDC, expectedParsedAuthorizationResponse);
 
         // set up RequestTokenResponse with failed response code
-        RequestTokenResponse expectedRequestTokenResponse = new RequestTokenResponse();
-        int expectedResponseCode = 404; // Failed response code
+        final RequestTokenResponse expectedRequestTokenResponse = new RequestTokenResponse();
+        final int expectedResponseCode = 404; // Failed response code
         expectedRequestTokenResponse.setResponseCode(expectedResponseCode);
-        ErrorResponse errorResponse = new ErrorResponse();
-        String expectedError = "ERROR";
-        String expectedErrorDescription = "ERROR-DESCRIPTION";
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final String expectedError = "ERROR";
+        final String expectedErrorDescription = "ERROR-DESCRIPTION";
         errorResponse.set_error(expectedError);
         errorResponse.set_error_description(expectedErrorDescription);
         expectedRequestTokenResponse.setErrorResponse(errorResponse);
         mockRequestTokenSuccess(mockedOIDC, expectedRequestTokenResponse);
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(config,
-                                                                                      expectedDiscoveryResponse);
+        final MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(this.config,
+                                                                                            expectedDiscoveryResponse);
 
         // THEN
         assertTrue(status.isError());
@@ -581,28 +564,26 @@ public class AuthorizationServiceTest
                                                                                                               DiscoveryResponseExpiredException
     {
         // GIVEN
-        IOIDC mockedOIDC = mock(IOIDC.class);
+        final IOIDC mockedOIDC = mock(IOIDC.class);
 
-        AuthorizationService connect = new AuthorizationService(mockedOIDC);
+        final AuthorizationService connect = new AuthorizationService(mockedOIDC);
 
         // set up valid session
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
-        String state = config.getAuthorizationState();
-        MobileConnectState sessionState = new MobileConnectState(expectedDiscoveryResponse, null, state, null);
-
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
+        final String state = this.config.getAuthorizationState();
 
         // set up valid ParsedAuthorizationResponse
-        ParsedAuthorizationResponse expectedParsedAuthorizationResponse = new ParsedAuthorizationResponse();
+        final ParsedAuthorizationResponse expectedParsedAuthorizationResponse = new ParsedAuthorizationResponse();
         expectedParsedAuthorizationResponse.set_state(state);
         mockParseAuthenticationResponseSuccess(mockedOIDC, expectedParsedAuthorizationResponse);
 
         // set up RequestTokenResponse with error response
-        RequestTokenResponse expectedRequestTokenResponse = new RequestTokenResponse();
-        int expectedResponseCode = 200;
+        final RequestTokenResponse expectedRequestTokenResponse = new RequestTokenResponse();
+        final int expectedResponseCode = 200;
         expectedRequestTokenResponse.setResponseCode(expectedResponseCode);
-        ErrorResponse errorResponse = new ErrorResponse();
-        String expectedError = "ERROR-ALT";
-        String expectedErrorDescription = "ERROR-DESCRIPTION-ALT";
+        final ErrorResponse errorResponse = new ErrorResponse();
+        final String expectedError = "ERROR-ALT";
+        final String expectedErrorDescription = "ERROR-DESCRIPTION-ALT";
         errorResponse.set_error(expectedError);
         errorResponse.set_error_description(expectedErrorDescription);
         expectedRequestTokenResponse.setErrorResponse(errorResponse);
@@ -610,8 +591,8 @@ public class AuthorizationServiceTest
 
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(config,
-                                                                                      expectedDiscoveryResponse);
+        final MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(this.config,
+                                                                                            expectedDiscoveryResponse);
 
         // THEN
         assertTrue(status.isError());
@@ -628,30 +609,28 @@ public class AuthorizationServiceTest
                                                                                                                    DiscoveryResponseExpiredException
     {
         // GIVEN
-        IOIDC mockedOIDC = mock(IOIDC.class);
+        final IOIDC mockedOIDC = mock(IOIDC.class);
 
-        AuthorizationService connect = new AuthorizationService(mockedOIDC);
+        final AuthorizationService connect = new AuthorizationService(mockedOIDC);
 
         // set up valid session
-        DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
-        String state = config.getAuthorizationState();
-        MobileConnectState sessionState = new MobileConnectState(expectedDiscoveryResponse, null, state, null);
-
+        final DiscoveryResponse expectedDiscoveryResponse = new DiscoveryResponse(false, null, 200, null, null);
+        final String state = this.config.getAuthorizationState();
 
         // set up valid ParsedAuthorizationResponse
-        ParsedAuthorizationResponse expectedParsedAuthorizationResponse = new ParsedAuthorizationResponse();
+        final ParsedAuthorizationResponse expectedParsedAuthorizationResponse = new ParsedAuthorizationResponse();
         expectedParsedAuthorizationResponse.set_state(state);
         mockParseAuthenticationResponseSuccess(mockedOIDC, expectedParsedAuthorizationResponse);
 
         // set up successful RequestTokenResponse
-        RequestTokenResponse expectedRequestTokenResponse = new RequestTokenResponse();
-        int expectedResponseCode = 200;
+        final RequestTokenResponse expectedRequestTokenResponse = new RequestTokenResponse();
+        final int expectedResponseCode = 200;
         expectedRequestTokenResponse.setResponseCode(expectedResponseCode);
         mockRequestTokenSuccess(mockedOIDC, expectedRequestTokenResponse);
 
         // WHEN
-        MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(config,
-                                                                                      expectedDiscoveryResponse);
+        final MobileConnectStatus status = connect.callMobileConnectOnAuthorizationRedirect(this.config,
+                                                                                            expectedDiscoveryResponse);
 
         // THEN
         assertTrue(status.isComplete());
@@ -663,11 +642,11 @@ public class AuthorizationServiceTest
     public void generateUniqueString_withPrefix_shouldReturnStringWithPrefix()
     {
         // GIVEN
-        String expectedPrefix = "EXPECTED_PREFIX_";
-        AuthorizationService connect = new AuthorizationService();
+        final String expectedPrefix = "EXPECTED_PREFIX_";
+        final AuthorizationService connect = new AuthorizationService();
 
         // WHEN
-        String uniqueString = connect.generateUniqueString(expectedPrefix);
+        final String uniqueString = connect.generateUniqueString(expectedPrefix);
 
         // THEN
         assertTrue(uniqueString.startsWith(expectedPrefix));
@@ -679,9 +658,9 @@ public class AuthorizationServiceTest
     {
         // GIVEN
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         // WHEN
-        String uniqueString = connect.generateUniqueString(null);
+        final String uniqueString = connect.generateUniqueString(null);
 
         // THEN
         assertTrue(uniqueString.length() > 0);
@@ -692,9 +671,9 @@ public class AuthorizationServiceTest
     {
         // GIVEN
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         // WHEN
-        boolean matchingState = connect.hasMatchingState(null, null);
+        final boolean matchingState = connect.hasMatchingState(null, null);
 
         // THEN
         assertTrue(matchingState);
@@ -705,9 +684,9 @@ public class AuthorizationServiceTest
     {
         // GIVEN
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         // WHEN
-        boolean matchingState = connect.hasMatchingState("VALUE", null);
+        final boolean matchingState = connect.hasMatchingState("VALUE", null);
 
         // THEN
         assertFalse(matchingState);
@@ -718,9 +697,9 @@ public class AuthorizationServiceTest
     {
         // GIVEN
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         // WHEN
-        boolean matchingState = connect.hasMatchingState(null, "VALUE");
+        final boolean matchingState = connect.hasMatchingState(null, "VALUE");
 
         // THEN
         assertFalse(matchingState);
@@ -731,9 +710,9 @@ public class AuthorizationServiceTest
     {
         // GIVEN
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         // WHEN
-        boolean matchingState = connect.hasMatchingState("VALUE1", "VALUE2");
+        final boolean matchingState = connect.hasMatchingState("VALUE1", "VALUE2");
 
         // THEN
         assertFalse(matchingState);
@@ -744,9 +723,9 @@ public class AuthorizationServiceTest
     {
         // GIVEN
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         // WHEN
-        boolean matchingState = connect.hasMatchingState("VALUE", "VALUE");
+        final boolean matchingState = connect.hasMatchingState("VALUE", "VALUE");
 
         // THEN
         assertTrue(matchingState);
@@ -755,12 +734,12 @@ public class AuthorizationServiceTest
     @Test
     public void testListenerSuccess()
     {
-        MobileConnectStatus mobileConnectStatus = mock(MobileConnectStatus.class);
-        RequestTokenResponse response = mock(RequestTokenResponse.class);
-        RequestTokenResponseData responseData = mock(RequestTokenResponseData.class);
-        ParsedIdToken parsedIdToken = mock(ParsedIdToken.class);
+        final MobileConnectStatus mobileConnectStatus = mock(MobileConnectStatus.class);
+        final RequestTokenResponse response = mock(RequestTokenResponse.class);
+        final RequestTokenResponseData responseData = mock(RequestTokenResponseData.class);
+        final ParsedIdToken parsedIdToken = mock(ParsedIdToken.class);
 
-        AuthorizationListener listener = mock(AuthorizationListener.class);
+        final AuthorizationListener listener = mock(AuthorizationListener.class);
 
         when(mobileConnectStatus.isComplete()).thenReturn(true);
 
@@ -769,7 +748,7 @@ public class AuthorizationServiceTest
         when(responseData.getParsedIdToken()).thenReturn(parsedIdToken);
         when(parsedIdToken.get_pcr()).thenReturn("token");
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         connect.notifyListener(mobileConnectStatus, listener);
 
         verify(listener, times(1)).tokenReceived(Mockito.any(RequestTokenResponse.class));
@@ -778,16 +757,13 @@ public class AuthorizationServiceTest
     @Test
     public void testListenerError()
     {
-        MobileConnectStatus mobileConnectStatus = mock(MobileConnectStatus.class);
-        RequestTokenResponse response = mock(RequestTokenResponse.class);
-        RequestTokenResponseData responseData = mock(RequestTokenResponseData.class);
-        ParsedIdToken parsedIdToken = mock(ParsedIdToken.class);
+        final MobileConnectStatus mobileConnectStatus = mock(MobileConnectStatus.class);
 
-        AuthorizationListener listener = mock(AuthorizationListener.class);
+        final AuthorizationListener listener = mock(AuthorizationListener.class);
 
         when(mobileConnectStatus.isError()).thenReturn(true);
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         connect.notifyListener(mobileConnectStatus, listener);
 
         verify(listener, times(1)).authorizationFailed(mobileConnectStatus);
@@ -797,32 +773,30 @@ public class AuthorizationServiceTest
     @Test
     public void testListenerDiscovery()
     {
-        MobileConnectStatus mobileConnectStatus = mock(MobileConnectStatus.class);
-        RequestTokenResponse response = mock(RequestTokenResponse.class);
-        RequestTokenResponseData responseData = mock(RequestTokenResponseData.class);
-        ParsedIdToken parsedIdToken = mock(ParsedIdToken.class);
+        final MobileConnectStatus mobileConnectStatus = mock(MobileConnectStatus.class);
 
-        AuthorizationListener listener = mock(AuthorizationListener.class);
+        final AuthorizationListener listener = mock(AuthorizationListener.class);
 
         when(mobileConnectStatus.isStartDiscovery()).thenReturn(true);
 
-        AuthorizationService connect = new AuthorizationService();
+        final AuthorizationService connect = new AuthorizationService();
         connect.notifyListener(mobileConnectStatus, listener);
 
         verify(listener, times(1)).authorizationFailed(mobileConnectStatus);
         verify(listener, times(0)).tokenReceived(Mockito.any(RequestTokenResponse.class));
     }
 
-    private void mockStartAutomatedOperatorDiscoverySuccess(IDiscovery mockedDiscovery,
+    private void mockStartAutomatedOperatorDiscoverySuccess(final IDiscovery mockedDiscovery,
                                                             final DiscoveryResponse discoveryResponse) throws
                                                                                                        DiscoveryException
     {
         doAnswer(new Answer()
         {
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
+            @Override
+            public Object answer(final InvocationOnMock invocationOnMock) throws Throwable
             {
-                Object[] args = invocationOnMock.getArguments();
-                IDiscoveryResponseCallback callback = (IDiscoveryResponseCallback) args[4];
+                final Object[] args = invocationOnMock.getArguments();
+                final IDiscoveryResponseCallback callback = (IDiscoveryResponseCallback) args[4];
                 callback.completed(discoveryResponse);
                 return null;
             }
@@ -834,8 +808,8 @@ public class AuthorizationServiceTest
                                            any(IDiscoveryResponseCallback.class));
     }
 
-    private void mockStartAutomatedOperatorDiscoveryThrowException(IDiscovery mockedDiscovery,
-                                                                   DiscoveryException expectedException) throws
+    private void mockStartAutomatedOperatorDiscoveryThrowException(final IDiscovery mockedDiscovery,
+                                                                   final DiscoveryException expectedException) throws
                                                                                                          DiscoveryException
     {
         doThrow(expectedException).when(mockedDiscovery)
@@ -846,45 +820,47 @@ public class AuthorizationServiceTest
                                                                    any(IDiscoveryResponseCallback.class));
     }
 
-    private void mockExtractOperatorSelectionURL(IDiscovery mockedDiscovery, String expectedUrl)
+    private void mockExtractOperatorSelectionURL(final IDiscovery mockedDiscovery, final String expectedUrl)
     {
         when(mockedDiscovery.extractOperatorSelectionURL(any(DiscoveryResponse.class))).thenReturn(expectedUrl);
     }
 
-    private void mockParseDiscoveryRedirectSuccess(IDiscovery mockedDiscovery,
+    private void mockParseDiscoveryRedirectSuccess(final IDiscovery mockedDiscovery,
                                                    final ParsedDiscoveryRedirect parsedDiscoveryRedirect) throws
                                                                                                           URISyntaxException
     {
         doAnswer(new Answer()
         {
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
+            @Override
+            public Object answer(final InvocationOnMock invocationOnMock) throws Throwable
             {
-                Object[] args = invocationOnMock.getArguments();
-                IParsedDiscoveryRedirectCallback callback = (IParsedDiscoveryRedirectCallback) args[1];
+                final Object[] args = invocationOnMock.getArguments();
+                final IParsedDiscoveryRedirectCallback callback = (IParsedDiscoveryRedirectCallback) args[1];
                 callback.completed(parsedDiscoveryRedirect);
                 return null;
             }
         }).when(mockedDiscovery).parseDiscoveryRedirect(anyString(), any(IParsedDiscoveryRedirectCallback.class));
     }
 
-    private void mockParseDiscoveryRedirectThrowsException(IDiscovery mockedDiscovery,
-                                                           URISyntaxException expectedException) throws
+    private void mockParseDiscoveryRedirectThrowsException(final IDiscovery mockedDiscovery,
+                                                           final URISyntaxException expectedException) throws
                                                                                                  URISyntaxException
     {
         doThrow(expectedException).when(mockedDiscovery)
                                   .parseDiscoveryRedirect(anyString(), any(IParsedDiscoveryRedirectCallback.class));
     }
 
-    private void mockCompleteSelectedOperatorDiscoverySuccess(IDiscovery mockedDiscovery,
+    private void mockCompleteSelectedOperatorDiscoverySuccess(final IDiscovery mockedDiscovery,
                                                               final DiscoveryResponse discoveryResponse) throws
                                                                                                          DiscoveryException
     {
         doAnswer(new Answer()
         {
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
+            @Override
+            public Object answer(final InvocationOnMock invocationOnMock) throws Throwable
             {
-                Object[] args = invocationOnMock.getArguments();
-                IDiscoveryResponseCallback callback = (IDiscoveryResponseCallback) args[6];
+                final Object[] args = invocationOnMock.getArguments();
+                final IDiscoveryResponseCallback callback = (IDiscoveryResponseCallback) args[6];
                 callback.completed(discoveryResponse);
                 return null;
             }
@@ -898,8 +874,8 @@ public class AuthorizationServiceTest
                                              any(IDiscoveryResponseCallback.class));
     }
 
-    private void mockCompleteSelectedOperatorDiscoveryThrowsException(IDiscovery mockedDiscovery,
-                                                                      DiscoveryException expectedException) throws
+    private void mockCompleteSelectedOperatorDiscoveryThrowsException(final IDiscovery mockedDiscovery,
+                                                                      final DiscoveryException expectedException) throws
                                                                                                             DiscoveryException
     {
         doThrow(expectedException).when(mockedDiscovery)
@@ -913,84 +889,42 @@ public class AuthorizationServiceTest
                                                                      any(IDiscoveryResponseCallback.class));
     }
 
-    private void mockIsOperatorSelectionRequired(IDiscovery mockedDiscovery,
-                                                 DiscoveryResponse discoveryResponse,
-                                                 boolean t)
+    private void mockIsOperatorSelectionRequired(final IDiscovery mockedDiscovery,
+                                                 final DiscoveryResponse discoveryResponse,
+                                                 final boolean t)
     {
         when(mockedDiscovery.isOperatorSelectionRequired(discoveryResponse)).thenReturn(t);
     }
 
-    private void mockStartAuthenticationSuccess(IOIDC mockedOIDC,
-                                                final StartAuthenticationResponse startAuthenticationResponse) throws
-                                                                                                               OIDCException,
-                                                                                                               DiscoveryResponseExpiredException
-    {
-        doAnswer(new Answer()
-        {
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
-            {
-                Object[] args = invocationOnMock.getArguments();
-                IStartAuthenticationCallback callback = (IStartAuthenticationCallback) args[9];
-                callback.complete(startAuthenticationResponse);
-                return null;
-            }
-        }).when(mockedOIDC)
-          .startAuthentication(any(DiscoveryResponse.class),
-                               anyString(),
-                               anyString(),
-                               anyString(),
-                               anyString(),
-                               anyInt(),
-                               anyString(),
-                               anyString(),
-                               any(AuthenticationOptions.class),
-                               any(IStartAuthenticationCallback.class));
-    }
-
-    private void mockStartAuthenticationThrowsException(IOIDC mockedOIDC, Exception expectedException) throws
-                                                                                                       OIDCException,
-                                                                                                       DiscoveryResponseExpiredException
-    {
-        doThrow(expectedException).when(mockedOIDC)
-                                  .startAuthentication(any(DiscoveryResponse.class),
-                                                       anyString(),
-                                                       anyString(),
-                                                       anyString(),
-                                                       anyString(),
-                                                       anyInt(),
-                                                       anyString(),
-                                                       anyString(),
-                                                       any(AuthenticationOptions.class),
-                                                       any(IStartAuthenticationCallback.class));
-    }
-
-    private void mockParseAuthenticationResponseSuccess(IOIDC mockedOIDC,
+    private void mockParseAuthenticationResponseSuccess(final IOIDC mockedOIDC,
                                                         final ParsedAuthorizationResponse
                                                                 parsedAuthorizationResponse) throws
                                                                                                                        OIDCException
     {
         doAnswer(new Answer()
         {
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
+            @Override
+            public Object answer(final InvocationOnMock invocationOnMock) throws Throwable
             {
-                Object[] args = invocationOnMock.getArguments();
-                IParseAuthenticationResponseCallback callback = (IParseAuthenticationResponseCallback) args[1];
+                final Object[] args = invocationOnMock.getArguments();
+                final IParseAuthenticationResponseCallback callback = (IParseAuthenticationResponseCallback) args[1];
                 callback.complete(parsedAuthorizationResponse);
                 return null;
             }
         }).when(mockedOIDC).parseAuthenticationResponse(anyString(), any(IParseAuthenticationResponseCallback.class));
     }
 
-    private void mockRequestTokenSuccess(IOIDC mockedOIDC, final RequestTokenResponse requestTokenResponse) throws
+    private void mockRequestTokenSuccess(final IOIDC mockedOIDC, final RequestTokenResponse requestTokenResponse) throws
                                                                                                             OIDCException,
                                                                                                             DiscoveryResponseExpiredException
     {
         doAnswer(new Answer()
         {
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable
+            @Override
+            public Object answer(final InvocationOnMock invocationOnMock) throws Throwable
             {
-                Object[] args = invocationOnMock.getArguments();
-                IRequestTokenCallback callback = (IRequestTokenCallback) args[4];
+                final Object[] args = invocationOnMock.getArguments();
+                final IRequestTokenCallback callback = (IRequestTokenCallback) args[4];
                 callback.complete(requestTokenResponse);
                 return null;
             }
@@ -1002,7 +936,7 @@ public class AuthorizationServiceTest
                         any(IRequestTokenCallback.class));
     }
 
-    private void mockRequestTokenThrowsException(IOIDC mockedOIDC, Exception ex) throws
+    private void mockRequestTokenThrowsException(final IOIDC mockedOIDC, final Exception ex) throws
                                                                                  OIDCException,
                                                                                  DiscoveryResponseExpiredException
     {
@@ -1014,12 +948,12 @@ public class AuthorizationServiceTest
                                  any(IRequestTokenCallback.class));
     }
 
-    private void mockGetErrorResponse(IDiscovery mockedDiscovery,
-                                      DiscoveryResponse discoveryResponse,
-                                      String expectedError,
-                                      String expectedErrorDescription)
+    private void mockGetErrorResponse(final IDiscovery mockedDiscovery,
+                                      final DiscoveryResponse discoveryResponse,
+                                      final String expectedError,
+                                      final String expectedErrorDescription)
     {
-        ErrorResponse errorResponse = new ErrorResponse();
+        final ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.set_error(expectedError);
         errorResponse.set_error_description(expectedErrorDescription);
         when(mockedDiscovery.getErrorResponse(discoveryResponse)).thenReturn(errorResponse);

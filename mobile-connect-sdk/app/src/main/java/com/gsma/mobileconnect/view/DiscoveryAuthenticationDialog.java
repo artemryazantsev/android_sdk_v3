@@ -21,10 +21,10 @@ public class DiscoveryAuthenticationDialog extends Dialog
     /**
      * When discovering and authentic
      *
-     * @param context
-     * @return
+     * @param context An Android {@link Context}
+     * @return A singleton {@link DiscoveryAuthenticationDialog} object
      */
-    public static DiscoveryAuthenticationDialog getInstance(Context context)
+    public static DiscoveryAuthenticationDialog getInstance(final Context context)
     {
         if (instance == null)
         {
@@ -33,7 +33,7 @@ public class DiscoveryAuthenticationDialog extends Dialog
         return instance;
     }
 
-    public DiscoveryAuthenticationDialog(Context context)
+    private DiscoveryAuthenticationDialog(final Context context)
     {
         super(context);
         initialise();
@@ -47,17 +47,17 @@ public class DiscoveryAuthenticationDialog extends Dialog
     {
         setCancelable(true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        layoutParams = new WindowManager.LayoutParams();
-        layoutParams.copyFrom(getWindow().getAttributes());
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        this.layoutParams = new WindowManager.LayoutParams();
+        this.layoutParams.copyFrom(getWindow().getAttributes());
+        this.layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        this.layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
 
         setOnShowListener(new OnShowListener()
         {
             @Override
-            public void onShow(DialogInterface dialog)
+            public void onShow(final DialogInterface dialog)
             {
-                getWindow().setAttributes(layoutParams);
+                getWindow().setAttributes(DiscoveryAuthenticationDialog.this.layoutParams);
             }
         });
     }

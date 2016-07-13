@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class AuthModel
 {
-    private static AuthModel ourInstance = new AuthModel();
+    private static final AuthModel ourInstance = new AuthModel();
 
     private AtomicBoolean authInProgress;
 

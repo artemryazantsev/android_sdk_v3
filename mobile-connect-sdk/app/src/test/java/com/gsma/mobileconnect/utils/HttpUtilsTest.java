@@ -33,8 +33,8 @@ public class HttpUtilsTest
     public void getCookiesToProxy_withCookiesEnabled_shouldFilterCookies()
     {
         // GIVEN
-        List<KeyValuePair> currentCookies = new ArrayList<KeyValuePair>(5);
-        List<KeyValuePair> expectedCookies = new ArrayList<KeyValuePair>(3);
+        final List<KeyValuePair> currentCookies = new ArrayList<>(5);
+        final List<KeyValuePair> expectedCookies = new ArrayList<>(3);
 
         KeyValuePair kvp = new KeyValuePair("key1", "value");
         currentCookies.add(kvp);
@@ -51,7 +51,7 @@ public class HttpUtilsTest
         currentCookies.add(kvp);
 
         // WHEN
-        List<KeyValuePair> cookiesToProxy = HttpUtils.getCookiesToProxy(true, currentCookies);
+        final List<KeyValuePair> cookiesToProxy = HttpUtils.getCookiesToProxy(true, currentCookies);
 
         // THEN
         assertEquals(expectedCookies, cookiesToProxy);
@@ -61,8 +61,8 @@ public class HttpUtilsTest
     public void getCookiesToProxy_withoutCookiesEnable_shouldReturnAllCookies()
     {
         // GIVEN
-        List<KeyValuePair> currentCookies = new ArrayList<KeyValuePair>(5);
-        List<KeyValuePair> expectedCookies = new ArrayList<KeyValuePair>(3);
+        final List<KeyValuePair> currentCookies = new ArrayList<>(5);
+        final List<KeyValuePair> expectedCookies = new ArrayList<>(3);
 
         KeyValuePair kvp = new KeyValuePair("key1", "value");
         currentCookies.add(kvp);
@@ -76,7 +76,7 @@ public class HttpUtilsTest
         currentCookies.add(kvp);
 
         // WHEN
-        List<KeyValuePair> cookiesToProxy = HttpUtils.getCookiesToProxy(false, currentCookies);
+        final List<KeyValuePair> cookiesToProxy = HttpUtils.getCookiesToProxy(false, currentCookies);
 
         // THEN
         assertEquals(expectedCookies, cookiesToProxy);
@@ -86,10 +86,10 @@ public class HttpUtilsTest
     public void extractParameters_withEmptyURL_shouldExtractNoParameters() throws URISyntaxException
     {
         // GIVEN
-        String url = "";
+        final String url = "";
 
         // WHEN
-        List<NameValuePair> parameters = HttpUtils.extractParameters(url);
+        final List<NameValuePair> parameters = HttpUtils.extractParameters(url);
 
         // THEN
         assertTrue(parameters.isEmpty());

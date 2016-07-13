@@ -38,7 +38,7 @@ import com.gsma.mobileconnect.utils.ErrorResponse;
 import com.gsma.mobileconnect.utils.RestClient;
 import com.gsma.mobileconnect.utils.StringUtils;
 import com.gsma.mobileconnect.view.DiscoveryAuthenticationDialog;
-import com.gsma.mobileconnect.view.InteractableWebView;
+import com.gsma.mobileconnect.view.MobileConnectWebView;
 
 import java.net.URISyntaxException;
 
@@ -51,8 +51,8 @@ public class DiscoveryService extends BaseService
 
     public DiscoveryService()
     {
-        RestClient client = new AndroidRestClient();
-        discovery = new AndroidDiscoveryImpl(null, client);
+        final RestClient client = new AndroidRestClient();
+        this.discovery = new AndroidDiscoveryImpl(null, client);
     }
 
     private static final String INTERNAL_ERROR_CODE = "internal error";
@@ -66,24 +66,22 @@ public class DiscoveryService extends BaseService
      * @param config Mobile Connect Configuration instance
      * @return A status object
      */
-    public MobileConnectStatus callMobileConnectForStartDiscovery(MobileConnectConfig config)
+    public MobileConnectStatus callMobileConnectForStartDiscovery(final MobileConnectConfig config)
     {
-        DiscoveryResponse discoveryResponse;
+        final DiscoveryResponse discoveryResponse;
         try
         {
-            DiscoveryOptions options = config.getDiscoveryOptions("Mobile");
+            final DiscoveryOptions options = config.getDiscoveryOptions("Mobile");
 
-            CaptureDiscoveryResponse captureDiscoveryResponse = new CaptureDiscoveryResponse();
-            discovery.startAutomatedOperatorDiscovery(config,
-                                                      config.getDiscoveryRedirectURL(),
-                                                      options,
-                                                      null,
-                                                      captureDiscoveryResponse);
+            final CaptureDiscoveryResponse captureDiscoveryResponse = new CaptureDiscoveryResponse();
+            this.discovery.startAutomatedOperatorDiscovery(config,
+                                                           config.getDiscoveryRedirectURL(),
+                                                           options,
+                                                           null,
+                                                           captureDiscoveryResponse);
             discoveryResponse = captureDiscoveryResponse.getDiscoveryResponse();
-            CompleteSelectedOperatorDiscoveryOptions optionsSelected = config
-                    .getCompleteSelectedOperatorDiscoveryOptions();
         }
-        catch (DiscoveryException ex)
+        catch (final DiscoveryException ex)
         {
             return MobileConnectStatus.error(INTERNAL_ERROR_CODE, "Failed to obtain operator details.", ex);
         }
@@ -92,7 +90,7 @@ public class DiscoveryService extends BaseService
         {
             if (!isSuccessResponseCode(discoveryResponse.getResponseCode()))
             {
-                ErrorResponse errorResponse = getErrorResponse(discoveryResponse);
+                final ErrorResponse errorResponse = getErrorResponse(discoveryResponse);
                 return MobileConnectStatus.error(errorResponse.get_error(),
                                                  errorResponse.get_error_description(),
                                                  discoveryResponse);
@@ -101,7 +99,7 @@ public class DiscoveryService extends BaseService
 
         // The DiscoveryResponse may contain the operator endpoints in which case we can proceed to authorization
         // with an operator.
-        String operatorSelectionURL = discovery.extractOperatorSelectionURL(discoveryResponse);
+        final String operatorSelectionURL = this.discovery.extractOperatorSelectionURL(discoveryResponse);
         if (!StringUtils.isNullOrEmpty(operatorSelectionURL))
         {
             return MobileConnectStatus.operatorSelection(operatorSelectionURL);
@@ -120,40 +118,40 @@ public class DiscoveryService extends BaseService
      * @param config Mobile Connect Configuration instance
      * @return A status object
      */
-    public MobileConnectStatus callMobileConnectOnDiscoveryRedirect(MobileConnectConfig config)
+    public MobileConnectStatus callMobileConnectOnDiscoveryRedirect(final MobileConnectConfig config)
     {
-        CaptureParsedDiscoveryRedirect captureParsedDiscoveryRedirect = new CaptureParsedDiscoveryRedirect();
+        final CaptureParsedDiscoveryRedirect captureParsedDiscoveryRedirect = new CaptureParsedDiscoveryRedirect();
         try
         {
-            String url = DiscoveryModel.getInstance().getDiscoveryServiceRedirectedURL();
-            discovery.parseDiscoveryRedirect(url, captureParsedDiscoveryRedirect);
+            final String url = DiscoveryModel.getInstance().getDiscoveryServiceRedirectedURL();
+            this.discovery.parseDiscoveryRedirect(url, captureParsedDiscoveryRedirect);
         }
-        catch (URISyntaxException ex)
+        catch (final URISyntaxException ex)
         {
             return MobileConnectStatus.error(INTERNAL_ERROR_CODE, "Cannot parse the redirect parameters.", ex);
         }
 
-        ParsedDiscoveryRedirect parsedDiscoveryRedirect = captureParsedDiscoveryRedirect.getParsedDiscoveryRedirect();
+        final ParsedDiscoveryRedirect parsedDiscoveryRedirect = captureParsedDiscoveryRedirect.getParsedDiscoveryRedirect();
         if (parsedDiscoveryRedirect == null || !parsedDiscoveryRedirect.hasMCCAndMNC())
         {
             // The operator has not been identified, need to start again.
             return MobileConnectStatus.startDiscovery();
         }
 
-        DiscoveryResponse discoveryResponse;
+        final DiscoveryResponse discoveryResponse;
         try
         {
-            CompleteSelectedOperatorDiscoveryOptions options = config.getCompleteSelectedOperatorDiscoveryOptions();
-            CaptureDiscoveryResponse captureDiscoveryResponse = new CaptureDiscoveryResponse();
+            final CompleteSelectedOperatorDiscoveryOptions options = config.getCompleteSelectedOperatorDiscoveryOptions();
+            final CaptureDiscoveryResponse captureDiscoveryResponse = new CaptureDiscoveryResponse();
 
             // Obtain the discovery information for the selected operator
-            discovery.completeSelectedOperatorDiscovery(config,
-                                                        config.getDiscoveryRedirectURL(),
-                                                        parsedDiscoveryRedirect.getSelectedMCC(),
-                                                        parsedDiscoveryRedirect.getSelectedMNC(),
-                                                        options,
-                                                        null,
-                                                        captureDiscoveryResponse);
+            this.discovery.completeSelectedOperatorDiscovery(config,
+                                                             config.getDiscoveryRedirectURL(),
+                                                             parsedDiscoveryRedirect.getSelectedMCC(),
+                                                             parsedDiscoveryRedirect.getSelectedMNC(),
+                                                             options,
+                                                             null,
+                                                             captureDiscoveryResponse);
             discoveryResponse = captureDiscoveryResponse.getDiscoveryResponse();
 
             //move to models
@@ -161,7 +159,7 @@ public class DiscoveryService extends BaseService
             DiscoveryModel.getInstance().setMnc(parsedDiscoveryRedirect.getSelectedMNC());
             DiscoveryModel.getInstance().setEncryptedMSISDN(parsedDiscoveryRedirect.getEncryptedMSISDN());
         }
-        catch (DiscoveryException ex)
+        catch (final DiscoveryException ex)
         {
             return MobileConnectStatus.error(INTERNAL_ERROR_CODE, "Failed to obtain operator details.", ex);
         }
@@ -170,14 +168,14 @@ public class DiscoveryService extends BaseService
         {
             if (!isSuccessResponseCode(discoveryResponse.getResponseCode()))
             {
-                ErrorResponse errorResponse = getErrorResponse(discoveryResponse);
+                final ErrorResponse errorResponse = getErrorResponse(discoveryResponse);
                 return MobileConnectStatus.error(errorResponse.get_error(),
                                                  errorResponse.get_error_description(),
                                                  discoveryResponse);
             }
         }
 
-        if (discovery.isOperatorSelectionRequired(discoveryResponse))
+        if (this.discovery.isOperatorSelectionRequired(discoveryResponse))
         {
             return MobileConnectStatus.startDiscovery();
         }
@@ -186,7 +184,7 @@ public class DiscoveryService extends BaseService
     }
 
     /**
-     * Create an Android WebView to display the MNO Discovery page. The Webview then captures the redirect on success
+     * Create an Android WebView to display the MNO Discovery page. The {@link android.webkit.WebView} then captures the redirect on success
      * containing
      * the MMC and MNC values. The handler is then called with these values.
      *
@@ -205,12 +203,12 @@ public class DiscoveryService extends BaseService
 
         final ViewGroup nullParent = null;
 
-        RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(context)
-                                                                      .inflate(R.layout.layout_web_view,
+        final RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(context)
+                                                                            .inflate(R.layout.layout_web_view,
                                                                                nullParent,
                                                                                false);
 
-        final InteractableWebView webView = (InteractableWebView) webViewLayout.findViewById(R.id.web_view);
+        final MobileConnectWebView webView = (MobileConnectWebView) webViewLayout.findViewById(R.id.web_view);
         final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
 
         final DiscoveryAuthenticationDialog dialog = DiscoveryAuthenticationDialog.getInstance(context);
@@ -235,9 +233,9 @@ public class DiscoveryService extends BaseService
      * @param discoveryResponse The discovery response to check.
      * @return The extracted error response, or a generic error.
      */
-    ErrorResponse getErrorResponse(DiscoveryResponse discoveryResponse)
+    private ErrorResponse getErrorResponse(final DiscoveryResponse discoveryResponse)
     {
-        ErrorResponse errorResponse = discovery.getErrorResponse(discoveryResponse);
+        ErrorResponse errorResponse = this.discovery.getErrorResponse(discoveryResponse);
         if (null == errorResponse)
         {
             errorResponse = new ErrorResponse();
@@ -247,22 +245,22 @@ public class DiscoveryService extends BaseService
         return errorResponse;
     }
 
-    public void setDiscovery(IDiscovery discovery)
+    public void setDiscovery(final IDiscovery discovery)
     {
         this.discovery = discovery;
     }
 
     private class DiscoveryWebViewClient extends MobileConnectWebViewClient
     {
-        private DiscoveryListener listener;
+        private final DiscoveryListener listener;
 
-        private MobileConnectConfig config;
+        private final MobileConnectConfig config;
 
-        public DiscoveryWebViewClient(Dialog dialog,
-                                      ProgressBar progressBar,
-                                      String redirectUrl,
-                                      DiscoveryListener listener,
-                                      MobileConnectConfig config)
+        public DiscoveryWebViewClient(final Dialog dialog,
+                                      final ProgressBar progressBar,
+                                      final String redirectUrl,
+                                      final DiscoveryListener listener,
+                                      final MobileConnectConfig config)
         {
             super(dialog, progressBar, redirectUrl);
             this.listener = listener;
@@ -270,29 +268,29 @@ public class DiscoveryService extends BaseService
         }
 
         @Override
-        protected boolean qualifyUrl(String url)
+        protected boolean qualifyUrl(final String url)
         {
             return url.contains("mcc_mnc=");
         }
 
         @Override
-        protected void handleError(MobileConnectStatus status)
+        protected void handleError(final MobileConnectStatus status)
         {
-            listener.discoveryFailed(status);
+            this.listener.discoveryFailed(status);
         }
 
         @Override
-        protected void handleResult(String url)
+        protected void handleResult(final String url)
         {
             DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL(url);
 
             if (DiscoveryModel.getInstance().getDiscoveryServiceRedirectedURL() != null)
             {
-                MobileConnectStatus status = callMobileConnectOnDiscoveryRedirect(config);
+                final MobileConnectStatus status = callMobileConnectOnDiscoveryRedirect(this.config);
 
                 if (!status.isError() && !status.isStartDiscovery())
                 {
-                    listener.discoveryComplete(status);
+                    this.listener.discoveryComplete(status);
                 }
             }
         }

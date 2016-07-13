@@ -9,30 +9,32 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 /**
+ * A Custom {@link WebView} with pre-initialised Javascript.
+ * <p/>
  * Created by Usmaan.Dad on 6/17/2016.
  */
-public class InteractableWebView extends WebView
+public class MobileConnectWebView extends WebView
 {
-    public InteractableWebView(Context context)
+    public MobileConnectWebView(final Context context)
     {
         super(context);
         initialise(context);
     }
 
-    public InteractableWebView(Context context, AttributeSet attrs)
+    public MobileConnectWebView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         initialise(context);
     }
 
-    public InteractableWebView(Context context, AttributeSet attrs, int defStyleAttr)
+    public MobileConnectWebView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         initialise(context);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void initialise(Context context)
+    private void initialise(final Context context)
     {
         if (!isInEditMode())
         {
@@ -50,7 +52,7 @@ public class InteractableWebView extends WebView
             setFocusableInTouchMode(true);
             requestFocus(View.FOCUS_DOWN);
 
-            WebSettings settings = getSettings();
+            final WebSettings settings = getSettings();
 
             settings.setJavaScriptEnabled(true);
             settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -60,7 +62,9 @@ public class InteractableWebView extends WebView
             settings.setSupportZoom(false);
             settings.setUseWideViewPort(false);
 
-            String databasePath = context.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
+            final String databasePath = context.getApplicationContext()
+                                               .getDir("database", Context.MODE_PRIVATE)
+                                               .getPath();
             settings.setDatabasePath(databasePath);
         }
     }

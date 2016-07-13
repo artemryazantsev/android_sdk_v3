@@ -47,7 +47,7 @@ import com.gsma.mobileconnect.utils.ErrorResponse;
 import com.gsma.mobileconnect.utils.NoFieldException;
 import com.gsma.mobileconnect.utils.StringUtils;
 import com.gsma.mobileconnect.view.DiscoveryAuthenticationDialog;
-import com.gsma.mobileconnect.view.InteractableWebView;
+import com.gsma.mobileconnect.view.MobileConnectWebView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -61,31 +61,17 @@ public class AuthorizationService extends BaseService
 {
     private static final String TAG = AuthorizationService.class.getName();
 
-    private IOIDC oidc;
-
-    private static final String MOBILE_CONNECT_SESSION_LOCK = "gsma:mc:session_lock";
-
-    private static final String MOBILE_CONNECT_SESSION_KEY = "gsma:mc:session_key";
-
-    private static final Object LOCK_OBJECT = new Object();
-
-    private static final String X_FORWARDED_FOR_HEADER = "X-FORWARDED-FOR";
-
-    private static final String SET_COOKIE_HEADER = "set-cookie";
-
-    private static final int HTTP_OK = 200;
-
-    private static final int HTTP_ACCEPTED = 202;
+    private final IOIDC oidc;
 
     private static final String INTERNAL_ERROR_CODE = "internal error";
 
     public AuthorizationService()
     {
-        AndroidRestClient client = new AndroidRestClient();
-        oidc = new AndroidOIDCImpl(client);
+        final AndroidRestClient client = new AndroidRestClient();
+        this.oidc = new AndroidOIDCImpl(client);
     }
 
-    public AuthorizationService(IOIDC oidc)
+    public AuthorizationService(final IOIDC oidc)
     {
         this.oidc = oidc;
     }
@@ -99,8 +85,8 @@ public class AuthorizationService extends BaseService
      * @param discoveryResponse The discoveryResponse Object
      * @return A status object that is either an error, start discovery or complete.
      */
-    public MobileConnectStatus callMobileConnectOnAuthorizationRedirect(MobileConnectConfig config,
-                                                                        DiscoveryResponse discoveryResponse)
+    public MobileConnectStatus callMobileConnectOnAuthorizationRedirect(final MobileConnectConfig config,
+                                                                        final DiscoveryResponse discoveryResponse)
     {
         if (discoveryResponse == null)
         {
@@ -109,11 +95,11 @@ public class AuthorizationService extends BaseService
 
         try
         {
-            String url = DiscoveryModel.getInstance().getDiscoveryServiceRedirectedURL();
-            CaptureParsedAuthorizationResponse captureParsedAuthorizationResponse = new
+            final String url = DiscoveryModel.getInstance().getDiscoveryServiceRedirectedURL();
+            final CaptureParsedAuthorizationResponse captureParsedAuthorizationResponse = new
                     CaptureParsedAuthorizationResponse();
-            oidc.parseAuthenticationResponse(url, captureParsedAuthorizationResponse);
-            ParsedAuthorizationResponse parsedAuthorizationResponse = captureParsedAuthorizationResponse
+            this.oidc.parseAuthenticationResponse(url, captureParsedAuthorizationResponse);
+            final ParsedAuthorizationResponse parsedAuthorizationResponse = captureParsedAuthorizationResponse
                     .getParsedAuthorizationResponse();
 
             if (!StringUtils.isNullOrEmpty(parsedAuthorizationResponse.get_error()))
@@ -132,27 +118,27 @@ public class AuthorizationService extends BaseService
                                                  null);
             }
 
-            TokenOptions tokenOptions = config.getTokenOptions();
-            CaptureRequestTokenResponse captureRequestTokenResponse = new CaptureRequestTokenResponse();
+            final TokenOptions tokenOptions = config.getTokenOptions();
+            final CaptureRequestTokenResponse captureRequestTokenResponse = new CaptureRequestTokenResponse();
 
-            oidc.requestToken(discoveryResponse,
-                              config.getApplicationURL(),
-                              parsedAuthorizationResponse.get_code(),
-                              tokenOptions,
-                              captureRequestTokenResponse);
+            this.oidc.requestToken(discoveryResponse,
+                                   config.getApplicationURL(),
+                                   parsedAuthorizationResponse.get_code(),
+                                   tokenOptions,
+                                   captureRequestTokenResponse);
 
-            RequestTokenResponse requestTokenResponse = captureRequestTokenResponse.getRequestTokenResponse();
+            final RequestTokenResponse requestTokenResponse = captureRequestTokenResponse.getRequestTokenResponse();
 
             if (!isSuccessResponseCode(requestTokenResponse.getResponseCode()))
             {
-                ErrorResponse errorResponse = getErrorResponse(requestTokenResponse);
+                final ErrorResponse errorResponse = getErrorResponse(requestTokenResponse);
                 return MobileConnectStatus.error(errorResponse.get_error(),
                                                  errorResponse.get_error_description(),
                                                  parsedAuthorizationResponse,
                                                  requestTokenResponse);
             }
 
-            ErrorResponse errorResponse = requestTokenResponse.getErrorResponse();
+            final ErrorResponse errorResponse = requestTokenResponse.getErrorResponse();
             if (null != errorResponse)
             {
                 return MobileConnectStatus.error(errorResponse.get_error(),
@@ -163,14 +149,14 @@ public class AuthorizationService extends BaseService
 
             return MobileConnectStatus.complete(parsedAuthorizationResponse, requestTokenResponse);
         }
-        catch (OIDCException ex)
+        catch (final OIDCException ex)
         {
             Log.e("authorize redirect", ex.getMessage());
             return MobileConnectStatus.error("Failed to obtain a token.",
                                              "Failed to obtain an authentication token from the operator.",
                                              ex);
         }
-        catch (DiscoveryResponseExpiredException ex)
+        catch (final DiscoveryResponseExpiredException ex)
         {
             return MobileConnectStatus.startDiscovery();
         }
@@ -184,7 +170,7 @@ public class AuthorizationService extends BaseService
      * @param requestTokenResponse The request token response to query
      * @return The extracted error or a generic error
      */
-    ErrorResponse getErrorResponse(RequestTokenResponse requestTokenResponse)
+    private ErrorResponse getErrorResponse(final RequestTokenResponse requestTokenResponse)
     {
         ErrorResponse errorResponse = requestTokenResponse.getErrorResponse();
         if (null == errorResponse)
@@ -205,16 +191,19 @@ public class AuthorizationService extends BaseService
      * @param requestState  The state contained in the request.
      * @return True if the states match, false otherwise.
      */
-    boolean hasMatchingState(String responseState, String requestState)
+    boolean hasMatchingState(final String responseState, final String requestState)
     {
+        // Return true if both are empty
         if (StringUtils.isNullOrEmpty(requestState) && StringUtils.isNullOrEmpty(responseState))
         {
             return true;
         }
+        // Return false if one is null and the other isn't
         else if (StringUtils.isNullOrEmpty(requestState) || StringUtils.isNullOrEmpty(responseState))
         {
             return false;
         }
+        // Check if they're both equal
         else
         {
             return requestState.equals(responseState);
@@ -242,14 +231,14 @@ public class AuthorizationService extends BaseService
      * @throws UnsupportedEncodingException
      */
     public void authorize(final MobileConnectConfig config,
-                          String authUri,
-                          String scopes,
+                          final String authUri,
+                          final String scopes,
                           final String redirectUri,
-                          String state,
-                          String nonce,
-                          int maxAge,
-                          String acrValues,
-                          Activity activity,
+                          final String state,
+                          final String nonce,
+                          final int maxAge,
+                          final String acrValues,
+                          final Activity activity,
                           final AuthorizationListener listener,
                           final DiscoveryResponse response) throws UnsupportedEncodingException
     {
@@ -290,20 +279,20 @@ public class AuthorizationService extends BaseService
      * @throws UnsupportedEncodingException
      */
     public void authorize(final MobileConnectConfig config,
-                          String authUri,
-                          String scopes,
-                          final String redirectUri,
-                          String state,
-                          String nonce,
-                          int maxAge,
-                          String acrValues,
-                          Context context,
-                          final AuthorizationListener listener,
-                          final DiscoveryResponse response,
-                          HashMap<String, Object> hmapExtraOptions) throws UnsupportedEncodingException
+                           String authUri,
+                           final String scopes,
+                           final String redirectUri,
+                           final String state,
+                           final String nonce,
+                           final int maxAge,
+                           final String acrValues,
+                           final Context context,
+                           final AuthorizationListener listener,
+                           final DiscoveryResponse response,
+                           final HashMap<String, Object> hmapExtraOptions) throws UnsupportedEncodingException
     {
-        JsonNode discoveryResponseWrapper = response.getResponseData();
-        JsonNode discoveryResponseJsonNode = discoveryResponseWrapper.get("response");
+        final JsonNode discoveryResponseWrapper = response.getResponseData();
+        final JsonNode discoveryResponseJsonNode = discoveryResponseWrapper.get("response");
 
         String clientId = null;
         String clientSecret = null;
@@ -312,7 +301,7 @@ public class AuthorizationService extends BaseService
         {
             clientId = AndroidJsonUtils.getExpectedStringValue(discoveryResponseJsonNode, "client_id");
         }
-        catch (NoFieldException e)
+        catch (final NoFieldException e)
         {
             Log.e("authorize", e.getMessage());
         }
@@ -322,7 +311,7 @@ public class AuthorizationService extends BaseService
         {
             clientSecret = AndroidJsonUtils.getExpectedStringValue(discoveryResponseJsonNode, "client_secret");
         }
-        catch (NoFieldException e)
+        catch (final NoFieldException e)
         {
             Log.e("authorize", e.getMessage());
         }
@@ -354,7 +343,7 @@ public class AuthorizationService extends BaseService
             {
                 requestUri += "&";
             }
-            String charSet = Charset.defaultCharset().name();
+            final String charSet = Charset.defaultCharset().name();
             requestUri += "response_type=" + URLEncoder.encode("code", charSet);
             requestUri += "&client_id=" + URLEncoder.encode(clientId, charSet);
             requestUri += "&scope=" + URLEncoder.encode(scopes, charSet);
@@ -367,7 +356,7 @@ public class AuthorizationService extends BaseService
 
             if (hmapExtraOptions != null && hmapExtraOptions.size() > 0)
             {
-                for (String key : hmapExtraOptions.keySet())
+                for (final String key : hmapExtraOptions.keySet())
                 {
                     requestUri += "&" + key + "=" + URLEncoder.encode(hmapExtraOptions.get(key).toString(), charSet);
                 }
@@ -375,12 +364,12 @@ public class AuthorizationService extends BaseService
 
             final ViewGroup nullParent = null;
 
-            RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(context)
-                                                                          .inflate(R.layout.layout_web_view,
+            final RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(context)
+                                                                                .inflate(R.layout.layout_web_view,
                                                                                    nullParent,
                                                                                    false);
 
-            final InteractableWebView webView = (InteractableWebView) webViewLayout.findViewById(R.id.web_view);
+            final MobileConnectWebView webView = (MobileConnectWebView) webViewLayout.findViewById(R.id.web_view);
             final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
 
             final DiscoveryAuthenticationDialog dialog = DiscoveryAuthenticationDialog.getInstance(context);
@@ -395,7 +384,7 @@ public class AuthorizationService extends BaseService
             webView.setWebChromeClient(new WebChromeClient()
             {
                 @Override
-                public void onCloseWindow(WebView w)
+                public void onCloseWindow(final WebView w)
                 {
                     super.onCloseWindow(w);
                     Log.d(TAG, "Window close");
@@ -415,7 +404,7 @@ public class AuthorizationService extends BaseService
             webView.loadUrl(requestUri);
             dialog.show();
         }
-        catch (NullPointerException e)
+        catch (final NullPointerException e)
         {
             Log.d(TAG, "NullPointerException=" + e.getMessage(), e);
         }
@@ -423,18 +412,18 @@ public class AuthorizationService extends BaseService
 
     public class AuthorizationWebViewClient extends MobileConnectWebViewClient
     {
-        AuthorizationListener listener;
+        final AuthorizationListener listener;
 
-        MobileConnectConfig config;
+        final MobileConnectConfig config;
 
-        DiscoveryResponse response;
+        final DiscoveryResponse response;
 
-        public AuthorizationWebViewClient(Dialog dialog,
-                                          ProgressBar progressBar,
-                                          AuthorizationListener listener,
-                                          String redirectUri,
-                                          MobileConnectConfig config,
-                                          DiscoveryResponse response)
+        public AuthorizationWebViewClient(final Dialog dialog,
+                                          final ProgressBar progressBar,
+                                          final AuthorizationListener listener,
+                                          final String redirectUri,
+                                          final MobileConnectConfig config,
+                                          final DiscoveryResponse response)
         {
             super(dialog, progressBar, redirectUri);
             this.listener = listener;
@@ -443,43 +432,43 @@ public class AuthorizationService extends BaseService
         }
 
         @Override
-        protected boolean qualifyUrl(String url)
+        protected boolean qualifyUrl(final String url)
         {
             return url.contains("code");
         }
 
         @Override
-        protected void handleError(MobileConnectStatus status)
+        protected void handleError(final MobileConnectStatus status)
         {
-            listener.authorizationFailed(status);
+            this.listener.authorizationFailed(status);
         }
 
         @Override
-        protected void handleResult(String url)
+        protected void handleResult(final String url)
         {
-            dialog.cancel();
+            this.dialog.cancel();
 
-            ParameterList parameters = ParameterList.getKeyValuesFromUrl(url, 0);
+            final ParameterList parameters = ParameterList.getKeyValuesFromUrl(url, 0);
 
-            String state = parameters.getValue("state");
-            String code = parameters.getValue("code");
-            String error = parameters.getValue("error");
+            final String state = parameters.getValue("state");
+            final String code = parameters.getValue("code");
+            final String error = parameters.getValue("error");
 
             Log.d(TAG, "state = " + state);
             Log.d(TAG, "code = " + code);
             Log.d(TAG, "error = " + error);
             Log.d(TAG, "Redirect URL " + url);
             DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL(url);
-            config.setAuthorizationState(state);
+            this.config.setAuthorizationState(state);
 
-            AuthorizationService connect = new AuthorizationService();
-            MobileConnectStatus mobileConnectStatus = connect.callMobileConnectOnAuthorizationRedirect(config,
-                                                                                                       response);
-            notifyListener(mobileConnectStatus, listener);
+            final AuthorizationService connect = new AuthorizationService();
+            final MobileConnectStatus mobileConnectStatus = connect.callMobileConnectOnAuthorizationRedirect(this.config,
+                                                                                                             this.response);
+            notifyListener(mobileConnectStatus, this.listener);
         }
     }
 
-    protected void notifyListener(MobileConnectStatus mobileConnectStatus, AuthorizationListener listener)
+    void notifyListener(final MobileConnectStatus mobileConnectStatus, final AuthorizationListener listener)
     {
         if (mobileConnectStatus == null)
         {
@@ -505,16 +494,16 @@ public class AuthorizationService extends BaseService
             // Successfully authenticated, ParsedAuthenticationResponse and RequestTokenResponse are available
             try
             {
-                RequestTokenResponse response = mobileConnectStatus.getRequestTokenResponse();
-                RequestTokenResponseData responseData = response.getResponseData();
-                ParsedIdToken parsedIdToken = responseData.getParsedIdToken();
-                String token = parsedIdToken.get_pcr();
+                final RequestTokenResponse response = mobileConnectStatus.getRequestTokenResponse();
+                final RequestTokenResponseData responseData = response.getResponseData();
+                final ParsedIdToken parsedIdToken = responseData.getParsedIdToken();
+                final String token = parsedIdToken.get_pcr();
                 Log.d(TAG, "Authorization has completed successfully");
                 Log.d(TAG, "PCR is " + token);
 
                 listener.tokenReceived(mobileConnectStatus.getRequestTokenResponse());
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 //This shouldn't happen so we will catch as exception to ensure something would return
                 Log.d(TAG, "Part of the Auth response was incorrect", e);
@@ -538,7 +527,7 @@ public class AuthorizationService extends BaseService
      *                  authenticated/consented.
      * @return ParameterList
      */
-    public ParameterList extractRedirectParameter(String returnUri)
+    public ParameterList extractRedirectParameter(final String returnUri)
     {
         ParameterList parameters = null;
 

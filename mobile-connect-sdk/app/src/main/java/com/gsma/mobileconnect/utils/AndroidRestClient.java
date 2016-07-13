@@ -35,9 +35,9 @@ public class AndroidRestClient extends RestClient
 {
 
     @Override
-    public HttpClientContext getHttpClientContext(String username, String password, URI uriForRealm)
+    public HttpClientContext getHttpClientContext(final String username, final String password, final URI uriForRealm)
     {
-        String host = uriForRealm.getHost();
+        final String host = uriForRealm.getHost();
         int port = uriForRealm.getPort();
         if (port == -1)
         {
@@ -51,12 +51,12 @@ public class AndroidRestClient extends RestClient
             }
         }
 
-        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(new AuthScope(host, port),
                                            new UsernamePasswordCredentials(username, password));
-        BasicAuthCache authCache = new BasicAuthCache();
+        final BasicAuthCache authCache = new BasicAuthCache();
         authCache.put(new HttpHost(host, port, uriForRealm.getScheme()), new BasicScheme());
-        HttpClientContext context = HttpClientContext.create();
+        final HttpClientContext context = HttpClientContext.create();
         context.setCredentialsProvider(credentialsProvider);
         context.setAuthCache(authCache);
         return context;
@@ -64,40 +64,41 @@ public class AndroidRestClient extends RestClient
 
     @Override
     public RestResponse callRestEndPoint(final HttpRequestBase httpRequest,
-                                         HttpClientContext context,
-                                         int timeout,
-                                         List<KeyValuePair> cookiesToProxy) throws RestException, IOException
+                                         final HttpClientContext context,
+                                         final int timeout,
+                                         final List<KeyValuePair> cookiesToProxy) throws RestException, IOException
     {
-        CookieStore cookieStore = this.buildCookieStore(httpRequest.getURI().getHost(), cookiesToProxy);
+        final CookieStore cookieStore = this.buildCookieStore(httpRequest.getURI().getHost(), cookiesToProxy);
 
         RestResponse restResponse;
         CloseableHttpClient closeableHttpClient = null;
         try
         {
             closeableHttpClient = this.getHttpClient(cookieStore);
-            Timer timer = new Timer();
+            final Timer timer = new Timer();
             timer.schedule(new TimerTask()
             {
+                @Override
                 public void run()
                 {
                     httpRequest.abort();
                 }
             }, (long) timeout);
-            RequestConfig localConfig = RequestConfig.custom()
-                                                     .setConnectionRequestTimeout(timeout)
-                                                     .setConnectTimeout(timeout)
-                                                     .setSocketTimeout(timeout)
-                                                     .setCookieSpec("standard")
-                                                     .build();
+            final RequestConfig localConfig = RequestConfig.custom()
+                                                           .setConnectionRequestTimeout(timeout)
+                                                           .setConnectTimeout(timeout)
+                                                           .setSocketTimeout(timeout)
+                                                           .setCookieSpec("standard")
+                                                           .build();
             context.setRequestConfig(localConfig);
 
-            CloseableHttpResponse httpResponse = closeableHttpClient.execute(httpRequest, context);
+            final CloseableHttpResponse httpResponse = closeableHttpClient.execute(httpRequest, context);
             restResponse = this.buildRestResponse(httpRequest, httpResponse);
             checkRestResponse(restResponse);
         }
-        catch (IOException ioe)
+        catch (final IOException ioe)
         {
-            String requestUri = httpRequest.getURI().toString();
+            final String requestUri = httpRequest.getURI().toString();
             if (httpRequest.isAborted())
             {
                 throw new RestException("Rest end point did not respond", requestUri);
@@ -118,9 +119,9 @@ public class AndroidRestClient extends RestClient
         return restResponse;
     }
 
-    private CookieStore buildCookieStore(String host, List<KeyValuePair> cookiesToProxy)
+    private CookieStore buildCookieStore(final String host, final List<KeyValuePair> cookiesToProxy)
     {
-        BasicCookieStore cookieStore = new BasicCookieStore();
+        final BasicCookieStore cookieStore = new BasicCookieStore();
         if (cookiesToProxy == null)
         {
             return cookieStore;
@@ -128,9 +129,10 @@ public class AndroidRestClient extends RestClient
         else
         {
 
-            for (KeyValuePair cookieToProxy : cookiesToProxy)
+            for (final KeyValuePair cookieToProxy : cookiesToProxy)
             {
-                BasicClientCookie cookie = new BasicClientCookie(cookieToProxy.getKey(), cookieToProxy.getValue());
+                final BasicClientCookie cookie = new BasicClientCookie(cookieToProxy.getKey(),
+                                                                       cookieToProxy.getValue());
                 cookie.setDomain(host);
                 cookieStore.addCookie(cookie);
             }
@@ -139,32 +141,31 @@ public class AndroidRestClient extends RestClient
         }
     }
 
-    private CloseableHttpClient getHttpClient(CookieStore cookieStore)
+    private CloseableHttpClient getHttpClient(final CookieStore cookieStore)
     {
-        CloseableHttpClient httpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-        return httpClient;
+        return HttpClients.custom().setDefaultCookieStore(cookieStore).build();
     }
 
-    private RestResponse buildRestResponse(HttpRequestBase request, CloseableHttpResponse closeableHttpResponse) throws
-                                                                                                                 IOException
+    private RestResponse buildRestResponse(final HttpRequestBase request,
+                                           final CloseableHttpResponse closeableHttpResponse) throws IOException
     {
-        String requestUri = request.getURI().toString();
-        int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
-        HeaderIterator headers = closeableHttpResponse.headerIterator();
-        ArrayList headerList = new ArrayList(3);
+        final String requestUri = request.getURI().toString();
+        final int statusCode = closeableHttpResponse.getStatusLine().getStatusCode();
+        final HeaderIterator headers = closeableHttpResponse.headerIterator();
+        final List<KeyValuePair> headerList = new ArrayList<>(3);
 
         while (headers.hasNext())
         {
-            Header httpEntity = headers.nextHeader();
+            final Header httpEntity = headers.nextHeader();
             headerList.add(new KeyValuePair(httpEntity.getName(), httpEntity.getValue()));
         }
 
-        HttpEntity entity = closeableHttpResponse.getEntity();
-        String responseData = EntityUtils.toString(entity);
+        final HttpEntity entity = closeableHttpResponse.getEntity();
+        final String responseData = EntityUtils.toString(entity);
         return new RestResponse(requestUri, statusCode, headerList, responseData);
     }
 
-    private static void checkRestResponse(RestResponse response) throws RestException
+    private static void checkRestResponse(final RestResponse response) throws RestException
     {
         if (!response.isJsonContent())
         {

@@ -6,7 +6,7 @@ package com.gsma.android.model;
  */
 public class DeviceModel
 {
-    private static DeviceModel ourInstance = new DeviceModel();
+    private static final DeviceModel ourInstance = new DeviceModel();
 
     private DeviceModel()
     {

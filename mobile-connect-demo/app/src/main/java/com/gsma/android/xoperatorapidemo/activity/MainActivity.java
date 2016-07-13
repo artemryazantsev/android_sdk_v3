@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
 
     static Handler phoneStatusHandler = null;
 
-    private static boolean discoveryComplete = false;
+    private static final boolean discoveryComplete = false;
 
     private static boolean connectionExists = true;
 
@@ -90,7 +90,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
 
     MobileConnectConfig config;
 
-    private BroadcastReceiver ConnectivityChangedReceiver = new BroadcastReceiver()
+    private final BroadcastReceiver ConnectivityChangedReceiver = new BroadcastReceiver()
     {
         @Override
         public void onReceive(Context context, Intent intent)

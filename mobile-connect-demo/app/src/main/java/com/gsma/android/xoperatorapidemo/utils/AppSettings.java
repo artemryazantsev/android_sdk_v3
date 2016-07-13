@@ -8,8 +8,6 @@ import com.gsma.mobileconnect.helpers.MobileConnectConfig;
  */
 public class AppSettings
 {
-
-
     /*
      * The following must be configured correctly for your application.
      * Use the Mobile Connect developer portal - https://developer.mobileconnect.io
@@ -22,44 +20,19 @@ public class AppSettings
      */
 
     // Use msisdn +447700900250 or replace the following credentials with your own working credentials
-    private static String discoveryURL = "http://discovery.sandbox2.mobileconnect.io/v2/discovery";
+    private static final String discoveryURL = "http://discovery.sandbox2.mobileconnect.io/v2/discovery";
 
-    private static String discoveryClientID = "66742a85-2282-4747-881d-ed5b7bd74d2d";
+    private static final String discoveryClientID = "66742a85-2282-4747-881d-ed5b7bd74d2d";
 
-    private static String discoveryClientSecret = "f15199f4-b658-4e58-8bb3-e40998873392";
+    private static final String discoveryClientSecret = "f15199f4-b658-4e58-8bb3-e40998873392";
 
-    private static String applicationRedirectURL = "http://localhost:8001/mobileconnect.html";
+    private static final String applicationRedirectURL = "http://localhost:8001/mobileconnect.html";
 
     /*
      * This URL is opened at the end of the discovery phase - it doesn't specifically need to be
      * changed, and it doesn't need to exist for the SDK to recognise discovery is complete.
      */
-    private static String discoveryRedirectURL = "http://localhost:8001/mobileconnect.html";
-
-    public static String getDiscoveryClientID()
-    {
-        return discoveryClientID;
-    }
-
-    public static String getDiscoveryClientSecret()
-    {
-        return discoveryClientSecret;
-    }
-
-    public static String getApplicationRedirectURL()
-    {
-        return applicationRedirectURL;
-    }
-
-    public static String getDiscoveryURL()
-    {
-        return discoveryURL;
-    }
-
-    public static String getDiscoveryRedirectURL()
-    {
-        return discoveryRedirectURL;
-    }
+    private static final String discoveryRedirectURL = "http://localhost:8001/mobileconnect.html";
 
     public static MobileConnectConfig getMobileConnectConfig()
     {
