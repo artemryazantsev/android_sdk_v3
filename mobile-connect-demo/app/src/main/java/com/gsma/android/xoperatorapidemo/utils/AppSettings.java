@@ -6,7 +6,7 @@ import com.gsma.mobileconnect.helpers.MobileConnectConfig;
 /*
  * Customise the settings in this file in order to use your own application details
  */
-public class AppSettings
+public final class AppSettings
 {
     /*
      * The following must be configured correctly for your application.
@@ -37,7 +37,7 @@ public class AppSettings
     public static MobileConnectConfig getMobileConnectConfig()
     {
 
-        MobileConnectConfig mobileConnectConfig = new MobileConnectConfig();
+        final MobileConnectConfig mobileConnectConfig = new MobileConnectConfig();
 
         // Registered application client id
         mobileConnectConfig.setClientId(discoveryClientID);
@@ -55,7 +55,7 @@ public class AppSettings
         // handler below
         mobileConnectConfig.setDiscoveryRedirectURL(discoveryRedirectURL);
 
-        DiscoveryService service = new DiscoveryService();
+        final DiscoveryService service = new DiscoveryService();
 
         // Authorization State would typically set to a unique value
         mobileConnectConfig.setAuthorizationState(service.generateUniqueString("S_"));

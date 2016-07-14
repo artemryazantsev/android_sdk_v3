@@ -23,14 +23,14 @@ public class PhoneState
 
     String simSerialNumber = null; // the SIM serial number
 
-    public PhoneState(String msisdn,
-                      String simOperator,
-                      String mcc,
-                      String mnc,
-                      boolean connected,
-                      boolean usingMobileData,
-                      boolean roaming,
-                      String simSerialNumber)
+    public PhoneState(final String msisdn,
+                      final String simOperator,
+                      final String mcc,
+                      final String mnc,
+                      final boolean connected,
+                      final boolean usingMobileData,
+                      final boolean roaming,
+                      final String simSerialNumber)
     {
         this.msisdn = msisdn;
         this.simOperator = simOperator;
@@ -47,13 +47,13 @@ public class PhoneState
      */
     public String getMsisdn()
     {
-        return msisdn;
+        return this.msisdn;
     }
 
     /**
      * @param msisdn the msisdn to set
      */
-    public void setMsisdn(String msisdn)
+    public void setMsisdn(final String msisdn)
     {
         this.msisdn = msisdn;
     }
@@ -63,13 +63,13 @@ public class PhoneState
      */
     public String getSimOperator()
     {
-        return simOperator;
+        return this.simOperator;
     }
 
     /**
      * @param simOperator the simOperator to set
      */
-    public void setSimOperator(String simOperator)
+    public void setSimOperator(final String simOperator)
     {
         this.simOperator = simOperator;
     }
@@ -79,13 +79,13 @@ public class PhoneState
      */
     public String getMcc()
     {
-        return mcc;
+        return this.mcc;
     }
 
     /**
      * @param mcc the mcc to set
      */
-    public void setMcc(String mcc)
+    public void setMcc(final String mcc)
     {
         this.mcc = mcc;
     }
@@ -95,13 +95,13 @@ public class PhoneState
      */
     public String getMnc()
     {
-        return mnc;
+        return this.mnc;
     }
 
     /**
      * @param mnc the mnc to set
      */
-    public void setMnc(String mnc)
+    public void setMnc(final String mnc)
     {
         this.mnc = mnc;
     }
@@ -111,13 +111,13 @@ public class PhoneState
      */
     public boolean isConnected()
     {
-        return connected;
+        return this.connected;
     }
 
     /**
      * @param connected the connected to set
      */
-    public void setConnected(boolean connected)
+    public void setConnected(final boolean connected)
     {
         this.connected = connected;
     }
@@ -127,13 +127,13 @@ public class PhoneState
      */
     public boolean isUsingMobileData()
     {
-        return usingMobileData;
+        return this.usingMobileData;
     }
 
     /**
      * @param usingMobileData the usingMobileData to set
      */
-    public void setUsingMobileData(boolean usingMobileData)
+    public void setUsingMobileData(final boolean usingMobileData)
     {
         this.usingMobileData = usingMobileData;
     }
@@ -143,13 +143,13 @@ public class PhoneState
      */
     public boolean isRoaming()
     {
-        return roaming;
+        return this.roaming;
     }
 
     /**
      * @param roaming the roaming to set
      */
-    public void setRoaming(boolean roaming)
+    public void setRoaming(final boolean roaming)
     {
         this.roaming = roaming;
     }
@@ -159,13 +159,13 @@ public class PhoneState
      */
     public String getSimSerialNumber()
     {
-        return simSerialNumber;
+        return this.simSerialNumber;
     }
 
     /**
      * @param simSerialNumber the simSerialNumber to set
      */
-    public void setSimSerialNumber(String simSerialNumber)
+    public void setSimSerialNumber(final String simSerialNumber)
     {
         this.simSerialNumber = simSerialNumber;
     }

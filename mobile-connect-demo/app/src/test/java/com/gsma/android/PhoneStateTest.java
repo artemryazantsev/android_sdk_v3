@@ -34,26 +34,26 @@ public class PhoneStateTest
 
     PhoneState nullPhoneState = new PhoneState(null, null, null, null, false, false, false, null);
 
-    String usernumber = "07111111111";
+    final String usernumber = "07111111111";
 
-    String simSerialNumber = "xxxx";
+    final String simSerialNumber = "xxxx";
 
-    String validSimOperator = "123456";
+    final String validSimOperator = "123456";
 
-    String inValidSimOperator = "11";
+    final String inValidSimOperator = "11";
 
-    String negativeSimOperator = "-123456";
+    final String negativeSimOperator = "-123456";
 
-    boolean networkIsConnected = true;
+    final boolean networkIsConnected = true;
 
-    boolean roamingIsOn = true;
+    final boolean roamingIsOn = true;
 
     @Before
     public void setup()
     {
-        telephonyManager = mock(TelephonyManager.class);
-        connectivityManager = mock(ConnectivityManager.class);
-        networkInfo = mock(NetworkInfo.class);
+        this.telephonyManager = mock(TelephonyManager.class);
+        this.connectivityManager = mock(ConnectivityManager.class);
+        this.networkInfo = mock(NetworkInfo.class);
     }
 
     /*Tests*/
@@ -62,130 +62,130 @@ public class PhoneStateTest
     public void getMcc_ShouldReturnCorrectMCC_WhenValidSimOperator()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock SIM serial number
-        when(telephonyManager.getSimSerialNumber()).thenReturn(simSerialNumber);
+        when(this.telephonyManager.getSimSerialNumber()).thenReturn(this.simSerialNumber);
         //mock SIM operator
-        when(telephonyManager.getSimOperator()).thenReturn(validSimOperator);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertEquals("123", state.getMcc());
+        when(this.telephonyManager.getSimOperator()).thenReturn(this.validSimOperator);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertEquals("123", this.state.getMcc());
     }
 
     @Test
     public void getMcc_ShouldReturnNull_WhenInValidSimOperator()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock SIM operator
-        when(telephonyManager.getSimOperator()).thenReturn(inValidSimOperator);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertNull(state.getMcc());
+        when(this.telephonyManager.getSimOperator()).thenReturn(this.inValidSimOperator);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertNull(this.state.getMcc());
     }
 
     @Test
     public void getMcc_ShouldReturnNull_WhenNegativeSimOperator()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock SIM operator
-        when(telephonyManager.getSimOperator()).thenReturn(negativeSimOperator);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertNull(state.getMcc());
+        when(this.telephonyManager.getSimOperator()).thenReturn(this.negativeSimOperator);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertNull(this.state.getMcc());
     }
 
     @Test
     public void getMnc_ShouldReturnCorrectMNC_WhenValidSimOperator()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock SIM serial number
-        when(telephonyManager.getSimSerialNumber()).thenReturn(simSerialNumber);
+        when(this.telephonyManager.getSimSerialNumber()).thenReturn(this.simSerialNumber);
         //mock SIM operator
-        when(telephonyManager.getSimOperator()).thenReturn(validSimOperator);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertEquals("456", state.getMnc());
+        when(this.telephonyManager.getSimOperator()).thenReturn(this.validSimOperator);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertEquals("456", this.state.getMnc());
     }
 
     @Test
     public void getMnc_ShouldReturnNull_WhenInValidSimOperator()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock SIM operator
-        when(telephonyManager.getSimOperator()).thenReturn(inValidSimOperator);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertNull(state.getMnc());
+        when(this.telephonyManager.getSimOperator()).thenReturn(this.inValidSimOperator);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertNull(this.state.getMnc());
     }
 
     @Test
     public void getMnc_ShouldReturnNull_WhenNegativeSimOperator()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock SIM operator
-        when(telephonyManager.getSimOperator()).thenReturn(negativeSimOperator);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertNull(state.getMnc());
+        when(this.telephonyManager.getSimOperator()).thenReturn(this.negativeSimOperator);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertNull(this.state.getMnc());
     }
 
     @Test
     public void getMsisdn_ShouldReturnCorrectMsisdn_WhenValidNumber()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock mobile telephone number of user
-        when(telephonyManager.getLine1Number()).thenReturn(usernumber);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertEquals(usernumber, state.getMsisdn());
+        when(this.telephonyManager.getLine1Number()).thenReturn(this.usernumber);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertEquals(this.usernumber, this.state.getMsisdn());
     }
 
     @Test
     public void getSimOperator_ShouldReturnCorrectSimOperator_WhenValidSimOperator()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock SIM operator
-        when(telephonyManager.getSimOperator()).thenReturn(validSimOperator);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertEquals(validSimOperator, state.getSimOperator());
+        when(this.telephonyManager.getSimOperator()).thenReturn(this.validSimOperator);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertEquals(this.validSimOperator, this.state.getSimOperator());
     }
 
     @Test
     public void getSimSerialNumber_ShouldReturnCorrectSimSerialNumber_WhenValidSimSerialNumber()
     {
         //set up connectivity manager
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
         //mock SIM serial number
-        when(telephonyManager.getSimSerialNumber()).thenReturn(simSerialNumber);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertEquals(simSerialNumber, state.getSimSerialNumber());
+        when(this.telephonyManager.getSimSerialNumber()).thenReturn(this.simSerialNumber);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertEquals(this.simSerialNumber, this.state.getSimSerialNumber());
     }
 
     @Test
     public void isConnected_ShouldReturnConnectionStatusAsTrue_WhenStatusConnectionIsTrue()
     {
         //mock Active Network Info, mock NetworkInfo first
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertEquals(networkIsConnected, state.isConnected());
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertEquals(this.networkIsConnected, this.state.isConnected());
     }
 
     @Test
     public void isRoaming_ShouldReturnRoamingStatusAsTrue_WhenStatusConnectionIsFalse()
     {
 
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertEquals(roamingIsOn, state.isRoaming());
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertEquals(this.roamingIsOn, this.state.isRoaming());
     }
 
     @Test
     public void isUsingMobileData_ShouldReturnTrue_WhenValidNetworkInfo()
     {
         //mock Active Network Info, mock NetworkInfo first
-        networkInfoSetUpForConnectivityManager(networkIsConnected, roamingIsOn, ConnectivityManager.TYPE_MOBILE);
-        state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
-        assertEquals(true, state.isUsingMobileData());
+        networkInfoSetUpForConnectivityManager(this.networkIsConnected, this.roamingIsOn, ConnectivityManager.TYPE_MOBILE);
+        this.state = PhoneUtils.getPhoneState(this.telephonyManager, this.connectivityManager);
+        assertEquals(true, this.state.isUsingMobileData());
     }
 
     /**
@@ -196,13 +196,13 @@ public class PhoneStateTest
      * @param isRoaming
      * @param type
      */
-    public void networkInfoSetUpForConnectivityManager(boolean isNetworkConnected, boolean isRoaming, int type)
+    public void networkInfoSetUpForConnectivityManager(final boolean isNetworkConnected, final boolean isRoaming, final int type)
     {
         //mock Active Network Info, mock NetworkInfo first
-        when(networkInfo.isConnected()).thenReturn(isNetworkConnected);
-        when(networkInfo.isRoaming()).thenReturn(isRoaming);
-        when(networkInfo.getType()).thenReturn(type);
+        when(this.networkInfo.isConnected()).thenReturn(isNetworkConnected);
+        when(this.networkInfo.isRoaming()).thenReturn(isRoaming);
+        when(this.networkInfo.getType()).thenReturn(type);
 
-        when(connectivityManager.getActiveNetworkInfo()).thenReturn(networkInfo);
+        when(this.connectivityManager.getActiveNetworkInfo()).thenReturn(this.networkInfo);
     }
 }

@@ -8,7 +8,7 @@ import android.telephony.TelephonyManager;
  * extract useful phone state information and return in the form of a PhoneState
  * object
  */
-public class PhoneUtils
+public final class PhoneUtils
 {
     private static final String TAG = "PhoneUtils";
 
@@ -20,35 +20,33 @@ public class PhoneUtils
      * @param connectivityMgr
      * @return
      */
-    public static PhoneState getPhoneState(TelephonyManager telephonyMgr, ConnectivityManager connectivityMgr)
+    public static PhoneState getPhoneState(final TelephonyManager telephonyMgr, final ConnectivityManager connectivityMgr)
     {
-
 		/*
          * the users' phone number is obtained - this is not always available/
 		 * valid
 		 */
-        String msisdn = telephonyMgr.getLine1Number();
+        final String msisdn = telephonyMgr.getLine1Number();
 
 		/*
          * get the active network
 		 */
-        NetworkInfo activeNetwork = connectivityMgr.getActiveNetworkInfo();
+        final NetworkInfo activeNetwork = connectivityMgr.getActiveNetworkInfo();
 
 		/*
 		 * check if the device is currently connected
 		 */
-        boolean connected = activeNetwork != null ? activeNetwork.isConnected() : false;
+        final boolean connected = activeNetwork != null && activeNetwork.isConnected();
 
 		/*
 		 * check if the device is currently roaming
 		 */
-        boolean roaming = activeNetwork != null ? activeNetwork.isRoaming() : false;
+        final boolean roaming = activeNetwork != null && activeNetwork.isRoaming();
 
 		/*
 		 * check if the device is using mobile/cellular data
 		 */
-        boolean usingMobileData =
-                activeNetwork != null ? activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE : false;
+        final boolean usingMobileData = activeNetwork != null && activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
 
 
 
@@ -56,13 +54,13 @@ public class PhoneUtils
 		/*
 		 * get the SIM serial number
 		 */
-        String simSerialNumber = telephonyMgr.getSimSerialNumber();
+        final String simSerialNumber = telephonyMgr.getSimSerialNumber();
 
 		/*
 		 * the simOperator indicates the registered network MCC/MNC the
 		 * networkOperator indicates the current network MCC/MNC
 		 */
-        String simOperator = telephonyMgr.getSimOperator();
+        final String simOperator = telephonyMgr.getSimOperator();
 		/*
 		 * Mobile Country Code is obtained from the first three digits of
 		 * simOperator, Mobile Network Code is any remaining digits

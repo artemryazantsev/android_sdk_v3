@@ -93,7 +93,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
     private final BroadcastReceiver ConnectivityChangedReceiver = new BroadcastReceiver()
     {
         @Override
-        public void onReceive(Context context, Intent intent)
+        public void onReceive(final Context context, final Intent intent)
         {
             updatePhoneState();
         }
@@ -103,7 +103,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
      * method called when the application first starts.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(final Bundle savedInstanceState)
     {
         Log.d(TAG, "Starting the app...");
 
@@ -114,27 +114,27 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
 
         Log.d(TAG, "onCreate called");
 
-        config = AppSettings.getMobileConnectConfig();
+        this.config = AppSettings.getMobileConnectConfig();
 
-        vMCC = (TextView) findViewById(R.id.valueMCC);
-        vMNC = (TextView) findViewById(R.id.valueMNC);
-        vMCC.setText(getText(R.string.valueUnknown));
-        vMNC.setText(getText(R.string.valueUnknown));
-        vStatus = (TextView) findViewById(R.id.valueStatus);
-        vDiscoveryStatus = (TextView) findViewById(R.id.valueDiscoveryStatus);
+        this.vMCC = (TextView) findViewById(R.id.valueMCC);
+        this.vMNC = (TextView) findViewById(R.id.valueMNC);
+        this.vMCC.setText(getText(R.string.valueUnknown));
+        this.vMNC.setText(getText(R.string.valueUnknown));
+        this.vStatus = (TextView) findViewById(R.id.valueStatus);
+        this.vDiscoveryStatus = (TextView) findViewById(R.id.valueDiscoveryStatus);
 
-        startOperatorId = (Button) findViewById(R.id.startOperatorId);
+        this.startOperatorId = (Button) findViewById(R.id.startOperatorId);
 
-        rlayout = (RelativeLayout) findViewById(R.id.mainActivity);
-        rlayout.setOnClickListener(new View.OnClickListener()
+        this.rlayout = (RelativeLayout) findViewById(R.id.mainActivity);
+        this.rlayout.setOnClickListener(new View.OnClickListener()
         {
 
             @Override
-            public void onClick(View v)
+            public void onClick(final View v)
             {
-                Toast noInternetConnection = Toast.makeText(getApplicationContext(),
-                                                            "No internet Connection",
-                                                            Toast.LENGTH_SHORT);
+                final Toast noInternetConnection = Toast.makeText(getApplicationContext(),
+                                                                  "No internet Connection",
+                                                                  Toast.LENGTH_SHORT);
                 noInternetConnection.show();
             }
         });
@@ -145,16 +145,14 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
         phoneStatusHandler = new Handler()
         {
             @Override
-            public void handleMessage(Message msg)
+            public void handleMessage(final Message msg)
             {
-                vStatus.setText(getString(msg.what));
+                MainActivity.this.vStatus.setText(getString(msg.what));
             }
         };
 
-        //        updatePhoneState();
-
-        vMCC.setText(DiscoveryModel.getInstance().getMcc());
-        vMNC.setText(DiscoveryModel.getInstance().getMnc());
+        this.vMCC.setText(DiscoveryModel.getInstance().getMcc());
+        this.vMNC.setText(DiscoveryModel.getInstance().getMnc());
     }
 
     @Override
@@ -165,11 +163,11 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
     }
 
     @Override
-    public void onClick(View v)
+    public void onClick(final View v)
     {
-        Toast noInternetConnection = Toast.makeText(getApplicationContext(),
-                                                    "No internet Connection",
-                                                    Toast.LENGTH_SHORT);
+        final Toast noInternetConnection = Toast.makeText(getApplicationContext(),
+                                                          "No internet Connection",
+                                                          Toast.LENGTH_SHORT);
         noInternetConnection.show();
 
     }
@@ -179,7 +177,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
      */
     public void updatePhoneState()
     {
-        List<String> permissions = new ArrayList<>();
+        final List<String> permissions = new ArrayList<>();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED)
         {
@@ -200,17 +198,17 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
             return;
         }
 
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        final TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        final ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        final WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
-        PhoneState state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
+        final PhoneState state = PhoneUtils.getPhoneState(telephonyManager, connectivityManager);
 
-        boolean connected = state.isConnected(); // Is the device connected to
+        final boolean connected = state.isConnected(); // Is the device connected to
         // the Internet
-        boolean usingMobileData = state.isUsingMobileData(); // Is the device
+        final boolean usingMobileData = state.isUsingMobileData(); // Is the device
         // connected using cellular/mobile data
-        boolean roaming = state.isRoaming(); // Is the device roaming
+        final boolean roaming = state.isRoaming(); // Is the device roaming
 
         int connectivityStatus = R.string.statusDisconnected;
         if (roaming)
@@ -229,15 +227,15 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
         if (!roaming && !usingMobileData && (wifi.getConnectionInfo().getNetworkId() == -1))
         {
             //no wifi or roaming or mobile data
-            rlayout.setClickable(true);
-            startOperatorId.setEnabled(false);
+            this.rlayout.setClickable(true);
+            this.startOperatorId.setEnabled(false);
             connectionExists = false;
         }
         else
         {
             //assume an internet connection is avilable
-            rlayout.setClickable(false);
-            startOperatorId.setEnabled(true);
+            this.rlayout.setClickable(false);
+            this.startOperatorId.setEnabled(true);
             connectionExists = true;
         }
 
@@ -255,11 +253,11 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
 
         Log.d(TAG, "called onStart");
 
-        vMCC.setText(getText(R.string.valueUnknown));
-        vMNC.setText(getText(R.string.valueUnknown));
-        vDiscoveryStatus.setText(getString(R.string.discoveryStatusPending));
+        this.vMCC.setText(getText(R.string.valueUnknown));
+        this.vMNC.setText(getText(R.string.valueUnknown));
+        this.vDiscoveryStatus.setText(getString(R.string.discoveryStatusPending));
 
-        IntentFilter intentFilter = new IntentFilter();
+        final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         intentFilter.addAction("android.intent.action.PHONE_STATE");
         intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
@@ -285,11 +283,11 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
 
         if (connectionExists)
         {
-            vDiscoveryStatus.setText(getString(R.string.discoveryStatusStarted));
+            this.vDiscoveryStatus.setText(getString(R.string.discoveryStatusStarted));
 
-            discoveryService = new DiscoveryService();
+            this.discoveryService = new DiscoveryService();
 
-            status = discoveryService.callMobileConnectForStartDiscovery(config);
+            status = this.discoveryService.callMobileConnectForStartDiscovery(this.config);
 
             Log.d(TAG, "Making initial discovery request");
             Log.d(TAG, "Initial response=" + status.toString());
@@ -299,17 +297,17 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
             }
             if (status.isError())
             {
-                Toast toast = Toast.makeText(getApplicationContext(), status.getDescription(), Toast.LENGTH_SHORT);
+                final Toast toast = Toast.makeText(getApplicationContext(), status.getDescription(), Toast.LENGTH_SHORT);
                 toast.show();
             }
             else if (status.isOperatorSelection())
             {
                 Log.d(TAG, "Operator Selection required");
-                discoveryService.doDiscoveryWithWebView(config, this, this, status.getUrl());
+                this.discoveryService.doDiscoveryWithWebView(this.config, this, this, status.getUrl());
             }
             else
             {
-                Message msg = new Message();
+                final Message msg = new Message();
                 msg.what = R.string.discoveryStatusCompleted;
                 msg.obj = status;
                 //                discoveryHandler.sendMessage(msg);
@@ -318,8 +316,8 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
         }
         else
         {
-            String error = "Device is not currently connected to the Internet";
-            Toast toast = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
+            final String error = "Device is not currently connected to the Internet";
+            final Toast toast = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
             toast.show();
         }
     }
@@ -329,25 +327,25 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
         Log.d(TAG, "Run Mobile Connect Login. Status = " + status);
         if (status != null)
         {
-            DiscoveryResponse resp = status.getDiscoveryResponse();
-            JsonNode discoveryResponseWrapper = resp.getResponseData();
-            JsonNode discoveryResponse = discoveryResponseWrapper.get("response");
+            final DiscoveryResponse resp = status.getDiscoveryResponse();
+            final JsonNode discoveryResponseWrapper = resp.getResponseData();
+            final JsonNode discoveryResponse = discoveryResponseWrapper.get("response");
 
-            ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
+            final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
                     .parseOperatorIdentifiedDiscoveryResult(
                     resp.getResponseData());
 
-            String authorizationHref = parsedOperatorIdentifiedDiscoveryResult.getAuthorizationHref();
-            String tokenHref = parsedOperatorIdentifiedDiscoveryResult.getTokenHref();
+            final String authorizationHref = parsedOperatorIdentifiedDiscoveryResult.getAuthorizationHref();
+            final String tokenHref = parsedOperatorIdentifiedDiscoveryResult.getTokenHref();
 
             Log.d(TAG, "authorizationHref=" + authorizationHref);
             Log.d(TAG, "tokenHref=" + tokenHref);
 
-            String encryptedMSISDN = DiscoveryModel.getInstance().getEncryptedMSISDN();
-            HashMap<String, Object> authOptions = new HashMap<String, Object>();
+            final String encryptedMSISDN = DiscoveryModel.getInstance().getEncryptedMSISDN();
+            final HashMap<String, Object> authOptions = new HashMap<String, Object>();
             if (encryptedMSISDN != null)
             {
-                String hint = "ENCR_MSISDN:" + encryptedMSISDN;
+                final String hint = "ENCR_MSISDN:" + encryptedMSISDN;
                 Log.d(TAG, "Setting login_hint to " + hint);
                 authOptions.put("login_hint", hint);
             }
@@ -355,28 +353,28 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
             try
             {
                 Log.d(TAG, "getting client_id from discovery response " + discoveryResponse.toString());
-                String clientId = AndroidJsonUtils.getExpectedStringValue(discoveryResponse, "client_id");
+                final String clientId = AndroidJsonUtils.getExpectedStringValue(discoveryResponse, "client_id");
                 Log.d(TAG, "clientId = " + clientId);
 
-                String clientSecret = AndroidJsonUtils.getExpectedStringValue(discoveryResponse, "client_secret");
+                final String clientSecret = AndroidJsonUtils.getExpectedStringValue(discoveryResponse, "client_secret");
                 Log.d(TAG, "clientSecret = " + clientId);
 
-                String openIDConnectScopes = "openid";
+                final String openIDConnectScopes = "openid";
 
-                String returnUri = config.getApplicationURL();
-                String state = UUID.randomUUID().toString();
-                String nonce = UUID.randomUUID().toString();
-                int maxAge = 3600;
-                String acrValues = "2";
+                final String returnUri = this.config.getApplicationURL();
+                final String state = UUID.randomUUID().toString();
+                final String nonce = UUID.randomUUID().toString();
+                final int maxAge = 3600;
+                final String acrValues = "2";
 
-                config.setDiscoveryRedirectURL(returnUri);
-                config.setAuthorizationState(state);
+                this.config.setDiscoveryRedirectURL(returnUri);
+                this.config.setAuthorizationState(state);
 
                 if (parsedOperatorIdentifiedDiscoveryResult == null ||
                     parsedOperatorIdentifiedDiscoveryResult.getAuthorizationHref() == null)
                 {
-                    String error;
-                    if (config.getIdentifiedMCC() != null)
+                    final String error;
+                    if (this.config.getIdentifiedMCC() != null)
                     {
                         error = "Authorisation URI for MMC/MNC not known";
                     }
@@ -384,33 +382,33 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
                     {
                         error = "Authorisation failed because MMC/MNC not found";
                     }
-                    Toast toast = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
+                    final Toast toast = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
                     toast.show();
                 }
                 else
                 {
-                    authorizationService = new AuthorizationService();
+                    this.authorizationService = new AuthorizationService();
 
                     Log.d(TAG, "Starting OpenIDConnect authorization");
-                    authorizationService.authenticate(config,
-                                                   authorizationHref,
-                                                   openIDConnectScopes,
-                                                   returnUri,
-                                                   state,
-                                                   nonce,
-                                                   maxAge,
-                                                   acrValues,
-                                                   this,
-                                                   this,
-                                                   resp,
-                                                   authOptions);
+                    this.authorizationService.authenticate(this.config,
+                                                           authorizationHref,
+                                                           openIDConnectScopes,
+                                                           returnUri,
+                                                           state,
+                                                           nonce,
+                                                           maxAge,
+                                                           acrValues,
+                                                           this,
+                                                           this,
+                                                           resp,
+                                                           authOptions);
                 }
             }
-            catch (NoFieldException nfe)
+            catch (final NoFieldException nfe)
             {
                 Log.e(TAG, "NoFieldException handling");
             }
-            catch (UnsupportedEncodingException ueo)
+            catch (final UnsupportedEncodingException ueo)
             {
                 Log.e(TAG, "UnsupportedEncodingException handling");
             }
@@ -421,7 +419,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
      * default method to add a menu
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public boolean onCreateOptionsMenu(final Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -429,7 +427,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+    public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults)
     {
         if (requestCode == PERMISSIONS_CODE_GRANT_AND_DISCOVER)
         {
@@ -447,9 +445,9 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
      * @param view
      * @throws UnsupportedEncodingException
      */
-    public void startOperatorId(View view) throws UnsupportedEncodingException
+    public void startOperatorId(final View view)
     {
-        List<String> permissions = new ArrayList<>();
+        final List<String> permissions = new ArrayList<>();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED)
         {
@@ -473,24 +471,24 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
         runDiscovery();
     }
 
-    public void displayAuthorizationResponse(String state,
-                                             String authorizationCode,
-                                             String error,
-                                             String clientId,
-                                             String clientSecret,
-                                             String scopes,
-                                             String returnUri,
-                                             String accessToken,
-                                             String PCR)
+    public void displayAuthorizationResponse(final String state,
+                                             final String authorizationCode,
+                                             final String error,
+                                             final String clientId,
+                                             final String clientSecret,
+                                             final String scopes,
+                                             final String returnUri,
+                                             final String accessToken,
+                                             final String PCR)
     {
 
-        DiscoveryResponse resp = status.getDiscoveryResponse();
+        final DiscoveryResponse resp = status.getDiscoveryResponse();
 
-        ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = AndroidJsonUtils
+        final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = AndroidJsonUtils
                 .parseOperatorIdentifiedDiscoveryResult(
                 resp.getResponseData());
 
-        Intent intent = new Intent(this, AuthorizationCompleteActivity.class);
+        final Intent intent = new Intent(this, AuthorizationCompleteActivity.class);
         intent.putExtra("state", state);
         intent.putExtra("code", authorizationCode);
         intent.putExtra("error", error);
@@ -506,16 +504,16 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
     }
 
     @Override
-    public void tokenReceived(RequestTokenResponse tokenResponse)
+    public void tokenReceived(final RequestTokenResponse tokenResponse)
     {
-        String state = config.getAuthorizationState();
-        String clientId = config.getClientId();
-        String clientSecret = config.getClientSecret();
-        String openIDConnectScopes = config.getAuthorizationScope();
-        String returnUri = config.getDiscoveryRedirectURL();
+        final String state = this.config.getAuthorizationState();
+        final String clientId = this.config.getClientId();
+        final String clientSecret = this.config.getClientSecret();
+        final String openIDConnectScopes = this.config.getAuthorizationScope();
+        final String returnUri = this.config.getDiscoveryRedirectURL();
 
-        String accessToken;
-        String error;
+        final String accessToken;
+        final String error;
         String pcr = null;
         if (tokenResponse.hasErrorResponse())
         {
@@ -525,7 +523,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
         else
         {
             accessToken = tokenResponse.getResponseData().get_access_token();
-            ParsedIdToken idtoken = tokenResponse.getResponseData().getParsedIdToken();
+            final ParsedIdToken idtoken = tokenResponse.getResponseData().getParsedIdToken();
             if (idtoken != null)
             {
                 pcr = idtoken.get_pcr();
@@ -548,30 +546,30 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
     }
 
     @Override
-    public void authorizationFailed(MobileConnectStatus mobileConnectStatus)
+    public void authorizationFailed(final MobileConnectStatus mobileConnectStatus)
     {
         Log.d(TAG, "AuthorizationFailed");
-        Toast authorizationFailed = Toast.makeText(getApplicationContext(),
+        final Toast authorizationFailed = Toast.makeText(getApplicationContext(),
                                                    "Authorization Failed : " + mobileConnectStatus.getError(),
-                                                   Toast.LENGTH_SHORT);
+                                                         Toast.LENGTH_SHORT);
         authorizationFailed.show();
     }
 
     @Override
-    public void discoveryComplete(MobileConnectStatus mobileConnectStatus)
+    public void discoveryComplete(final MobileConnectStatus mobileConnectStatus)
     {
-        vMCC.setText(DiscoveryModel.getInstance().getMcc());
-        vMNC.setText(DiscoveryModel.getInstance().getMnc());
-        vDiscoveryStatus.setText(getString(R.string.discoveryStatusCompleted));
+        this.vMCC.setText(DiscoveryModel.getInstance().getMcc());
+        this.vMNC.setText(DiscoveryModel.getInstance().getMnc());
+        this.vDiscoveryStatus.setText(getString(R.string.discoveryStatusCompleted));
         Log.d(TAG, "Discovery Complete");
         status = mobileConnectStatus;
         runMobileConnectLogin();
     }
 
     @Override
-    public void discoveryFailed(MobileConnectStatus mobileConnectStatus)
+    public void discoveryFailed(final MobileConnectStatus mobileConnectStatus)
     {
-        vDiscoveryStatus.setText(getString(R.string.discoveryStatusFailer));
+        this.vDiscoveryStatus.setText(getString(R.string.discoveryStatusFailer));
         Log.d(TAG, getString(R.string.discoveryStatusFailer));
         Log.d(TAG, getString(R.string.discoveryStatusFailer));
     }

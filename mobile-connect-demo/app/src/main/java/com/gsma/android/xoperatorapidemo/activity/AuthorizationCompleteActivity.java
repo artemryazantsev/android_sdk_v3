@@ -24,43 +24,13 @@ public class AuthorizationCompleteActivity extends Activity implements UserInfoL
 {
     private static final String TAG = "AuthCompleteActivity";
 
-    private static final String NA = "not available";
-    // needed when sending an intent
+    private AuthorizationCompleteActivity authorizationCompleteActivityInstance;
 
-    AuthorizationCompleteActivity authorizationCompleteActivityInstance; // saved copy of this instance -
+    private TextView statusField = null;
 
-    String authUri = null;
+    private TextView authorizationCompleteTokenValue = null;
 
-    String tokenUri = null;
-
-    String userinfoUri = null;
-
-    String clientId = null;
-
-    String clientSecret = null;
-
-    String scopes = null;
-
-    String returnUri = null;
-
-    String state = null;
-
-    String code = null;
-
-    String error = null;
-
-    String accessToken = null;
-
-    String PCR = null;
-
-    TextView statusField = null;
-
-    TextView authorizationCompleteTokenValue = null;
-
-    TextView authorizationCompletePCRValue = null;
-
-    boolean setEmail = false;
-    //	AuthorizationService service = new AuthorizationService();
+    private TextView authorizationCompletePCRValue = null;
 
     /*
      * method called when this activity is created - handles the receiving of
@@ -69,16 +39,16 @@ public class AuthorizationCompleteActivity extends Activity implements UserInfoL
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        authorizationCompleteActivityInstance = this;
+        this.authorizationCompleteActivityInstance = this;
         setContentView(R.layout.activity_identity_authorization_complete);
 
-        statusField = (TextView) findViewById(R.id.authorizationCompleteStatus);
+        this.statusField = (TextView) findViewById(R.id.authorizationCompleteStatus);
 
-        authorizationCompleteTokenValue = (TextView) findViewById(R.id.authorizationCompleteTokenValue);
-        authorizationCompletePCRValue = (TextView) findViewById(R.id.authorizationCompletePCRValue);
+        this.authorizationCompleteTokenValue = (TextView) findViewById(R.id.authorizationCompleteTokenValue);
+        this.authorizationCompletePCRValue = (TextView) findViewById(R.id.authorizationCompletePCRValue);
     }
 
     /*
@@ -90,35 +60,27 @@ public class AuthorizationCompleteActivity extends Activity implements UserInfoL
     {
         super.onStart();
 
-        authorizationCompleteTokenValue.setText(getString(R.string.authorizationCompleteTokenValue));
-        authorizationCompletePCRValue.setText(getString(R.string.authorizationCompletePCRValue));
+        this.authorizationCompleteTokenValue.setText(getString(R.string.authorizationCompleteTokenValue));
+        this.authorizationCompletePCRValue.setText(getString(R.string.authorizationCompletePCRValue));
 
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras != null)
         {
-            /*
-             * Extract the parameters from the bundle provided
-			 */
-
-            userinfoUri = extras.getString("userinfoUri");
-            scopes = extras.getString("scopes");
-            returnUri = extras.getString("returnUri");
-            state = extras.getString("state");
-            code = extras.getString("code");
-            error = extras.getString("error");
-            clientId = extras.getString("clientId");
-            clientSecret = extras.getString("clientSecret");
-
-            accessToken = extras.getString("accessToken");
-            PCR = extras.getString("PCR");
+            final String userinfoUri = extras.getString("userinfoUri");
+            final String code = extras.getString("code");
+            final String error = extras.getString("error");
+            final String clientId = extras.getString("clientId");
+            final String clientSecret = extras.getString("clientSecret");
+            final String accessToken = extras.getString("accessToken");
+            final String PCR = extras.getString("PCR");
 
             if (accessToken != null)
             {
-                authorizationCompleteTokenValue.setText(accessToken);
+                this.authorizationCompleteTokenValue.setText(accessToken);
             }
             if (PCR != null)
             {
-                authorizationCompletePCRValue.setText(PCR);
+                this.authorizationCompletePCRValue.setText(PCR);
             }
 
             String statusDescription = "Unknown";
@@ -133,29 +95,32 @@ public class AuthorizationCompleteActivity extends Activity implements UserInfoL
                 statusDescription = "Not authorized";
             }
 
-            statusField.setText(statusDescription);
+            this.statusField.setText(statusDescription);
 
             if (authorized)
             {
                 //MobileConnectConfig config,String userinfoUri, String accessToken, UserInfoListener listener
-                RetrieveUserinfoTask task = new RetrieveUserinfoTask(userinfoUri, code, clientId, clientSecret, this);
+                final RetrieveUserinfoTask task = new RetrieveUserinfoTask(userinfoUri,
+                                                                           code,
+                                                                           clientId,
+                                                                           clientSecret,
+                                                                           this);
                 task.execute();
             }
-
         }
     }
 
     /*
      * go back to the main screen
      */
-    public void home(View view)
+    public void home(final View view)
     {
-        Intent intent = new Intent(authorizationCompleteActivityInstance, MainActivity.class);
+        final Intent intent = new Intent(this.authorizationCompleteActivityInstance, MainActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void userReceived(UserInfo userInfo)
+    public void userReceived(final UserInfo userInfo)
     {
         Log.d(TAG, "userInfo" + userInfo);
     }
