@@ -297,7 +297,9 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
             }
             if (status.isError())
             {
-                final Toast toast = Toast.makeText(getApplicationContext(), status.getDescription(), Toast.LENGTH_SHORT);
+                final Toast toast = Toast.makeText(getApplicationContext(),
+                                                   status.getDescription(),
+                                                   Toast.LENGTH_SHORT);
                 toast.show();
             }
             else if (status.isOperatorSelection())
@@ -316,6 +318,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
         }
         else
         {
+
             final String error = "Device is not currently connected to the Internet";
             final Toast toast = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
             toast.show();
@@ -324,94 +327,71 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
 
     public void runMobileConnectLogin()
     {
-        Log.d(TAG, "Run Mobile Connect Login. Status = " + status);
-        if (status != null)
+        final DiscoveryResponse resp = status.getDiscoveryResponse();
+
+        final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
+                .parseOperatorIdentifiedDiscoveryResult(
+                resp.getResponseData());
+
+        final String authorizationHref = parsedOperatorIdentifiedDiscoveryResult.getAuthorizationHref();
+
+        final String encryptedMSISDN = DiscoveryModel.getInstance().getEncryptedMSISDN();
+
+        final HashMap<String, Object> authOptions = new HashMap<String, Object>();
+
+        if (encryptedMSISDN != null)
         {
-            final DiscoveryResponse resp = status.getDiscoveryResponse();
-            final JsonNode discoveryResponseWrapper = resp.getResponseData();
-            final JsonNode discoveryResponse = discoveryResponseWrapper.get("response");
+            final String hint = "ENCR_MSISDN:" + encryptedMSISDN;
+            authOptions.put("login_hint", hint);
+        }
 
-            final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
-                    .parseOperatorIdentifiedDiscoveryResult(
-                    resp.getResponseData());
+        try
+        {
+            final String openIDConnectScopes = "openid";
+            final String returnUri = this.config.getApplicationURL();
+            final String state = UUID.randomUUID().toString();
+            final String nonce = UUID.randomUUID().toString();
+            final int maxAge = 3600;
+            final String acrValues = "2";
 
-            final String authorizationHref = parsedOperatorIdentifiedDiscoveryResult.getAuthorizationHref();
-            final String tokenHref = parsedOperatorIdentifiedDiscoveryResult.getTokenHref();
+            this.config.setDiscoveryRedirectURL(returnUri);
+            this.config.setAuthorizationState(state);
 
-            Log.d(TAG, "authorizationHref=" + authorizationHref);
-            Log.d(TAG, "tokenHref=" + tokenHref);
-
-            final String encryptedMSISDN = DiscoveryModel.getInstance().getEncryptedMSISDN();
-            final HashMap<String, Object> authOptions = new HashMap<String, Object>();
-            if (encryptedMSISDN != null)
+            if (parsedOperatorIdentifiedDiscoveryResult.getAuthorizationHref() == null)
             {
-                final String hint = "ENCR_MSISDN:" + encryptedMSISDN;
-                Log.d(TAG, "Setting login_hint to " + hint);
-                authOptions.put("login_hint", hint);
-            }
-
-            try
-            {
-                Log.d(TAG, "getting client_id from discovery response " + discoveryResponse.toString());
-                final String clientId = AndroidJsonUtils.getExpectedStringValue(discoveryResponse, "client_id");
-                Log.d(TAG, "clientId = " + clientId);
-
-                final String clientSecret = AndroidJsonUtils.getExpectedStringValue(discoveryResponse, "client_secret");
-                Log.d(TAG, "clientSecret = " + clientId);
-
-                final String openIDConnectScopes = "openid";
-
-                final String returnUri = this.config.getApplicationURL();
-                final String state = UUID.randomUUID().toString();
-                final String nonce = UUID.randomUUID().toString();
-                final int maxAge = 3600;
-                final String acrValues = "2";
-
-                this.config.setDiscoveryRedirectURL(returnUri);
-                this.config.setAuthorizationState(state);
-
-                if (parsedOperatorIdentifiedDiscoveryResult == null ||
-                    parsedOperatorIdentifiedDiscoveryResult.getAuthorizationHref() == null)
+                final String error;
+                if (this.config.getIdentifiedMCC() != null)
                 {
-                    final String error;
-                    if (this.config.getIdentifiedMCC() != null)
-                    {
-                        error = "Authorisation URI for MMC/MNC not known";
-                    }
-                    else
-                    {
-                        error = "Authorisation failed because MMC/MNC not found";
-                    }
-                    final Toast toast = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
-                    toast.show();
+                    error = "Authorisation URI for MMC/MNC not known";
                 }
                 else
                 {
-                    this.authorizationService = new AuthorizationService();
-
-                    Log.d(TAG, "Starting OpenIDConnect authorization");
-                    this.authorizationService.authenticate(this.config,
-                                                           authorizationHref,
-                                                           openIDConnectScopes,
-                                                           returnUri,
-                                                           state,
-                                                           nonce,
-                                                           maxAge,
-                                                           acrValues,
-                                                           this,
-                                                           this,
-                                                           resp,
-                                                           authOptions);
+                    error = "Authorisation failed because MMC/MNC not found";
                 }
+                final Toast toast = Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT);
+                toast.show();
             }
-            catch (final NoFieldException nfe)
+            else
             {
-                Log.e(TAG, "NoFieldException handling");
+                this.authorizationService = new AuthorizationService();
+
+                this.authorizationService.authenticate(this.config,
+                                                       authorizationHref,
+                                                       openIDConnectScopes,
+                                                       returnUri,
+                                                       state,
+                                                       nonce,
+                                                       maxAge,
+                                                       acrValues,
+                                                       this,
+                                                       this,
+                                                       resp,
+                                                       authOptions);
             }
-            catch (final UnsupportedEncodingException ueo)
-            {
-                Log.e(TAG, "UnsupportedEncodingException handling");
-            }
+        }
+        catch (final UnsupportedEncodingException ueo)
+        {
+            Log.e(TAG, "UnsupportedEncodingException handling");
         }
     }
 
@@ -550,7 +530,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
     {
         Log.d(TAG, "AuthorizationFailed");
         final Toast authorizationFailed = Toast.makeText(getApplicationContext(),
-                                                   "Authorization Failed : " + mobileConnectStatus.getError(),
+                                                         "Authorization Failed : " + mobileConnectStatus.getError(),
                                                          Toast.LENGTH_SHORT);
         authorizationFailed.show();
     }
