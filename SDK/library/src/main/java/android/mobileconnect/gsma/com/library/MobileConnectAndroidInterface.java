@@ -12,18 +12,25 @@ import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import java.net.URI;
 
 /**
+ * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
+ * {@link AsyncTask}s and sends the result via a {@link IMobileConnectCallback}
+ * <p>
+ * <p>
  * Created by usmaan.dad on 11/08/2016.
  */
 public class MobileConnectAndroidInterface
 {
     private final MobileConnectInterface mobileConnectInterface;
 
-    public MobileConnectAndroidInterface(MobileConnectInterface mobileConnectInterface)
+    /**
+     * @param mobileConnectInterface The {@link MobileConnectInterface} containing the necessary set-up of services.
+     */
+    public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface)
     {
-
         this.mobileConnectInterface = mobileConnectInterface;
     }
 
+    @SuppressWarnings("unused")
     public void attemptDiscovery(@NonNull final IMobileConnectCallback IMobileConnectCallback,
                                  @Nullable final String msisdn,
                                  @Nullable final String mcc,
@@ -43,6 +50,7 @@ public class MobileConnectAndroidInterface
         }, IMobileConnectCallback).execute();
     }
 
+    @SuppressWarnings("unused")
     public void attemptDiscoveryAfterOperationSelection(@NonNull final IMobileConnectCallback IMobileConnectCallback,
                                                         @Nullable final URI redirectUri)
     {
@@ -57,6 +65,7 @@ public class MobileConnectAndroidInterface
         }, IMobileConnectCallback).execute();
     }
 
+    @SuppressWarnings("unused")
     public void startAuthentication(@NonNull final IMobileConnectCallback IMobileConnectCallback,
                                     final DiscoveryResponse discoveryResponse,
                                     final String encryptedMSISDN,
@@ -78,11 +87,12 @@ public class MobileConnectAndroidInterface
         }, IMobileConnectCallback).execute();
     }
 
+    @SuppressWarnings("unused")
     public void requestToken(@NonNull final IMobileConnectCallback IMobileConnectCallback,
-                             final DiscoveryResponse discoveryResponse,
-                             final URI redirectedUrl,
-                             final String expectedState,
-                             final String expectedNonce)
+                             @Nullable final DiscoveryResponse discoveryResponse,
+                             @Nullable final URI redirectedUrl,
+                             @Nullable final String expectedState,
+                             @Nullable final String expectedNonce)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -97,11 +107,12 @@ public class MobileConnectAndroidInterface
         }, IMobileConnectCallback).execute();
     }
 
+    @SuppressWarnings("unused")
     public void handleRedirect(@NonNull final IMobileConnectCallback IMobileConnectCallback,
-                               final URI redirectedUrl,
-                               final DiscoveryResponse discoveryResponse,
-                               final String expectedState,
-                               final String expectedNonce)
+                               @Nullable final URI redirectedUrl,
+                               @Nullable final DiscoveryResponse discoveryResponse,
+                               @Nullable final String expectedState,
+                               @Nullable final String expectedNonce)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -116,10 +127,11 @@ public class MobileConnectAndroidInterface
         }, IMobileConnectCallback).execute();
     }
 
+    @SuppressWarnings("unused")
     public void requestIdentity(@NonNull final IMobileConnectCallback IMobileConnectCallback,
-                                final DiscoveryResponse discoveryResponse,
-                                final String accessToken,
-                                final MobileConnectRequestOptions options)
+                                @Nullable final DiscoveryResponse discoveryResponse,
+                                @Nullable final String accessToken,
+                                @Nullable final MobileConnectRequestOptions options)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -139,8 +151,8 @@ public class MobileConnectAndroidInterface
 
         private IMobileConnectCallback IMobileConnectCallback;
 
-        public MobileConnectAsyncTask(IMobileConnectOperation mobileConnectOperation,
-                                      IMobileConnectCallback IMobileConnectCallback)
+        public MobileConnectAsyncTask(@NonNull IMobileConnectOperation mobileConnectOperation,
+                                      @NonNull IMobileConnectCallback IMobileConnectCallback)
         {
 
             this.mobileConnectOperation = mobileConnectOperation;
