@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -25,14 +26,20 @@ import java.net.URI;
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
  * {@link AsyncTask}s and sends the result via a {@link IMobileConnectCallback}
- * <p>
+ * <p/>
  * Created by usmaan.dad on 11/08/2016.
  */
 public class MobileConnectAndroidInterface
 {
     private final MobileConnectInterface mobileConnectInterface;
 
-    public void
+    /**
+     * @param mobileConnectInterface The {@link MobileConnectInterface} containing the necessary set-up of services.
+     */
+    public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface)
+    {
+        this.mobileConnectInterface = mobileConnectInterface;
+    }
 
     public void doDiscoveryWithWebView(final MobileConnectConfig config,
                                        final Context activityContext,
@@ -53,7 +60,7 @@ public class MobileConnectAndroidInterface
 
         final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
                                                                                 progressBar,
-                                                                                config.getDiscoveryRedirectURL(),
+                                                                                config.getRedirectUrl().toString(),
                                                                                 discoveryListener,
                                                                                 config);
         webView.setWebViewClient(webViewClient);
@@ -67,7 +74,7 @@ public class MobileConnectAndroidInterface
             {
                 Log.e("Discovery Dialog", "dismissed");
                 dialogInterface.dismiss();
-                closeWebViewAndNotify(dialog, discoveryListener, webView);
+                closeWebViewAndNotify(discoveryListener, webView);
             }
         });
 
@@ -81,12 +88,11 @@ public class MobileConnectAndroidInterface
         }
     }
 
-    /**
-     * @param mobileConnectInterface The {@link MobileConnectInterface} containing the necessary set-up of services.
-     */
-    public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface)
+    private void closeWebViewAndNotify(final DiscoveryListener listener, final WebView webView)
     {
-        this.mobileConnectInterface = mobileConnectInterface;
+        webView.stopLoading();
+        webView.loadData("", "text/html", null);
+        listener.onDiscoveryDialogClose();
     }
 
     /**
@@ -104,11 +110,11 @@ public class MobileConnectAndroidInterface
      * Connect process
      */
     @SuppressWarnings("unused")
-    public void attemptDiscovery(@NonNull final IMobileConnectCallback mobileConnectCallback,
-                                 @Nullable final String msisdn,
-                                 @Nullable final String mcc,
-                                 @Nullable final String mnc,
-                                 @Nullable final MobileConnectRequestOptions options)
+    public void attemptDiscovery(final String msisdn,
+                                 final String mcc,
+                                 final String mnc,
+                                 final MobileConnectRequestOptions options,
+                                 @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -125,7 +131,7 @@ public class MobileConnectAndroidInterface
 
     /**
      * Asynchronously attempt discovery using the values returned from the operator selection redirect
-     * <p>
+     * <p/>
      *
      * @param mobileConnectCallback The callback in which a {@link MobileConnectStatus} shall be provided after
      *                              completion
@@ -163,12 +169,12 @@ public class MobileConnectAndroidInterface
      * Connect process
      */
     @SuppressWarnings("unused")
-    public void startAuthentication(@NonNull final IMobileConnectCallback mobileConnectCallback,
-                                    final DiscoveryResponse discoveryResponse,
+    public void startAuthentication(final DiscoveryResponse discoveryResponse,
                                     final String encryptedMSISDN,
                                     final String state,
                                     final String nonce,
-                                    final MobileConnectRequestOptions options)
+                                    final MobileConnectRequestOptions options,
+                                    @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -185,11 +191,11 @@ public class MobileConnectAndroidInterface
     }
 
     @SuppressWarnings("unused")
-    public void requestToken(@NonNull final IMobileConnectCallback mobileConnectCallback,
-                             @Nullable final DiscoveryResponse discoveryResponse,
-                             @Nullable final URI redirectedUrl,
-                             @Nullable final String expectedState,
-                             @Nullable final String expectedNonce)
+    public void requestToken(final DiscoveryResponse discoveryResponse,
+                             final URI redirectedUrl,
+                             final String expectedState,
+                             final String expectedNonce,
+                             @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -205,11 +211,11 @@ public class MobileConnectAndroidInterface
     }
 
     @SuppressWarnings("unused")
-    public void handleRedirect(@NonNull final IMobileConnectCallback mobileConnectCallback,
-                               @Nullable final URI redirectedUrl,
-                               @Nullable final DiscoveryResponse discoveryResponse,
-                               @Nullable final String expectedState,
-                               @Nullable final String expectedNonce)
+    public void handleRedirect(final URI redirectedUrl,
+                               final DiscoveryResponse discoveryResponse,
+                               final String expectedState,
+                               final String expectedNonce,
+                               @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -225,10 +231,10 @@ public class MobileConnectAndroidInterface
     }
 
     @SuppressWarnings("unused")
-    public void requestIdentity(@NonNull final IMobileConnectCallback mobileConnectCallback,
-                                @Nullable final DiscoveryResponse discoveryResponse,
-                                @Nullable final String accessToken,
-                                @Nullable final MobileConnectRequestOptions options)
+    public void requestIdentity(final DiscoveryResponse discoveryResponse,
+                                final String accessToken,
+                                final MobileConnectRequestOptions options,
+                                @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -236,8 +242,7 @@ public class MobileConnectAndroidInterface
             public MobileConnectStatus operation()
             {
                 return MobileConnectAndroidInterface.this.mobileConnectInterface.requestIdentity(discoveryResponse,
-                                                                                                 accessToken,
-                                                                                                 options);
+                                                                                                 accessToken);
             }
         }, mobileConnectCallback).execute();
     }
@@ -273,7 +278,7 @@ public class MobileConnectAndroidInterface
         }
     }
 
-    private interface IMobileConnectCallback
+    public interface IMobileConnectCallback
     {
         void onComplete(MobileConnectStatus mobileConnectStatus);
     }

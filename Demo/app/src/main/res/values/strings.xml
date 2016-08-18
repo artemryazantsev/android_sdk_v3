@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Demo</string>
+
+    <!-- Mobile Connect Credentials -->
+    <string name="client_id">66742a85-2282-4747-881d-ed5b7bd74d2d</string>
+    <string name="client_secret">f15199f4-b658-4e58-8bb3-e40998873392</string>
+    <string name="discovery_url">http://discovery.sandbox2.mobileconnect.io/v2/discovery</string>
+    <string name="redirect_url">http://localhost:8001/mobileconnect.html</string>
 </resources>
