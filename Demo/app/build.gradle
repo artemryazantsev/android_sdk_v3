@@ -19,10 +19,20 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
-    compile(name: 'library-debug', ext: 'aar')
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:cardview-v7:24.1.1'
+    compile 'sdk:library:unspecified@aar'
+
+}
+
+task showMeCache << {
+    configurations.compile.each { println it }
 }

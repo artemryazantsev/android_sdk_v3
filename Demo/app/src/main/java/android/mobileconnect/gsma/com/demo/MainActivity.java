@@ -8,11 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.gsma.mobileconnect.r2.MobileConnect;
-import com.gsma.mobileconnect.r2.MobileConnectConfig;
-import com.gsma.mobileconnect.r2.MobileConnectInterface;
-import com.gsma.mobileconnect.r2.MobileConnectStatus;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 
