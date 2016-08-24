@@ -4,6 +4,9 @@ buildscript {
     repositories {
         jcenter()
         mavenLocal()
+        maven {
+            url '/Users/usmaan.dad/.m2/repository/'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.2'
@@ -22,9 +25,21 @@ allprojects {
     repositories {
         jcenter()
         mavenLocal()
+        maven {
+            url '/Users/usmaan.dad/.m2/repository/'
+        }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///Users/usmaan.dad/.m2/repository/")
+        }
+    }
 }

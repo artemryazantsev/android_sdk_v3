@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.gsma.mobileconnect.r2.MobileConnect;
+import com.gsma.mobileconnect.r2.MobileConnectConfig;
+import com.gsma.mobileconnect.r2.MobileConnectInterface;
+import com.gsma.mobileconnect.r2.MobileConnectStatus;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -50,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
 
-        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_id))
+        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_key))
                                                                .withClientSecret(getString(R.string.client_secret))
                                                                .withDiscoveryUrl(discoveryUri)
                                                                .withRedirectUrl(redirectUri)
@@ -81,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                                                      this,
                                                                      this,
                                                                      mobileConnectConfig.getDiscoveryUrl().toString());
+
                 break;
             }
         }
@@ -89,13 +95,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void discoveryComplete(MobileConnectStatus mobileConnectStatus)
     {
-        Toast.makeText(this, "Discovery Complete", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void discoveryFailed(MobileConnectStatus mobileConnectStatus)
     {
-        Toast.makeText(this, "Discovery Failed", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

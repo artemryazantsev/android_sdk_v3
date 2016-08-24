@@ -9,7 +9,6 @@ import android.view.WindowManager;
  * A simple {@link Dialog} which simply expands to the size of the parent window.
  * <p>
  * A singleton instance is provided which should be used when using
- * {@link com.gsma.mobileconnect.helpers.DiscoveryService} and {@link com.gsma.mobileconnect.helpers.AuthorizationService} as they both require a {@link Dialog} for the same purpose.
  * Created by Usmaan.Dad on 6/17/2016.
  */
 public class DiscoveryAuthenticationDialog extends Dialog
@@ -18,20 +17,20 @@ public class DiscoveryAuthenticationDialog extends Dialog
 
     private static DiscoveryAuthenticationDialog instance;
 
-//    /**
-    //     * When discovering and authentic
-    //     *
-    //     * @param context
-    //     * @return
-    //     */
-    //    public static DiscoveryAuthenticationDialog getInstance(Context context)
-    //    {
-    //        if (instance == null && context != null)
-    //        {
-    //            instance = new DiscoveryAuthenticationDialog(context);
-    //        }
-    //        return instance;
-    //    }
+    /**
+     * When discovering and authentic
+     *
+     * @param context
+     * @return
+     */
+    public static DiscoveryAuthenticationDialog getInstance(Context context)
+    {
+        if (instance == null && context != null)
+        {
+            instance = new DiscoveryAuthenticationDialog(context);
+        }
+        return instance;
+    }
 
     public DiscoveryAuthenticationDialog(final Context context)
     {

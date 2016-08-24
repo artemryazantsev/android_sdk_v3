@@ -5,9 +5,7 @@ buildscript {
         jcenter()
         mavenLocal()
         maven {
-
-            repository(url: "file:///Users/usmaan.dad/.m2/repository")
-
+            url "/Users/usmaan.dad/.m2/repository/"
         }
     }
     dependencies {
@@ -21,9 +19,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        flatDir {
-            dirs 'libs'
-        }
+        mavenLocal()
     }
 }
 
