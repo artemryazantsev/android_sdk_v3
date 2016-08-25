@@ -3,8 +3,8 @@ package com.gsma.mobileconnect.helpers;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.gsma.mobileconnect.utils.AndroidJsonUtils;
 import com.gsma.mobileconnect.utils.AndroidRestClient;
-import com.gsma.mobileconnect.utils.JsonUtils;
 import com.gsma.mobileconnect.utils.KeyValuePair;
 import com.gsma.mobileconnect.utils.RestException;
 import com.gsma.mobileconnect.utils.RestResponse;
@@ -93,7 +93,7 @@ public class RetrieveUserinfoTask extends AsyncTask<Void, Void, UserInfo>
             {
                 final String response = restResponse.getResponse();
                 Log.d(TAG, response);
-                userInfo = JsonUtils.parseUserInfo(response);
+                userInfo = AndroidJsonUtils.parseUserInfo(response);
             }
             else
             {

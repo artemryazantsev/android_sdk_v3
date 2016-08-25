@@ -28,7 +28,7 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.gsma.android.mobileconnect.R;
 import com.gsma.mobileconnect.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.impl.AndroidOIDCImpl;
@@ -44,7 +44,7 @@ import com.gsma.mobileconnect.oidc.TokenOptions;
 import com.gsma.mobileconnect.utils.AndroidJsonUtils;
 import com.gsma.mobileconnect.utils.AndroidRestClient;
 import com.gsma.mobileconnect.utils.ErrorResponse;
-import com.gsma.mobileconnect.utils.JsonUtils;
+import com.gsma.mobileconnect.utils.NoFieldException;
 import com.gsma.mobileconnect.utils.StringUtils;
 import com.gsma.mobileconnect.view.DiscoveryAuthenticationDialog;
 import com.gsma.mobileconnect.view.MobileConnectWebView;
@@ -78,7 +78,7 @@ public class AuthorizationService extends BaseService
 
     /**
      * This method is called via the redirect from the operator authorization page.
-     * <p/>
+     * <p>
      * The values encoded in the URL are used to obtain an authorization token from the operator.
      *
      * @param config            The config to be used.
@@ -102,15 +102,15 @@ public class AuthorizationService extends BaseService
             final ParsedAuthorizationResponse parsedAuthorizationResponse = captureParsedAuthorizationResponse
                     .getParsedAuthorizationResponse();
 
-            if (!StringUtils.isNullOrEmpty(parsedAuthorizationResponse.getError()))
+            if (!StringUtils.isNullOrEmpty(parsedAuthorizationResponse.get_error()))
             {
-                return MobileConnectStatus.error(parsedAuthorizationResponse.getError(),
-                                                 parsedAuthorizationResponse.getErrorDescription(),
+                return MobileConnectStatus.error(parsedAuthorizationResponse.get_error(),
+                                                 parsedAuthorizationResponse.get_error_description(),
                                                  parsedAuthorizationResponse,
                                                  null);
             }
 
-            if (!hasMatchingState(parsedAuthorizationResponse.getState(), config.getAuthorizationState()))
+            if (!hasMatchingState(parsedAuthorizationResponse.get_state(), config.getAuthorizationState()))
             {
                 return MobileConnectStatus.error("Invalid authentication response",
                                                  "State values do not match",
@@ -123,7 +123,7 @@ public class AuthorizationService extends BaseService
 
             this.oidc.requestToken(discoveryResponse,
                                    config.getApplicationURL(),
-                                   parsedAuthorizationResponse.getCode(),
+                                   parsedAuthorizationResponse.get_code(),
                                    tokenOptions,
                                    captureRequestTokenResponse);
 
@@ -132,8 +132,8 @@ public class AuthorizationService extends BaseService
             if (!isSuccessResponseCode(requestTokenResponse.getResponseCode()))
             {
                 final ErrorResponse errorResponse = getErrorResponse(requestTokenResponse);
-                return MobileConnectStatus.error(errorResponse.getError(),
-                                                 errorResponse.getErrorDescription(),
+                return MobileConnectStatus.error(errorResponse.get_error(),
+                                                 errorResponse.get_error_description(),
                                                  parsedAuthorizationResponse,
                                                  requestTokenResponse);
             }
@@ -141,8 +141,8 @@ public class AuthorizationService extends BaseService
             final ErrorResponse errorResponse = requestTokenResponse.getErrorResponse();
             if (null != errorResponse)
             {
-                return MobileConnectStatus.error(errorResponse.getError(),
-                                                 errorResponse.getErrorDescription(),
+                return MobileConnectStatus.error(errorResponse.get_error(),
+                                                 errorResponse.get_error_description(),
                                                  parsedAuthorizationResponse,
                                                  requestTokenResponse);
             }
@@ -177,15 +177,15 @@ public class AuthorizationService extends BaseService
         if (null == errorResponse)
         {
             errorResponse = new ErrorResponse();
-            errorResponse.setError(INTERNAL_ERROR_CODE);
-            errorResponse.setErrorDescription("End point failed.");
+            errorResponse.set_error(INTERNAL_ERROR_CODE);
+            errorResponse.set_error_description("End point failed.");
         }
         return errorResponse;
     }
 
     /**
      * Test whether the state values in the Authorization request and the Authorization response match.
-     * <p/>
+     * <p>
      * States match if both are null or the values equal each other.
      *
      * @param responseState The state contained in the response.
@@ -293,16 +293,30 @@ public class AuthorizationService extends BaseService
                              final DiscoveryResponse response,
                              final HashMap<String, Object> hmapExtraOptions) throws UnsupportedEncodingException
     {
-        final JsonObject discoveryResponseWrapper = response.getResponseData();
-        final JsonObject discoveryResponseJsonNode = discoveryResponseWrapper.getAsJsonObject("response");
+        final JsonNode discoveryResponseWrapper = response.getResponseData();
+        final JsonNode discoveryResponseJsonNode = discoveryResponseWrapper.get("response");
 
-        final String clientId;
-        final String clientSecret;
+        String clientId = null;
+        String clientSecret = null;
 
-        clientId = JsonUtils.(discoveryResponseJsonNode, "client_id");
+        try
+        {
+            clientId = AndroidJsonUtils.getExpectedStringValue(discoveryResponseJsonNode, "client_id");
+        }
+        catch (final NoFieldException e)
+        {
+            Log.e("authenticate", e.getMessage());
+        }
         Log.d(TAG, "clientId = " + clientId);
 
-        clientSecret = JsonUtils.getOptionalStringValue(discoveryResponseJsonNode, "client_secret");
+        try
+        {
+            clientSecret = AndroidJsonUtils.getExpectedStringValue(discoveryResponseJsonNode, "client_secret");
+        }
+        catch (final NoFieldException e)
+        {
+            Log.e("authenticate", e.getMessage());
+        }
         Log.d(TAG, "clientSecret = " + clientSecret);
 
         try
@@ -485,7 +499,7 @@ public class AuthorizationService extends BaseService
                 final RequestTokenResponse response = mobileConnectStatus.getRequestTokenResponse();
                 final RequestTokenResponseData responseData = response.getResponseData();
                 final ParsedIdToken parsedIdToken = responseData.getParsedIdToken();
-                final String token = parsedIdToken.getPcr();
+                final String token = parsedIdToken.get_pcr();
                 Log.d(TAG, "Authorization has completed successfully");
                 Log.d(TAG, "PCR is " + token);
 

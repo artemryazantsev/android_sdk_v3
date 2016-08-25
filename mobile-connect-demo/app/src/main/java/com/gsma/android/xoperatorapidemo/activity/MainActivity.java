@@ -26,7 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.gsma.android.R;
 import com.gsma.android.xoperatorapidemo.utils.AppSettings;
 import com.gsma.android.xoperatorapidemo.utils.PhoneState;
@@ -293,7 +293,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
             Log.d(TAG, "Initial response=" + status.toString());
             if (status.getDiscoveryResponse() != null && status.getDiscoveryResponse().getResponseData() != null)
             {
-                Log.d(TAG, "Response = " + status.getDiscoveryResponse().getResponseData());
+                Log.d(TAG, "Response = " + status.getDiscoveryResponse().getResponseData().toString());
             }
             if (status.isError())
             {
@@ -310,7 +310,7 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
                 final Message msg = new Message();
                 msg.what = R.string.discoveryStatusCompleted;
                 msg.obj = status;
-                // discoveryHandler.sendMessage(msg);
+                //                discoveryHandler.sendMessage(msg);
                 // todo test by adding a phone number in to the config and checking if this branch works.
             }
         }
@@ -328,8 +328,8 @@ public class MainActivity extends Activity implements AuthorizationListener, Vie
         if (status != null)
         {
             final DiscoveryResponse resp = status.getDiscoveryResponse();
-            final JsonObject discoveryResponseWrapper = resp.getResponseData();
-            final JsonObject discoveryResponse = discoveryResponseWrapper.get("response");
+            final JsonNode discoveryResponseWrapper = resp.getResponseData();
+            final JsonNode discoveryResponse = discoveryResponseWrapper.get("response");
 
             final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
                     .parseOperatorIdentifiedDiscoveryResult(
