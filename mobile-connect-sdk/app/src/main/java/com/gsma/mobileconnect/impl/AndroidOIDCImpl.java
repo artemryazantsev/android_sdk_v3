@@ -16,9 +16,9 @@ import com.gsma.mobileconnect.oidc.ParsedIdToken;
 import com.gsma.mobileconnect.oidc.RequestTokenResponse;
 import com.gsma.mobileconnect.oidc.StartAuthenticationResponse;
 import com.gsma.mobileconnect.oidc.TokenOptions;
-import com.gsma.mobileconnect.utils.AndroidJsonUtils;
 import com.gsma.mobileconnect.utils.AndroidRestClient;
 import com.gsma.mobileconnect.utils.Constants;
+import com.gsma.mobileconnect.utils.JsonUtils;
 import com.gsma.mobileconnect.utils.ParsedOperatorIdentifiedDiscoveryResult;
 import com.gsma.mobileconnect.utils.RestClient;
 import com.gsma.mobileconnect.utils.RestException;
@@ -61,8 +61,8 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
     }
 
     @Override
-    public void parseAuthenticationResponse(final String redirectURL, final IParseAuthenticationResponseCallback callback) throws
-                                                                                                               OIDCException
+    public void parseAuthenticationResponse(final String redirectURL,
+                                            final IParseAuthenticationResponseCallback callback) throws OIDCException
     {
         ValidationUtils.validateParameter(redirectURL, Constants.REDIRECT_URL_PARAMETER_NAME);
         ValidationUtils.validateParameter(callback, CALLBACK);
@@ -70,11 +70,11 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
         final Uri uri = Uri.parse(redirectURL);
 
         final ParsedAuthorizationResponse parsedAuthorizationResponse = new ParsedAuthorizationResponse();
-        parsedAuthorizationResponse.set_error(uri.getQueryParameter(Constants.ERROR_NAME));
-        parsedAuthorizationResponse.set_error_description(uri.getQueryParameter(Constants.ERROR_DESCRIPTION_NAME));
-        parsedAuthorizationResponse.set_error_uri(uri.getQueryParameter(Constants.ERROR_URI_NAME));
-        parsedAuthorizationResponse.set_state(uri.getQueryParameter(Constants.STATE_PARAMETER_NAME));
-        parsedAuthorizationResponse.set_code(uri.getQueryParameter(Constants.CODE_PARAMETER_NAME));
+        parsedAuthorizationResponse.setError(uri.getQueryParameter(Constants.ERROR_NAME));
+        parsedAuthorizationResponse.setErrorDescription(uri.getQueryParameter(Constants.ERROR_DESCRIPTION_NAME));
+        parsedAuthorizationResponse.setErrorUri(uri.getQueryParameter(Constants.ERROR_URI_NAME));
+        parsedAuthorizationResponse.setState(uri.getQueryParameter(Constants.STATE_PARAMETER_NAME));
+        parsedAuthorizationResponse.setCode(uri.getQueryParameter(Constants.CODE_PARAMETER_NAME));
         callback.complete(parsedAuthorizationResponse);
     }
 
@@ -82,12 +82,14 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
     public void parseIDToken(final DiscoveryResponse discoveryResult,
                              final String id_tokenStr,
                              final TokenOptions options,
-                             final IParseIDTokenCallback callback) throws OIDCException, DiscoveryResponseExpiredException
+                             final IParseIDTokenCallback callback) throws
+                                                                   OIDCException,
+                                                                   DiscoveryResponseExpiredException
     {
         validateParseIdTokenParameters(discoveryResult, id_tokenStr, callback);
         try
         {
-            final ParsedIdToken parsedIdToken = AndroidJsonUtils.createParsedIdToken(id_tokenStr);
+            final ParsedIdToken parsedIdToken = JsonUtils.createParsedIdToken(id_tokenStr);
             callback.complete(parsedIdToken);
         }
         catch (final IOException ex)
@@ -98,7 +100,8 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
 
     private void validateParseIdTokenParameters(final DiscoveryResponse discoveryResult,
                                                 final String idTokenStr,
-                                                final IParseIDTokenCallback callback) throws DiscoveryResponseExpiredException
+                                                final IParseIDTokenCallback callback) throws
+                                                                                      DiscoveryResponseExpiredException
     {
         ValidationUtils.validateParameter(discoveryResult, DISCOVERY_RESULT);
         if (discoveryResult.hasExpired())
@@ -125,13 +128,14 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
                              final String redirectURI,
                              final String code,
                              final TokenOptions specifiedOptions,
-                             final IRequestTokenCallback callback) throws OIDCException, DiscoveryResponseExpiredException
+                             final IRequestTokenCallback callback) throws
+                                                                   OIDCException,
+                                                                   DiscoveryResponseExpiredException
     {
         validateTokenParameters(discoveryResult, redirectURI, code, callback);
 
-        final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = AndroidJsonUtils
-                .parseOperatorIdentifiedDiscoveryResult(
-                discoveryResult.getResponseData());
+        final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
+                .parseOperatorIdentifiedDiscoveryResult(discoveryResult.getResponseData());
         if (null == parsedOperatorIdentifiedDiscoveryResult)
         {
             throw new OIDCException("Not a valid discovery result.");
@@ -157,9 +161,9 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
 
             restResponse = this.restClient.callRestEndPoint(httpPost, context, optionsToUse.getTimeout(), null);
 
-            final RequestTokenResponse requestTokenResponse = AndroidJsonUtils.parseRequestTokenResponse(Calendar.getInstance(),
+            final RequestTokenResponse requestTokenResponse = JsonUtils.parseRequestTokenResponse(Calendar.getInstance(),
                                                                                                          restResponse
-                                                                                                           .getResponse());
+                                                                                                                 .getResponse());
             requestTokenResponse.setResponseCode(restResponse.getStatusCode());
             requestTokenResponse.setHeaders(restResponse.getHeaders());
 
@@ -183,7 +187,7 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
                                                   final String redirectURI,
                                                   final String nonce,
                                                   final IStartAuthenticationCallback callback) throws
-                                                                                         DiscoveryResponseExpiredException
+                                                                                               DiscoveryResponseExpiredException
     {
         ValidationUtils.validateParameter(discoveryResult, DISCOVERY_RESULT);
         if (discoveryResult.hasExpired())
@@ -225,8 +229,8 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
                                     final String encryptedMSISDN,
                                     final AuthenticationOptions specifiedOptions,
                                     final IStartAuthenticationCallback callback) throws
-                                                                           OIDCException,
-                                                                           DiscoveryResponseExpiredException
+                                                                                 OIDCException,
+                                                                                 DiscoveryResponseExpiredException
     {
         validateAuthenticationParameters(discoveryResult, redirectURI, nonce, callback);
         scope = getScope(scope);
@@ -235,9 +239,9 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
 
         final AuthenticationOptions optionsToBeUsed = getOptionsToBeUsed(specifiedOptions);
 
-        final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = AndroidJsonUtils
-                .parseOperatorIdentifiedDiscoveryResult(
-                discoveryResult.getResponseData());
+        final ParsedOperatorIdentifiedDiscoveryResult parsedOperatorIdentifiedDiscoveryResult = JsonUtils
+                .parseOperatorIdentifiedDiscoveryResult(discoveryResult.getResponseData());
+
         if (null == parsedOperatorIdentifiedDiscoveryResult)
         {
             throw new OIDCException("Not a valid discovery result.");
@@ -436,8 +440,8 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
      * @throws UnsupportedEncodingException
      */
     private HttpPost buildHttpPostForAccessToken(final URI uri, final String redirectURL, final String code) throws
-                                                                                           URISyntaxException,
-                                                                                           UnsupportedEncodingException
+                                                                                                             URISyntaxException,
+                                                                                                             UnsupportedEncodingException
     {
         final URIBuilder uriBuilder = new URIBuilder(uri);
 
@@ -466,7 +470,9 @@ public class AndroidOIDCImpl extends OIDCImpl implements IOIDC
                                  restException);
     }
 
-    private OIDCException newOIDCExceptionWithRestResponse(final String message, final RestResponse restResponse, final Throwable ex)
+    private OIDCException newOIDCExceptionWithRestResponse(final String message,
+                                                           final RestResponse restResponse,
+                                                           final Throwable ex)
     {
         if (null == restResponse)
         {

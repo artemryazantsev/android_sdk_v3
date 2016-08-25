@@ -56,6 +56,7 @@ public class AuthorizationCompleteActivity extends Activity implements UserInfoL
      *
      * @see android.app.Activity#onStart()
      */
+    @Override
     public void onStart()
     {
         super.onStart();

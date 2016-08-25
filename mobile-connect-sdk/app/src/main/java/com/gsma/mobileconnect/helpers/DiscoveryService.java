@@ -91,8 +91,8 @@ public class DiscoveryService extends BaseService
             if (!isSuccessResponseCode(discoveryResponse.getResponseCode()))
             {
                 final ErrorResponse errorResponse = getErrorResponse(discoveryResponse);
-                return MobileConnectStatus.error(errorResponse.get_error(),
-                                                 errorResponse.get_error_description(),
+                return MobileConnectStatus.error(errorResponse.getError(),
+                                                 errorResponse.getErrorDescription(),
                                                  discoveryResponse);
             }
         }
@@ -169,8 +169,8 @@ public class DiscoveryService extends BaseService
             if (!isSuccessResponseCode(discoveryResponse.getResponseCode()))
             {
                 final ErrorResponse errorResponse = getErrorResponse(discoveryResponse);
-                return MobileConnectStatus.error(errorResponse.get_error(),
-                                                 errorResponse.get_error_description(),
+                return MobileConnectStatus.error(errorResponse.getError(),
+                                                 errorResponse.getErrorDescription(),
                                                  discoveryResponse);
             }
         }
@@ -239,8 +239,8 @@ public class DiscoveryService extends BaseService
         if (null == errorResponse)
         {
             errorResponse = new ErrorResponse();
-            errorResponse.set_error(INTERNAL_ERROR_CODE);
-            errorResponse.set_error_description("End point failed.");
+            errorResponse.setError(INTERNAL_ERROR_CODE);
+            errorResponse.setErrorDescription("End point failed.");
         }
         return errorResponse;
     }

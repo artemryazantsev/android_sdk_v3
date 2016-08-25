@@ -6,5 +6,4 @@ package com.gsma.mobileconnect.helpers;
  */
 public class UserInfo
 {
-
 }
