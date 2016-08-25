@@ -1,112 +1,45 @@
 package android.mobileconnect.gsma.com.demo;
 
-import android.mobileconnect.gsma.com.library.DiscoveryListener;
-import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
+import android.mobileconnect.gsma.com.demo.fragments.AuthFragmentsAdapter;
+import android.mobileconnect.gsma.com.demo.fragments.AuthenticationFragment;
+import android.mobileconnect.gsma.com.demo.fragments.AuthorizationFragment;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
-import com.gsma.mobileconnect.r2.MobileConnect;
-import com.gsma.mobileconnect.r2.MobileConnectConfig;
-import com.gsma.mobileconnect.r2.MobileConnectInterface;
-import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, DiscoveryListener
+/**
+ * An Activity which contains two Fragments, {@link AuthenticationFragment} and {@link AuthorizationFragment}
+ */
+public class MainActivity extends AppCompatActivity
 {
-    private Button performDiscoveryButton;
-
-    private Button performAuthorizationButton;
-
-    private Button webViewButton;
-
-    private MobileConnectAndroidInterface mobileConnectAndroidInterface;
-
-    private MobileConnectConfig mobileConnectConfig;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        performDiscoveryButton = (Button) findViewById(R.id.button_perform_discovery);
-        performAuthorizationButton = (Button) findViewById(R.id.button_perform_authorisation);
-        webViewButton = (Button) findViewById(R.id.button_perform_discovery_with_web_view);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        performDiscoveryButton.setOnClickListener(this);
-        performAuthorizationButton.setOnClickListener(this);
-        webViewButton.setOnClickListener(this);
+        AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance();
+        AuthorizationFragment authorizationFragment = AuthorizationFragment.newInstance();
 
-        URI discoveryUri = null;
-        URI redirectUri = null;
+        List<Fragment> authFragments = new ArrayList<>();
+        authFragments.add(authenticationFragment);
+        authFragments.add(authorizationFragment);
 
-        try
-        {
-            discoveryUri = new URI(getString(R.string.discovery_url));
-            redirectUri = new URI(getString(R.string.redirect_url));
-        }
-        catch (URISyntaxException e)
-        {
-            e.printStackTrace();
-        }
+        AuthFragmentsAdapter authFragmentsAdapter = new AuthFragmentsAdapter(authFragments,
+                                                                             getSupportFragmentManager());
 
-        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_key))
-                                                               .withClientSecret(getString(R.string.client_secret))
-                                                               .withDiscoveryUrl(discoveryUri)
-                                                               .withRedirectUrl(redirectUri)
-                                                               .build();
-
-        // todo setup only a single thread for this service
-        MobileConnectInterface mobileConnectInterface = MobileConnect.buildInterface(mobileConnectConfig);
-
-        mobileConnectAndroidInterface = new MobileConnectAndroidInterface(mobileConnectInterface);
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-        switch (view.getId())
-        {
-            case R.id.button_perform_discovery:
-            {
-                break;
-            }
-            case R.id.button_perform_authorisation:
-            {
-                break;
-            }
-            case R.id.button_perform_discovery_with_web_view:
-            {
-                mobileConnectAndroidInterface.doDiscoveryWithWebView(mobileConnectConfig,
-                                                                     this,
-                                                                     this,
-                                                                     mobileConnectConfig.getDiscoveryUrl().toString());
-
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void discoveryComplete(MobileConnectStatus mobileConnectStatus)
-    {
-
-    }
-
-    @Override
-    public void discoveryFailed(MobileConnectStatus mobileConnectStatus)
-    {
-
-    }
-
-    @Override
-    public void onDiscoveryDialogClose()
-    {
-        Toast.makeText(this, "Discovery Dialog Closed", Toast.LENGTH_SHORT).show();
+        viewPager.setAdapter(authFragmentsAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, R.color.md_red_A200));
     }
 }
