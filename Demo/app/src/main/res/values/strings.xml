@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Demo</string>
+
+    <!-- Mobile Connect Credentials -->
+    <string name="client_key">ZWRhNjU3OWI3MGIwYTRh</string>
+    <string name="client_secret">NjQzZTBhZWM0YmQ4ZDQ5</string>
+    <string name="discovery_url">https://reference.mobileconnect.io/discovery/</string>
+    <string name="redirect_url">https://www.bbc.co.uk</string>
 </resources>

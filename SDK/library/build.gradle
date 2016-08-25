@@ -12,14 +12,34 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage', 'InflateParams', 'SetJavaScriptEnabled'
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.gsma.mobileconnect:mobile-connect-sdk:2.1.0-SNAPSHOT'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+
+}
+
+task showMeCache << {
+    configurations.compile.each { println it }
+}
+
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///Users/usmaan.dad/.m2/repository/")
+        }
+    }
 }

@@ -3,6 +3,10 @@
 buildscript {
     repositories {
         jcenter()
+        mavenLocal()
+        maven {
+            url "/Users/usmaan.dad/.m2/repository/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.2'
@@ -15,6 +19,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        mavenLocal()
     }
 }
 
