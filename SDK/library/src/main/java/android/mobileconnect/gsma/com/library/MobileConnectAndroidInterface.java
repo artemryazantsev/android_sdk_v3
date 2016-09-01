@@ -15,7 +15,6 @@ import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
@@ -27,7 +26,7 @@ import java.net.URI;
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
  * {@link AsyncTask}s and sends the result via a {@link IMobileConnectCallback}
- * <p/>
+ * <p>
  * Created by usmaan.dad on 11/08/2016.
  */
 public class MobileConnectAndroidInterface
@@ -35,17 +34,40 @@ public class MobileConnectAndroidInterface
     private final MobileConnectInterface mobileConnectInterface;
 
     /**
-     * @param mobileConnectInterface The {@link MobileConnectInterface} containing the necessary set-up of services.
+     * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
     public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface)
     {
         this.mobileConnectInterface = mobileConnectInterface;
     }
 
-    public void doDiscoveryWithWebView(final MobileConnectConfig config,
-                                       final Context activityContext,
-                                       final DiscoveryListener discoveryListener,
-                                       final String operatorUrl)
+    /**
+     * Launches a Dialog containing a {@link WebView} and loads the passed-in operatorUrl.
+     *
+     * @param activityContext   The {@link Context} in which the Dialog is used to draw
+     * @param discoveryListener The callback determining success, failure or the dialog being closed
+     * @param operatorUrl       The url to load in to the {@link WebView}
+     * @param redirectUrl       The redirect url expected to be received from the API
+     */
+    public void attemptDiscoveryWithWebView(final Context activityContext,
+                                            final DiscoveryListener discoveryListener,
+                                            final String operatorUrl,
+                                            final String redirectUrl)
+    {
+        initiateWebView(activityContext, discoveryListener, operatorUrl, redirectUrl);
+    }
+
+    public void attemptAuthenticationWithWebView(@NonNull final Context activityContext,
+                                                 @NonNull final DiscoveryListener discoveryListener,
+                                                 @NonNull final String operatorUrl)
+    {
+
+    }
+
+    private void initiateWebView(@NonNull final Context activityContext,
+                                 @NonNull final DiscoveryListener discoveryListener,
+                                 @NonNull final String operatorUrl,
+                                 @NonNull final String redirectUrl)
     {
         RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
                                                                       .inflate(R.layout.layout_web_view, null);
@@ -61,9 +83,9 @@ public class MobileConnectAndroidInterface
 
         final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
                                                                                 progressBar,
-                                                                                config.getRedirectUrl().toString(),
+                                                                                redirectUrl,
                                                                                 discoveryListener,
-                                                                                config);
+                                                                                this);
         webView.setWebViewClient(webViewClient);
 
         webView.loadUrl(operatorUrl);
@@ -89,6 +111,13 @@ public class MobileConnectAndroidInterface
         }
     }
 
+    /**
+     * Stop any processing on the {@link WebView} and notify that it has been stopped. This is called regardless of
+     * success, failure or if the user has intentionally closed the dialog.
+     *
+     * @param listener The callback to notify of the closing of the Dialog
+     * @param webView  The view to stop loading.
+     */
     private void closeWebViewAndNotify(final DiscoveryListener listener, final WebView webView)
     {
         webView.stopLoading();
@@ -132,7 +161,7 @@ public class MobileConnectAndroidInterface
 
     /**
      * Asynchronously attempt discovery using the values returned from the operator selection redirect
-     * <p/>
+     * <p>
      *
      * @param mobileConnectCallback The callback in which a {@link MobileConnectStatus} shall be provided after
      *                              completion

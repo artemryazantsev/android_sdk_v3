@@ -1,12 +1,21 @@
 package android.mobileconnect.gsma.com.demo.fragments;
 
 import android.mobileconnect.gsma.com.demo.R;
+import android.mobileconnect.gsma.com.library.AndroidMobileConnectEncodeDecoder;
 import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.gsma.mobileconnect.r2.MobileConnect;
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
+import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
+import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,16 +25,29 @@ import java.net.URISyntaxException;
  */
 public class BaseAuthFragment extends Fragment
 {
-    private MobileConnectAndroidInterface mobileConnectAndroidInterface;
+    // Views
+    protected Button goButton;
 
-    private MobileConnectConfig mobileConnectConfig;
+    protected CheckBox msisdnCheckBox;
+
+    protected TextInputLayout msisdnTextInputLayout;
+
+    protected TextInputEditText msisdnTextInputEditText;
+
+    // Mobile Connect Fields
+    protected MobileConnectAndroidInterface mobileConnectAndroidInterface;
+
+    protected MobileConnectConfig mobileConnectConfig;
 
     /**
      * Sets-up the {@link BaseAuthFragment#mobileConnectAndroidInterface} with the configuration based on the values in
      * strings.xml
      */
-    protected void setupMobileConnectAndroid()
+    protected void setupUIAndMobileConnectAndroid(View view,
+                                                  MobileConnectAndroidInterface.IMobileConnectCallback mobileConnectCallback)
     {
+        setupUI(view, mobileConnectCallback);
+
         URI discoveryUri = null;
         URI redirectUri = null;
 
@@ -45,9 +67,60 @@ public class BaseAuthFragment extends Fragment
                                                                .withRedirectUrl(redirectUri)
                                                                .build();
 
-        // todo setup only a single thread for this service
-        MobileConnectInterface mobileConnectInterface = MobileConnect.buildInterface(mobileConnectConfig);
-
+        MobileConnectInterface mobileConnectInterface = MobileConnect.buildInterface(mobileConnectConfig,
+                                                                                     new AndroidMobileConnectEncodeDecoder());
         mobileConnectAndroidInterface = new MobileConnectAndroidInterface(mobileConnectInterface);
+    }
+
+    private void setupUI(View view, final MobileConnectAndroidInterface.IMobileConnectCallback mobileConnectCallback)
+    {
+        goButton = (Button) view.findViewById(R.id.button_go);
+        msisdnCheckBox = (CheckBox) view.findViewById(R.id.check_box_msisdn);
+        msisdnTextInputLayout = (TextInputLayout) view.findViewById(R.id.text_input_layout_msisdn);
+        msisdnTextInputEditText = (TextInputEditText) view.findViewById(R.id.text_input_edit_text_msisdn);
+
+        goButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
+                String msisdn = null;
+                DiscoveryOptions.Builder discoveryOptionsBuilder = new DiscoveryOptions.Builder();
+
+                if (msisdnCheckBox.isChecked())
+                {
+                    msisdn = msisdnTextInputEditText.getText().toString();
+                    discoveryOptionsBuilder.withMsisdn(msisdn);
+                }
+
+                discoveryOptionsBuilder.withRedirectUrl(mobileConnectConfig.getRedirectUrl());
+
+                MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder().withDiscoveryOptions(
+                        discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
+
+                mobileConnectAndroidInterface.attemptDiscovery(msisdn,
+                                                               null,
+                                                               null,
+                                                               requestOptions,
+                                                               mobileConnectCallback);
+            }
+        });
+
+        msisdnCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked)
+            {
+                if (checked)
+                {
+                    msisdnTextInputLayout.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    msisdnTextInputLayout.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }

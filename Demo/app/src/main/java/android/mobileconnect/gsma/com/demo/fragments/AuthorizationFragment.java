@@ -1,16 +1,20 @@
 package android.mobileconnect.gsma.com.demo.fragments;
 
 import android.mobileconnect.gsma.com.demo.R;
+import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gsma.mobileconnect.r2.MobileConnectStatus;
+
 /**
  * Created by usmaan.dad on 24/08/2016.
  */
-public class AuthorizationFragment extends BaseAuthFragment implements ITitle
+public class AuthorizationFragment extends BaseAuthFragment implements ITitle,
+                                                                       MobileConnectAndroidInterface.IMobileConnectCallback
 {
     public static AuthorizationFragment newInstance()
     {
@@ -25,7 +29,7 @@ public class AuthorizationFragment extends BaseAuthFragment implements ITitle
     {
         View view = inflater.inflate(R.layout.fragment_authorization, container, false);
 
-        setupMobileConnectAndroid();
+        setupUIAndMobileConnectAndroid(view, this);
 
         return view;
     }
@@ -34,5 +38,11 @@ public class AuthorizationFragment extends BaseAuthFragment implements ITitle
     public String getTitle()
     {
         return "Authorization";
+    }
+
+    @Override
+    public void onComplete(MobileConnectStatus mobileConnectStatus)
+    {
+
     }
 }

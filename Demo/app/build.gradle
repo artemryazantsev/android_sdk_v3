@@ -31,4 +31,5 @@ dependencies {
 
     compile 'SDK:library:unspecified'
     compile group: 'org.apache.httpcomponents', name: 'httpclient-android', version: '4.3.5.1'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.5'
 }

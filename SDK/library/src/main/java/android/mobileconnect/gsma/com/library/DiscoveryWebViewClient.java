@@ -4,7 +4,6 @@ import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog
 import android.util.Log;
 import android.widget.ProgressBar;
 
-import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
 import java.net.URI;
@@ -13,21 +12,19 @@ import java.util.UUID;
 
 public class DiscoveryWebViewClient extends MobileConnectWebViewClient
 {
-    private DiscoveryListener listener;
-
-    private MobileConnectConfig config;
+    private DiscoveryListener discoveryListener;
 
     private MobileConnectAndroidInterface mobileConnectAndroidInterface;
 
-    public DiscoveryWebViewClient(DiscoveryAuthenticationDialog dialog,
-                                  ProgressBar progressBar,
-                                  String redirectUrl,
-                                  DiscoveryListener listener,
-                                  MobileConnectConfig config)
+    public DiscoveryWebViewClient(final DiscoveryAuthenticationDialog dialog,
+                                  final ProgressBar progressBar,
+                                  final String redirectUrl,
+                                  final DiscoveryListener discoveryListener,
+                                  final MobileConnectAndroidInterface mobileConnectAndroidInterface)
     {
         super(dialog, progressBar, redirectUrl);
-        this.listener = listener;
-        this.config = config;
+        this.discoveryListener = discoveryListener;
+        this.mobileConnectAndroidInterface = mobileConnectAndroidInterface;
     }
 
     @Override
@@ -39,7 +36,7 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     @Override
     protected void handleError(MobileConnectStatus status)
     {
-        listener.discoveryFailed(status);
+        discoveryListener.discoveryFailed(status);
     }
 
     @Override
@@ -68,10 +65,9 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
                                                          {
                                                              @Override
                                                              public void onComplete(MobileConnectStatus
-
                                                                                             mobileConnectStatus)
                                                              {
-                                                                 if (listener == null)
+                                                                 if (discoveryListener == null)
                                                                  {
                                                                      return;
                                                                  }
@@ -86,7 +82,7 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
                                                                          break;
                                                                      case START_AUTHENTICATION:
                                                                      {
-                                                                         listener.discoveryComplete
+                                                                         discoveryListener.discoveryComplete
                                                                                  (mobileConnectStatus);
 
                                                                      }

@@ -6,4 +6,6 @@
     <string name="client_secret">NjQzZTBhZWM0YmQ4ZDQ5</string>
     <string name="discovery_url">https://reference.mobileconnect.io/discovery/</string>
     <string name="redirect_url">https://www.bbc.co.uk</string>
+    <string name="mnc">901</string>
+    <string name="mcc">01</string>
 </resources>
