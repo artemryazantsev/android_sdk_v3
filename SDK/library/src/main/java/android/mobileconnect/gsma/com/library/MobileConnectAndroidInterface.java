@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.mobileconnect.gsma.com.library.view.InteractableWebView;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -58,10 +59,11 @@ public class MobileConnectAndroidInterface
     }
 
     public void attemptAuthenticationWithWebView(@NonNull final Context activityContext,
-                                                 @NonNull final DiscoveryListener discoveryListener,
-                                                 @NonNull final String operatorUrl)
+                                                 @NonNull final AuthenticationListener authenticationListener,
+                                                 @NonNull final String url,
+                                                 @NonNull final DiscoveryResponse discoveryResponse)
     {
-
+        initiateWebView(activityContext, authenticationListener, url, discoveryResponse);
     }
 
     private void initiateWebView(@NonNull final Context activityContext,
@@ -111,6 +113,70 @@ public class MobileConnectAndroidInterface
         }
     }
 
+    private void initiateWebView(@NonNull final Context activityContext,
+                                 @NonNull final AuthenticationListener authenticationListener,
+                                 @NonNull final String authenticationUrl,
+                                 @NonNull final DiscoveryResponse discoveryResponse)
+    {
+        RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
+                                                                      .inflate(R.layout.layout_web_view, null);
+
+        final InteractableWebView webView = (InteractableWebView) webViewLayout.findViewById(R.id.web_view);
+        final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
+
+        final DiscoveryAuthenticationDialog dialog = new DiscoveryAuthenticationDialog(activityContext);
+
+        dialog.setContentView(webViewLayout);
+
+        webView.setWebChromeClient(new WebChromeClient());
+
+        final AuthenticationWebViewClient webViewClient = new AuthenticationWebViewClient(dialog,
+                                                                                          progressBar,
+                                                                                          authenticationListener,
+                                                                                          authenticationUrl,
+                                                                                          discoveryResponse);
+        webView.setWebViewClient(webViewClient);
+
+        webView.loadUrl(authenticationUrl);
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
+        {
+            @Override
+            public void onDismiss(final DialogInterface dialogInterface)
+            {
+                Log.e("Discovery Dialog", "dismissed");
+                dialogInterface.dismiss();
+                closeWebViewAndNotify(authenticationListener, webView);
+            }
+        });
+
+        try
+        {
+            dialog.show();
+        }
+        catch (final WindowManager.BadTokenException exception)
+        {
+            Log.e("Discovery Dialog", exception.getMessage());
+        }
+    }
+
+    private String getAuthUrl(final String authenticationUrl, final String urlWithParameters)
+    {
+        Uri uri = Uri.parse(urlWithParameters);
+
+        Uri.Builder builder = Uri.parse(authenticationUrl).buildUpon();
+
+        if (uri != null)
+        {
+            for (String queryParamName : uri.getQueryParameterNames())
+            {
+                builder.appendQueryParameter(queryParamName, uri.getQueryParameter(queryParamName));
+            }
+        }
+
+        return builder.build().toString();
+    }
+
     /**
      * Stop any processing on the {@link WebView} and notify that it has been stopped. This is called regardless of
      * success, failure or if the user has intentionally closed the dialog.
@@ -123,6 +189,20 @@ public class MobileConnectAndroidInterface
         webView.stopLoading();
         webView.loadData("", "text/html", null);
         listener.onDiscoveryDialogClose();
+    }
+
+    /**
+     * Stop any processing on the {@link WebView} and notify that it has been stopped. This is called regardless of
+     * success, failure or if the user has intentionally closed the dialog.
+     *
+     * @param listener The callback to notify of the closing of the Dialog
+     * @param webView  The view to stop loading.
+     */
+    private void closeWebViewAndNotify(final AuthenticationListener listener, final WebView webView)
+    {
+        webView.stopLoading();
+        webView.loadData("", "text/html", null);
+        listener.onAuthorizationDialogClose();
     }
 
     /**

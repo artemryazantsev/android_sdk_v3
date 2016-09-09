@@ -16,6 +16,7 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
+import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -39,12 +40,15 @@ public class BaseAuthFragment extends Fragment
 
     protected MobileConnectConfig mobileConnectConfig;
 
+    protected DiscoveryResponse discoveryResponse;
+
     /**
      * Sets-up the {@link BaseAuthFragment#mobileConnectAndroidInterface} with the configuration based on the values in
      * strings.xml
      */
     protected void setupUIAndMobileConnectAndroid(View view,
-                                                  MobileConnectAndroidInterface.IMobileConnectCallback mobileConnectCallback)
+                                                  MobileConnectAndroidInterface.IMobileConnectCallback
+                                                          mobileConnectCallback)
     {
         setupUI(view, mobileConnectCallback);
 
@@ -65,6 +69,7 @@ public class BaseAuthFragment extends Fragment
                                                                .withClientSecret(getString(R.string.client_secret))
                                                                .withDiscoveryUrl(discoveryUri)
                                                                .withRedirectUrl(redirectUri)
+                                                               .withCacheResponsesWithSessionId(false)
                                                                .build();
 
         MobileConnectInterface mobileConnectInterface = MobileConnect.buildInterface(mobileConnectConfig,
@@ -96,7 +101,8 @@ public class BaseAuthFragment extends Fragment
 
                 discoveryOptionsBuilder.withRedirectUrl(mobileConnectConfig.getRedirectUrl());
 
-                MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder().withDiscoveryOptions(
+                MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder()
+                        .withDiscoveryOptions(
                         discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
 
                 mobileConnectAndroidInterface.attemptDiscovery(msisdn,

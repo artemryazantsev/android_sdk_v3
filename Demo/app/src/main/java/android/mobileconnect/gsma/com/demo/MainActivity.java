@@ -34,8 +34,7 @@ public class MainActivity extends AppCompatActivity
         authFragments.add(authenticationFragment);
         authFragments.add(authorizationFragment);
 
-        AuthFragmentsAdapter authFragmentsAdapter = new AuthFragmentsAdapter(authFragments,
-                                                                             getSupportFragmentManager());
+        AuthFragmentsAdapter authFragmentsAdapter = new AuthFragmentsAdapter(authFragments, getSupportFragmentManager());
 
         viewPager.setAdapter(authFragmentsAdapter);
         tabLayout.setupWithViewPager(viewPager);

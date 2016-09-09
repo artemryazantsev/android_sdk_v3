@@ -1,6 +1,7 @@
 package android.mobileconnect.gsma.com.demo.fragments;
 
 import android.mobileconnect.gsma.com.demo.R;
+import android.mobileconnect.gsma.com.library.AuthenticationListener;
 import android.mobileconnect.gsma.com.library.DiscoveryListener;
 import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
 import android.os.Bundle;
@@ -13,6 +14,10 @@ import android.widget.Toast;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
+import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
+import com.gsma.mobileconnect.r2.constants.Scopes;
+
+import java.util.UUID;
 
 /**
  * Created by usmaan.dad on 24/08/2016.
@@ -20,7 +25,8 @@ import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 public class AuthenticationFragment extends BaseAuthFragment implements ITitle,
                                                                         DiscoveryListener,
                                                                         MobileConnectAndroidInterface
-                                                                                .IMobileConnectCallback
+                                                                                .IMobileConnectCallback,
+                                                                        AuthenticationListener
 {
     public static AuthenticationFragment newInstance()
     {
@@ -47,32 +53,94 @@ public class AuthenticationFragment extends BaseAuthFragment implements ITitle,
     }
 
     @Override
-    public void discoveryComplete(MobileConnectStatus mobileConnectStatus)
+    public void onDiscoveryRedirect(@Nullable String s)
     {
-        MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder()
+
+    }
+
+    @Override
+    public void onDiscoveryResponse(MobileConnectStatus mobileConnectStatus)
+    {
+        final MobileConnectRequestOptions mobileConnectRequestOptions = new MobileConnectRequestOptions.Builder()
                 .withAuthenticationOptions(
-                new AuthenticationOptions.Builder().withAcrValues("2").build()).build();
+                new AuthenticationOptions.Builder().withScope(Scopes.MOBILECONNECTAUTHENTICATION)
+                                                   .withContext("demo")
+                                                   .withBindingMessage("demo auth")
+                                                   .build()).build();
 
-        this.mobileConnectAndroidInterface.startAuthentication(mobileConnectStatus.getDiscoveryResponse(),
-                                                               mobileConnectStatus.getDiscoveryResponse()
-                                                                                  .getResponseData()
-                                                                                  .getSubscriberId(),
-                                                               null,
-                                                               null,
-                                                               requestOptions,
-                                                               new MobileConnectAndroidInterface
-                                                                       .IMobileConnectCallback()
+        final String state =
+                mobileConnectStatus.getState() == null ? UUID.randomUUID().toString() : mobileConnectStatus.getState();
+        final String nonce =
+                mobileConnectStatus.getNonce() == null ? UUID.randomUUID().toString() : mobileConnectStatus.getNonce();
 
-                                                               {
-                                                                   @Override
-                                                                   public void onComplete(MobileConnectStatus
-                                                                                                  mobileConnectStatus)
-                                                                   {
-                                                                       Toast.makeText(getActivity(),
-                                                                                      "Authorization Complete",
-                                                                                      Toast.LENGTH_SHORT).show();
-                                                                   }
-                                                               });
+        switch (mobileConnectStatus.getResponseType())
+        {
+            case ERROR:
+                break;
+            case OPERATOR_SELECTION:
+                break;
+            case START_DISCOVERY:
+                break;
+            case START_AUTHENTICATION:
+                this.discoveryResponse = mobileConnectStatus.getDiscoveryResponse();
+                startAuthentication(mobileConnectStatus, mobileConnectRequestOptions, state, nonce);
+                break;
+            case AUTHENTICATION:
+                break;
+            case COMPLETE:
+                break;
+            case USER_INFO:
+                break;
+            case IDENTITY:
+                break;
+        }
+    }
+
+    private void startAuthentication(MobileConnectStatus mobileConnectStatus,
+                                     MobileConnectRequestOptions mobileConnectRequestOptions,
+                                     String state,
+                                     String nonce)
+    {
+        mobileConnectAndroidInterface.startAuthentication(mobileConnectStatus.getDiscoveryResponse(),
+                                                          mobileConnectStatus.getDiscoveryResponse()
+                                                                             .getResponseData()
+                                                                             .getSubscriberId(),
+                                                          state,
+                                                          nonce,
+                                                          mobileConnectRequestOptions,
+                                                          new MobileConnectAndroidInterface.IMobileConnectCallback()
+                                                          {
+                                                              @Override
+                                                              public void onComplete(MobileConnectStatus
+                                                                                             mobileConnectStatus)
+                                                              {
+                                                                  performAuthentication(mobileConnectStatus);
+                                                              }
+                                                          });
+    }
+
+    private void performAuthentication(final MobileConnectStatus mobileConnectStatus)
+    {
+        switch (mobileConnectStatus.getResponseType())
+        {
+            case ERROR:
+                break;
+            case OPERATOR_SELECTION:
+                break;
+            case START_DISCOVERY:
+                break;
+            case START_AUTHENTICATION:
+                break;
+            case AUTHENTICATION:
+                mobileConnectAndroidInterface.attemptAuthenticationWithWebView(getActivity(), this, mobileConnectStatus.getUrl(), this.discoveryResponse);
+                break;
+            case COMPLETE:
+                break;
+            case USER_INFO:
+                break;
+            case IDENTITY:
+                break;
+        }
     }
 
     @Override
@@ -90,9 +158,33 @@ public class AuthenticationFragment extends BaseAuthFragment implements ITitle,
     @Override
     public void onComplete(MobileConnectStatus mobileConnectStatus)
     {
-        this.mobileConnectAndroidInterface.doDiscoveryWithWebView(getActivity(),
-                                                                  this,
-                                                                  mobileConnectStatus.getUrl(),
-                                                                  mobileConnectConfig.getRedirectUrl().toString());
+        this.mobileConnectAndroidInterface.attemptDiscoveryWithWebView(getActivity(),
+                                                                       this,
+                                                                       mobileConnectStatus.getUrl(),
+                                                                       mobileConnectConfig.getRedirectUrl().toString());
+    }
+
+    @Override
+    public void tokenReceived(RequestTokenResponse requestTokenResponse)
+    {
+
+    }
+
+    @Override
+    public void authorizationFailed(MobileConnectStatus mobileConnectStatus)
+    {
+        Toast.makeText(getActivity(), "asdfasd", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void authorizationSuccess(String s)
+    {
+        Toast.makeText(getActivity(), "asdfasd", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAuthorizationDialogClose()
+    {
+
     }
 }

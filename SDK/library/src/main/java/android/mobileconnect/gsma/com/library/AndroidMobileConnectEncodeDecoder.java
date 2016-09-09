@@ -2,13 +2,13 @@ package android.mobileconnect.gsma.com.library;
 
 import android.util.Base64;
 
-import com.gsma.mobileconnect.r2.utils.JsonWebTokens;
+import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 
 /**
  * An implementation of Encoding and Decoding from an array of {@link byte} to {@link String}
  * Created by usmaan.dad on 26/08/2016.
  */
-public class AndroidMobileConnectEncodeDecoder implements JsonWebTokens.IMobileConnectEncodeDecoder
+public class AndroidMobileConnectEncodeDecoder implements IMobileConnectEncodeDecoder
 {
     @Override
     public String encodeToBase64(final byte[] value)

@@ -1,6 +1,7 @@
 package android.mobileconnect.gsma.com.library;
 
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ProgressBar;
 
@@ -43,53 +44,38 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     protected void handleResult(String url)
     {
         DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL(url);
+        Log.d("url", url);
 
-        if (url != null)
-        {
-            URI uri = null;
+        URI uri = getUri(url);
 
-            try
-            {
-                uri = new URI(url);
-            }
-            catch (URISyntaxException e)
-            {
-                Log.e("Invalid Redirect URI", e.getMessage());
-            }
-
-            mobileConnectAndroidInterface.handleRedirect(uri,
-                                                         null,
-                                                         UUID.randomUUID().toString(),
-                                                         UUID.randomUUID().toString(),
-                                                         new MobileConnectAndroidInterface.IMobileConnectCallback()
+        mobileConnectAndroidInterface.handleRedirect(uri,
+                                                     null,
+                                                     UUID.randomUUID().toString(),
+                                                     UUID.randomUUID().toString(),
+                                                     new MobileConnectAndroidInterface.IMobileConnectCallback()
+                                                     {
+                                                         @Override
+                                                         public void onComplete(MobileConnectStatus mobileConnectStatus)
                                                          {
-                                                             @Override
-                                                             public void onComplete(MobileConnectStatus
-                                                                                            mobileConnectStatus)
-                                                             {
-                                                                 if (discoveryListener == null)
-                                                                 {
-                                                                     return;
-                                                                 }
+                                                             discoveryListener.onDiscoveryResponse(mobileConnectStatus);
+                                                         }
+                                                     });
 
-                                                                 switch (mobileConnectStatus.getResponseType())
-                                                                 {
-                                                                     case ERROR:
-                                                                         break;
-                                                                     case OPERATOR_SELECTION:
-                                                                         break;
-                                                                     case START_DISCOVERY:
-                                                                         break;
-                                                                     case START_AUTHENTICATION:
-                                                                     {
-                                                                         discoveryListener.discoveryComplete
-                                                                                 (mobileConnectStatus);
+    }
 
-                                                                     }
-                                                                     break;
-                                                                 }
-                                                             }
-                                                         });
+    @Nullable
+    private URI getUri(final String url)
+    {
+        URI uri;
+        try
+        {
+            uri = new URI(url);
         }
+        catch (URISyntaxException e)
+        {
+            uri = null;
+            Log.e("Invalid Redirect URI", e.getMessage());
+        }
+        return uri;
     }
 }
