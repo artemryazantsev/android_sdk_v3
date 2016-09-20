@@ -1,6 +1,7 @@
 package android.mobileconnect.gsma.com.library;
 
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ProgressBar;
@@ -31,7 +32,25 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     @Override
     protected boolean qualifyUrl(String url)
     {
-        return url.contains("mcc_mnc=");
+        if (url.contains("mcc_mnc="))
+        {
+            Uri uri = Uri.parse(url);
+
+            if (uri != null)
+            {
+                String param = uri.getQueryParameter("mcc_mnc");
+                String[] mccAndMnc = param.split("_");
+
+                if (mccAndMnc.length == 2)
+                {
+                    this.mobileConnectAndroidInterface.setMcc(mccAndMnc[0]);
+                    this.mobileConnectAndroidInterface.setMnc(mccAndMnc[1]);
+                }
+            }
+
+            return true;
+        }
+        return false;
     }
 
     @Override

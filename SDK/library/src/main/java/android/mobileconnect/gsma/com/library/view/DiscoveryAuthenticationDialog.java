@@ -15,23 +15,6 @@ public class DiscoveryAuthenticationDialog extends Dialog
 {
     private WindowManager.LayoutParams layoutParams;
 
-    private static DiscoveryAuthenticationDialog instance;
-
-    /**
-     * When discovering and authentic
-     *
-     * @param context
-     * @return
-     */
-    public static DiscoveryAuthenticationDialog getInstance(Context context)
-    {
-        if (instance == null && context != null)
-        {
-            instance = new DiscoveryAuthenticationDialog(context);
-        }
-        return instance;
-    }
-
     public DiscoveryAuthenticationDialog(final Context context)
     {
         super(context);
