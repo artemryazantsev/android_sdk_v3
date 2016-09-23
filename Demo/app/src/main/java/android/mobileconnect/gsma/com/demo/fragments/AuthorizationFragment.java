@@ -14,7 +14,8 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
  * Created by usmaan.dad on 24/08/2016.
  */
 public class AuthorizationFragment extends BaseAuthFragment implements ITitle,
-                                                                       MobileConnectAndroidInterface.IMobileConnectCallback
+                                                                       MobileConnectAndroidInterface
+                                                                               .IMobileConnectCallback
 {
     public static AuthorizationFragment newInstance()
     {
@@ -43,6 +44,7 @@ public class AuthorizationFragment extends BaseAuthFragment implements ITitle,
     @Override
     public void onComplete(MobileConnectStatus mobileConnectStatus)
     {
-
     }
+
+
 }

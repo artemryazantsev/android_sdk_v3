@@ -25,7 +25,7 @@ public interface AuthenticationListener
      */
     void authorizationFailed(MobileConnectStatus mobileConnectStatus);
 
-    void authorizationSuccess(final String url);
+    void authorizationSuccess(final MobileConnectStatus mobileConnectStatus);
 
     /**
      * This is called when the authorization dialog has been dismissed.

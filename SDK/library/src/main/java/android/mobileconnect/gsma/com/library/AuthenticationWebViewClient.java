@@ -13,6 +13,8 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
 {
     private final String TAG = AuthenticationWebViewClient.class.getSimpleName();
 
+    private final AuthenticationWebViewCallback authenticationWebViewCallback;
+
     AuthenticationListener listener;
 
     DiscoveryResponse response;
@@ -21,11 +23,12 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
                                        final ProgressBar progressBar,
                                        final AuthenticationListener listener,
                                        final String redirectUri,
-                                       final DiscoveryResponse response)
+                                       final DiscoveryResponse response, final AuthenticationWebViewCallback authenticationWebViewCallback)
     {
         super(dialog, progressBar, redirectUri);
         this.listener = listener;
         this.response = response;
+        this.authenticationWebViewCallback = authenticationWebViewCallback;
     }
 
     @Override
@@ -46,7 +49,7 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
         this.dialog.cancel();
 
         DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL(url);
-        listener.authorizationSuccess(url);
+        authenticationWebViewCallback.onSuccess(url);
     }
 
     protected void notifyListener(final MobileConnectStatus mobileConnectStatus, final AuthenticationListener listener)

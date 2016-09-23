@@ -20,26 +20,37 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.discovery.DiscoveryService;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
  * {@link AsyncTask}s and sends the result via a {@link IMobileConnectCallback}
- * <p>
+ * <p/>
  * Created by usmaan.dad on 11/08/2016.
  */
 public class MobileConnectAndroidInterface
 {
     private final MobileConnectInterface mobileConnectInterface;
 
+    private String mcc;
+
+    private String mnc;
+
+    private DiscoveryService discoveryService;
+
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
-    public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface)
+    public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface,
+                                         DiscoveryService discoveryService)
     {
         this.mobileConnectInterface = mobileConnectInterface;
+        this.discoveryService = discoveryService;
     }
 
     /**
@@ -61,9 +72,11 @@ public class MobileConnectAndroidInterface
     public void attemptAuthenticationWithWebView(@NonNull final Context activityContext,
                                                  @NonNull final AuthenticationListener authenticationListener,
                                                  @NonNull final String url,
-                                                 @NonNull final DiscoveryResponse discoveryResponse)
+                                                 @NonNull final DiscoveryResponse discoveryResponse,
+                                                 @NonNull final String state,
+                                                 @NonNull String nonce)
     {
-        initiateWebView(activityContext, authenticationListener, url, discoveryResponse);
+        initiateWebView(activityContext, authenticationListener, url, discoveryResponse, state, nonce);
     }
 
     private void initiateWebView(@NonNull final Context activityContext,
@@ -116,7 +129,9 @@ public class MobileConnectAndroidInterface
     private void initiateWebView(@NonNull final Context activityContext,
                                  @NonNull final AuthenticationListener authenticationListener,
                                  @NonNull final String authenticationUrl,
-                                 @NonNull final DiscoveryResponse discoveryResponse)
+                                 @NonNull final DiscoveryResponse discoveryResponse,
+                                 @NonNull final String state,
+                                 @NonNull final String nonce)
     {
         RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
                                                                       .inflate(R.layout.layout_web_view, null);
@@ -130,11 +145,28 @@ public class MobileConnectAndroidInterface
 
         webView.setWebChromeClient(new WebChromeClient());
 
+        Uri uri = Uri.parse(authenticationUrl);
+        String redirectUrl = uri.getQueryParameter("redirect_uri");
+
         final AuthenticationWebViewClient webViewClient = new AuthenticationWebViewClient(dialog,
                                                                                           progressBar,
                                                                                           authenticationListener,
-                                                                                          authenticationUrl,
-                                                                                          discoveryResponse);
+                                                                                          redirectUrl,
+                                                                                          discoveryResponse,
+                                                                                          new AuthenticationWebViewCallback()
+                                                                                          {
+                                                                                              @Override
+                                                                                              public void onSuccess(
+                                                                                                      String url)
+                                                                                              {
+                                                                                                  handleRedirectAfterAuthentication(
+                                                                                                          url,
+                                                                                                          state,
+                                                                                                          nonce,
+                                                                                                          authenticationListener);
+                                                                                              }
+                                                                                          });
+
         webView.setWebViewClient(webViewClient);
 
         webView.loadUrl(authenticationUrl);
@@ -144,7 +176,7 @@ public class MobileConnectAndroidInterface
             @Override
             public void onDismiss(final DialogInterface dialogInterface)
             {
-                Log.e("Discovery Dialog", "dismissed");
+                Log.e("Authentication Dialog", "dismissed");
                 dialogInterface.dismiss();
                 closeWebViewAndNotify(authenticationListener, webView);
             }
@@ -158,6 +190,48 @@ public class MobileConnectAndroidInterface
         {
             Log.e("Discovery Dialog", exception.getMessage());
         }
+    }
+
+    private void handleRedirectAfterAuthentication(final String url,
+                                                   final String state,
+                                                   final String nonce,
+                                                   final AuthenticationListener authenticationListener)
+    {
+        URI uri = null;
+
+        try
+        {
+            uri = new URI(url);
+        }
+        catch (URISyntaxException e)
+        {
+            e.printStackTrace();
+        }
+
+        if (uri == null)
+        {
+            return;
+        }
+
+        DiscoveryResponse discoveryResponse = null;
+
+        try
+        {
+            discoveryResponse = discoveryService.getCachedDiscoveryResponse(mcc, mnc);
+        }
+        catch (CacheAccessException e)
+        {
+            e.printStackTrace();
+        }
+
+        handleRedirect(uri, discoveryResponse, state, nonce, new IMobileConnectCallback()
+        {
+            @Override
+            public void onComplete(MobileConnectStatus mobileConnectStatus)
+            {
+                authenticationListener.authorizationSuccess(mobileConnectStatus);
+            }
+        });
     }
 
     private String getAuthUrl(final String authenticationUrl, final String urlWithParameters)
@@ -241,7 +315,7 @@ public class MobileConnectAndroidInterface
 
     /**
      * Asynchronously attempt discovery using the values returned from the operator selection redirect
-     * <p>
+     * <p/>
      *
      * @param mobileConnectCallback The callback in which a {@link MobileConnectStatus} shall be provided after
      *                              completion
@@ -355,6 +429,41 @@ public class MobileConnectAndroidInterface
                                                                                                  accessToken);
             }
         }, mobileConnectCallback).execute();
+    }
+
+    public void requestUserInfo(final DiscoveryResponse discoveryResponse,
+                                final String accessToken,
+                                final IMobileConnectCallback mobileConnectCallback)
+    {
+        new MobileConnectAsyncTask(new IMobileConnectOperation()
+        {
+            @Override
+            public MobileConnectStatus operation()
+            {
+                return MobileConnectAndroidInterface.this.mobileConnectInterface.requestUserInfo(discoveryResponse,
+                                                                                                 accessToken);
+            }
+        }, mobileConnectCallback).execute();
+    }
+
+    public String getMcc()
+    {
+        return mcc;
+    }
+
+    public void setMcc(String mcc)
+    {
+        this.mcc = mcc;
+    }
+
+    public void setMnc(String mnc)
+    {
+        this.mnc = mnc;
+    }
+
+    public String getMnc()
+    {
+        return mnc;
     }
 
     private class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectStatus>
