@@ -114,19 +114,45 @@ public class AuthenticationFragment extends BaseAuthFragment implements ITitle,
                                                                                                   .toString());
                 break;
             case START_DISCOVERY:
+                //todo
                 break;
             case START_AUTHENTICATION:
-                final MobileConnectRequestOptions mobileConnectRequestOptions = new MobileConnectRequestOptions
-                        .Builder()
-                        .withAuthenticationOptions(new AuthenticationOptions.Builder().withScope(Scopes.MOBILECONNECTAUTHENTICATION)
-                                                                                      .withContext("demo")
-                                                                                      .withBindingMessage("demo auth")
-                                                                                      .build())
-                        .build();
+                AuthenticationOptions.Builder authenticationOptionsBuilder = new AuthenticationOptions.Builder()
+                        .withContext(
+                        "demo").withBindingMessage("demo auth");
+
+                final MobileConnectRequestOptions.Builder mobileConnectRequestOptionsBuilder = new
+                        MobileConnectRequestOptions.Builder();
+
+                StringBuilder stringBuilder = new StringBuilder(Scopes.MOBILECONNECTAUTHENTICATION);
+
+                if (addressSwitch.isChecked())
+                {
+                    stringBuilder.append(" address");
+                }
+                if (emailSwitch.isChecked())
+                {
+                    stringBuilder.append(" email");
+                }
+                if (phoneSwitch.isChecked())
+                {
+                    stringBuilder.append(" phone");
+                }
+                if (profileSwitch.isChecked())
+                {
+                    stringBuilder.append(" profile");
+                }
+
+                authenticationOptionsBuilder.withScope(stringBuilder.toString());
+
+                MobileConnectRequestOptions mobileConnectRequestOptions = mobileConnectRequestOptionsBuilder
+                        .withAuthenticationOptions(
+                        authenticationOptionsBuilder.build()).build();
 
                 startAuthentication(mobileConnectStatus, mobileConnectRequestOptions, state, nonce);
                 break;
             case AUTHENTICATION:
+            {
                 DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
 
                 if (discoveryResponse == null)
@@ -144,13 +170,46 @@ public class AuthenticationFragment extends BaseAuthFragment implements ITitle,
                                                                                state,
                                                                                nonce);
                 break;
+            }
             case COMPLETE:
+            {
+                displayIdToken(mobileConnectStatus);
+                if (addressSwitch.isChecked() || profileSwitch.isChecked() || phoneSwitch.isChecked() ||
+                    emailSwitch.isChecked())
+                {
+                    getUserInfo(mobileConnectStatus);
+                }
                 break;
+            }
             case USER_INFO:
+            {
+                getUserInfo(mobileConnectStatus);
                 break;
+            }
             case IDENTITY:
                 break;
         }
+    }
+
+    private void getUserInfo(MobileConnectStatus mobileConnectStatus)
+    {
+        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
+        mobileConnectAndroidInterface.requestUserInfo(discoveryResponse,
+                                                      getAccessToken(mobileConnectStatus),
+                                                      new MobileConnectAndroidInterface.IMobileConnectCallback()
+                                                      {
+                                                          @Override
+                                                          public void onComplete(MobileConnectStatus
+                                                                                         mobileConnectStatus)
+                                                          {
+                                                              onRequestUserInfoComplete(mobileConnectStatus);
+                                                          }
+                                                      });
+    }
+
+    private void onRequestUserInfoComplete(MobileConnectStatus mobileConnectStatus)
+    {
+
     }
 
     @Nullable
@@ -211,6 +270,11 @@ public class AuthenticationFragment extends BaseAuthFragment implements ITitle,
     @Override
     public void authorizationSuccess(final MobileConnectStatus mobileConnectStatus)
     {
+        handleRedirect(mobileConnectStatus);
+    }
+
+    private void requestToken(MobileConnectStatus mobileConnectStatus)
+    {
         Toast.makeText(getActivity(), "Authentication Success", Toast.LENGTH_SHORT).show();
         URI uri = null;
 
@@ -245,12 +309,46 @@ public class AuthenticationFragment extends BaseAuthFragment implements ITitle,
                                                        @Override
                                                        public void onComplete(MobileConnectStatus mobileConnectStatus)
                                                        {
-                                                           tokenReceived(mobileConnectStatus);
+                                                           displayIdToken(mobileConnectStatus);
                                                        }
                                                    });
     }
 
-    private void tokenReceived(MobileConnectStatus mobileConnectStatus)
+    private void displayIdToken(MobileConnectStatus mobileConnectStatus)
+    {
+        String idToken = getIdToken(mobileConnectStatus);
+
+        if (idToken == null)
+        {
+            idToken = "Failed to receive token. Please try again.";
+        }
+
+        Toast.makeText(getActivity(), idToken, Toast.LENGTH_SHORT).show();
+    }
+
+    private String getIdToken(final MobileConnectStatus mobileConnectStatus)
+    {
+        if (mobileConnectStatus != null && mobileConnectStatus.getRequestTokenResponse() != null)
+        {
+            RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
+
+            if (requestTokenResponse != null)
+            {
+                RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
+
+                if (responseData != null)
+                {
+                    if (responseData.getIdToken() != null)
+                    {
+                        return responseData.getIdToken();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getAccessToken(final MobileConnectStatus mobileConnectStatus)
     {
         if (mobileConnectStatus != null && mobileConnectStatus.getRequestTokenResponse() != null)
         {
@@ -264,16 +362,17 @@ public class AuthenticationFragment extends BaseAuthFragment implements ITitle,
                 {
                     if (responseData.getAccessToken() != null)
                     {
-                        Toast.makeText(getActivity(), responseData.getAccessToken(), Toast.LENGTH_SHORT).show();
+                        return responseData.getAccessToken();
                     }
                 }
             }
         }
+        return null;
     }
 
     @Override
     public void onAuthorizationDialogClose()
     {
-
+        Toast.makeText(getActivity(), "Dialog closed", Toast.LENGTH_SHORT).show();
     }
 }

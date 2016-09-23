@@ -1,11 +1,22 @@
+<!--<resources>-->
+    <!--<string name="app_name">Demo</string>-->
+
+    <!--&lt;!&ndash; Mobile Connect Credentials &ndash;&gt;-->
+    <!--<string name="client_key">31ef91db-9e65-4e1f-9037-54367d00d373</string>-->
+    <!--<string name="client_secret">c7a2a795-1af3-48ac-aabe-ecaff243a4a1</string>-->
+    <!--<string name="discovery_url">https://discovery.integration.sandbox.mobileconnect.io/v2/discovery</string>-->
+    <!--<string name="redirect_url">http://localhost:8001/mobileconnect.html</string>-->
+    <!--<string name="mnc">901</string>-->
+    <!--<string name="mcc">01</string>-->
+<!--</resources>-->
 <resources>
     <string name="app_name">Demo</string>
 
     <!-- Mobile Connect Credentials -->
-    <string name="client_key">31ef91db-9e65-4e1f-9037-54367d00d373</string>
-    <string name="client_secret">c7a2a795-1af3-48ac-aabe-ecaff243a4a1</string>
-    <string name="discovery_url">https://discovery.integration.sandbox.mobileconnect.io/v2/discovery</string>
-    <string name="redirect_url">http://localhost:8001/mobileconnect.html</string>
+    <string name="client_key">ZWRhNjU3OWI3MGIwYTRh</string>
+    <string name="client_secret">NjQzZTBhZWM0YmQ4ZDQ5</string>
+    <string name="discovery_url">https://reference.mobileconnect.io/discovery/</string>
+    <string name="redirect_url">http://complete/</string>
     <string name="mnc">901</string>
     <string name="mcc">01</string>
 </resources>

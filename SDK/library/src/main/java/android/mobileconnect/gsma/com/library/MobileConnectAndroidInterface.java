@@ -30,7 +30,7 @@ import java.net.URISyntaxException;
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
  * {@link AsyncTask}s and sends the result via a {@link IMobileConnectCallback}
- * <p>
+ * <p/>
  * Created by usmaan.dad on 11/08/2016.
  */
 public class MobileConnectAndroidInterface
@@ -46,7 +46,8 @@ public class MobileConnectAndroidInterface
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
-    public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface, DiscoveryService discoveryService)
+    public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface,
+                                         DiscoveryService discoveryService)
     {
         this.mobileConnectInterface = mobileConnectInterface;
         this.discoveryService = discoveryService;
@@ -314,7 +315,7 @@ public class MobileConnectAndroidInterface
 
     /**
      * Asynchronously attempt discovery using the values returned from the operator selection redirect
-     * <p>
+     * <p/>
      *
      * @param mobileConnectCallback The callback in which a {@link MobileConnectStatus} shall be provided after
      *                              completion
@@ -425,6 +426,21 @@ public class MobileConnectAndroidInterface
             public MobileConnectStatus operation()
             {
                 return MobileConnectAndroidInterface.this.mobileConnectInterface.requestIdentity(discoveryResponse,
+                                                                                                 accessToken);
+            }
+        }, mobileConnectCallback).execute();
+    }
+
+    public void requestUserInfo(final DiscoveryResponse discoveryResponse,
+                                final String accessToken,
+                                final IMobileConnectCallback mobileConnectCallback)
+    {
+        new MobileConnectAsyncTask(new IMobileConnectOperation()
+        {
+            @Override
+            public MobileConnectStatus operation()
+            {
+                return MobileConnectAndroidInterface.this.mobileConnectInterface.requestUserInfo(discoveryResponse,
                                                                                                  accessToken);
             }
         }, mobileConnectCallback).execute();

@@ -7,13 +7,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
-import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
-
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Created by usmaan.dad on 24/08/2016.
@@ -50,4 +45,6 @@ public class AuthorizationFragment extends BaseAuthFragment implements ITitle,
     public void onComplete(MobileConnectStatus mobileConnectStatus)
     {
     }
+
+
 }

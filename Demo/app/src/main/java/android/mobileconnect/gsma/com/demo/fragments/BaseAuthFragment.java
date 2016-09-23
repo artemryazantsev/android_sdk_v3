@@ -36,13 +36,13 @@ public class BaseAuthFragment extends Fragment
 
     protected TextInputEditText msisdnTextInputEditText;
 
-    private Switch addressSwitch;
+    protected Switch addressSwitch;
 
-    private Switch emailSwitch;
+    protected Switch emailSwitch;
 
-    private Switch phoneSwitch;
+    protected Switch phoneSwitch;
 
-    private Switch profileSwitch;
+    protected Switch profileSwitch;
 
     // Mobile Connect Fields
     protected MobileConnectAndroidInterface mobileConnectAndroidInterface;
