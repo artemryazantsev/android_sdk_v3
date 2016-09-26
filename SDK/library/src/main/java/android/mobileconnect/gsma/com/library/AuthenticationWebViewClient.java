@@ -7,7 +7,6 @@ import android.widget.ProgressBar;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
 public class AuthenticationWebViewClient extends MobileConnectWebViewClient
 {
@@ -17,17 +16,14 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
 
     AuthenticationListener listener;
 
-    DiscoveryResponse response;
-
     public AuthenticationWebViewClient(final DiscoveryAuthenticationDialog dialog,
                                        final ProgressBar progressBar,
                                        final AuthenticationListener listener,
                                        final String redirectUri,
-                                       final DiscoveryResponse response, final AuthenticationWebViewCallback authenticationWebViewCallback)
+                                       final AuthenticationWebViewCallback authenticationWebViewCallback)
     {
         super(dialog, progressBar, redirectUri);
         this.listener = listener;
-        this.response = response;
         this.authenticationWebViewCallback = authenticationWebViewCallback;
     }
 

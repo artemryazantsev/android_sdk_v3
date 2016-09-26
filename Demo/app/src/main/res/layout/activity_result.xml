@@ -13,92 +13,98 @@
         app:title="Result"
         app:titleTextColor="@android:color/white"/>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@drawable/vertical_divider_8dp"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:showDividers="middle">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:divider="@drawable/vertical_divider_8dp"
+            android:orientation="vertical"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:showDividers="middle">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/activity_horizontal_margin">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    style="@style/Base.TextAppearance.AppCompat.Subhead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Application Short Name"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/activity_horizontal_margin">
 
-                <TextView
-                    android:id="@+id/text_view_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    tools:text="Vodaphone"/>
+                    <TextView
+                        style="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Application Short Name"/>
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/text_view_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        tools:text="Vodaphone"/>
 
-        </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/activity_horizontal_margin">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    style="@style/Base.TextAppearance.AppCompat.Subhead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ID Token"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/activity_horizontal_margin">
 
-                <TextView
-                    android:id="@+id/text_view_id_token"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    tools:text="TrhjvUFio67GJhhgbkGFhkjgvg53HGjkb896GV674fGGHHKJBayn744GGJuyfydgjv45536BGFJHG656uVGVJVGFHJK67y6jhVHGFGHJVGHk657fgghvsjhghjYGJHvbvg787JHGJHVfgkjbVHgfhjH877uVJHDf87876bHVHGF"/>
+                    <TextView
+                        style="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ID Token"/>
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/text_view_id_token"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        tools:text="TrhjvUFio67GJhhgbkGFhkjgvg53HGjkb896GV674fGGHHKJBayn744GGJuyfydgjv45536BGFJHG656uVGVJVGFHJK67y6jhVHGFGHJVGHk657fgghvsjhghjYGJHvbvg787JHGJHVfgkjbVHgfhjH877uVJHDf87876bHVHGF"/>
 
-        </android.support.v7.widget.CardView>
+                </LinearLayout>
 
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            </android.support.v7.widget.CardView>
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/activity_horizontal_margin">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    style="@style/Base.TextAppearance.AppCompat.Subhead"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Access Token"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/activity_horizontal_margin">
 
-                <TextView
-                    android:id="@+id/text_view_access_token"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    tools:text="TrhjvUFio67GJhhgbkGFhkjgvg5dfs75FHGFD434"/>
+                    <TextView
+                        style="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Access Token"/>
 
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
+                    <TextView
+                        android:id="@+id/text_view_access_token"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        tools:text="TrhjvUFio67GJhhgbkGFhkjgvg5dfs75FHGFD434"/>
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>

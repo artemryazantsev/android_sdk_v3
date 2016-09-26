@@ -72,11 +72,10 @@ public class MobileConnectAndroidInterface
     public void attemptAuthenticationWithWebView(@NonNull final Context activityContext,
                                                  @NonNull final AuthenticationListener authenticationListener,
                                                  @NonNull final String url,
-                                                 @NonNull final DiscoveryResponse discoveryResponse,
                                                  @NonNull final String state,
                                                  @NonNull String nonce)
     {
-        initiateWebView(activityContext, authenticationListener, url, discoveryResponse, state, nonce);
+        initiateWebView(activityContext, authenticationListener, url, state, nonce);
     }
 
     private void initiateWebView(@NonNull final Context activityContext,
@@ -129,7 +128,6 @@ public class MobileConnectAndroidInterface
     private void initiateWebView(@NonNull final Context activityContext,
                                  @NonNull final AuthenticationListener authenticationListener,
                                  @NonNull final String authenticationUrl,
-                                 @NonNull final DiscoveryResponse discoveryResponse,
                                  @NonNull final String state,
                                  @NonNull final String nonce)
     {
@@ -152,7 +150,6 @@ public class MobileConnectAndroidInterface
                                                                                           progressBar,
                                                                                           authenticationListener,
                                                                                           redirectUrl,
-                                                                                          discoveryResponse,
                                                                                           new AuthenticationWebViewCallback()
                                                                                           {
                                                                                               @Override

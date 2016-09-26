@@ -24,9 +24,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:animateLayoutChanges="true"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
-                    android:animateLayoutChanges="true"
                     android:padding="@dimen/activity_horizontal_margin">
 
                     <CheckBox
@@ -45,7 +45,10 @@
                             android:id="@+id/text_input_edit_text_msisdn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Phone Number"/>
+                            android:hint="Phone Number"
+                            android:maxLines="1"
+                            android:minLines="1"
+                            android:text="+447964197453"/>
 
                     </android.support.design.widget.TextInputLayout>
 
@@ -108,14 +111,14 @@
 
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/button_go"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Go"/>
         </LinearLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/button_go"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Go"/>
 
 </LinearLayout>

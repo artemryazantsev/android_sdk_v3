@@ -253,20 +253,9 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                 break;
             case AUTHENTICATION:
             {
-                DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
-
-                if (discoveryResponse == null)
-                {
-                    Toast.makeText(getActivity(),
-                                   "Failed to retrieve DiscoveryResponse. Unable to proceed to Authentication",
-                                   Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 mobileConnectAndroidInterface.attemptAuthenticationWithWebView(getActivity(),
                                                                                this,
                                                                                mobileConnectStatus.getUrl(),
-                                                                               discoveryResponse,
                                                                                state,
                                                                                nonce);
                 break;
