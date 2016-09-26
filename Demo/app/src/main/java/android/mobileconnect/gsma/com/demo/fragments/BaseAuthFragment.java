@@ -271,7 +271,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
             }
             case COMPLETE:
             {
-                displayIdToken(mobileConnectStatus);
+                displayResult(mobileConnectStatus);
                 if (authType.equals(Scopes.MOBILECONNECTAUTHENTICATION))
                 {
                     if (addressSwitch.isChecked() || profileSwitch.isChecked() || phoneSwitch.isChecked() ||
@@ -374,9 +374,23 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         return discoveryResponse;
     }
 
-    protected void displayIdToken(MobileConnectStatus mobileConnectStatus)
+    protected void displayResult(MobileConnectStatus mobileConnectStatus)
     {
         String idToken = getIdToken(mobileConnectStatus);
+        String accessToken = getAccessToken(mobileConnectStatus);
+
+        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
+
+        String applicationShortName;
+
+        if (discoveryResponse != null)
+        {
+            applicationShortName = discoveryResponse.getApplicationShortName();
+        }
+        else
+        {
+            applicationShortName = "Unable to get application short name";
+        }
 
         if (idToken == null)
         {
@@ -524,7 +538,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                        @Override
                                                        public void onComplete(MobileConnectStatus mobileConnectStatus)
                                                        {
-                                                           displayIdToken(mobileConnectStatus);
+                                                           displayResult(mobileConnectStatus);
                                                        }
                                                    });
     }
