@@ -417,7 +417,6 @@ public class MobileConnectAndroidInterface
     @SuppressWarnings("unused")
     public void requestIdentity(final DiscoveryResponse discoveryResponse,
                                 final String accessToken,
-                                final MobileConnectRequestOptions options,
                                 @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()

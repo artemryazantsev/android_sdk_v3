@@ -89,16 +89,19 @@
                         android:text="Profile"/>
 
                     <Switch
+                        android:id="@+id/switch_nationality"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Nationality ID (Identity)"/>
 
                     <Switch
+                        android:id="@+id/switch_phone_number"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Phone Number (Identity)"/>
 
                     <Switch
+                        android:id="@+id/switch_sign_up"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Sign Up (Identity)"/>
