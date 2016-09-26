@@ -26,7 +26,6 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
-import com.gsma.mobileconnect.r2.cache.CacheAccessException;
 import com.gsma.mobileconnect.r2.constants.Scopes;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
@@ -289,9 +288,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
     private void getIdentity(final MobileConnectStatus mobileConnectStatus)
     {
-        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
-        mobileConnectAndroidInterface.requestIdentity(discoveryResponse,
-                                                      getAccessToken(mobileConnectStatus),
+        mobileConnectAndroidInterface.requestIdentity(getAccessToken(mobileConnectStatus),
                                                       new MobileConnectAndroidInterface.IMobileConnectCallback()
                                                       {
                                                           @Override
@@ -308,9 +305,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
     protected void getUserInfo(final MobileConnectStatus mobileConnectStatus)
     {
-        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
-        mobileConnectAndroidInterface.requestUserInfo(discoveryResponse,
-                                                      getAccessToken(mobileConnectStatus),
+        mobileConnectAndroidInterface.requestUserInfo(getAccessToken(mobileConnectStatus),
                                                       new MobileConnectAndroidInterface.IMobileConnectCallback()
                                                       {
                                                           @Override
@@ -327,8 +322,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                      String state,
                                      String nonce)
     {
-        mobileConnectAndroidInterface.startAuthentication(mobileConnectStatus.getDiscoveryResponse(),
-                                                          mobileConnectStatus.getDiscoveryResponse()
+        mobileConnectAndroidInterface.startAuthentication(mobileConnectStatus.getDiscoveryResponse()
                                                                              .getResponseData()
                                                                              .getSubscriberId(),
                                                           state,
@@ -345,25 +339,6 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                           });
     }
 
-    @Nullable
-    protected DiscoveryResponse getDiscoveryResponse(MobileConnectStatus mobileConnectStatus)
-    {
-        DiscoveryResponse discoveryResponse = mobileConnectStatus.getDiscoveryResponse();
-
-        if (discoveryResponse == null)
-        {
-            try
-            {
-                discoveryResponse = discoveryService.getCachedDiscoveryResponse(mobileConnectAndroidInterface.getMcc(),
-                                                                                mobileConnectAndroidInterface.getMnc());
-            }
-            catch (CacheAccessException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return discoveryResponse;
-    }
 
     protected void displayResult(MobileConnectStatus mobileConnectStatus)
     {
@@ -381,7 +356,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
         String applicationShortName;
 
-        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
+        DiscoveryResponse discoveryResponse = mobileConnectAndroidInterface.getDiscoveryResponse();
 
         if (discoveryResponse != null)
         {
@@ -492,7 +467,14 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
     @Override
     public void authorizationFailed(MobileConnectStatus mobileConnectStatus)
     {
-        Toast.makeText(getActivity(), "Authentication Failure", Toast.LENGTH_SHORT).show();
+        String error = null;
+
+        if (mobileConnectStatus != null)
+        {
+            error = mobileConnectStatus.getErrorMessage();
+        }
+
+        Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -526,10 +508,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         String state =
                 mobileConnectStatus.getState() == null ? mobileConnectStatus.getState() : UUID.randomUUID().toString();
 
-        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
-
-        mobileConnectAndroidInterface.requestToken(discoveryResponse,
-                                                   uri,
+        mobileConnectAndroidInterface.requestToken(uri,
                                                    state,
                                                    nonce,
                                                    new MobileConnectAndroidInterface.IMobileConnectCallback()

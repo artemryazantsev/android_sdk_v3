@@ -68,7 +68,6 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
         URI uri = getUri(url);
 
         mobileConnectAndroidInterface.handleRedirect(uri,
-                                                     null,
                                                      UUID.randomUUID().toString(),
                                                      UUID.randomUUID().toString(),
                                                      new MobileConnectAndroidInterface.IMobileConnectCallback()
