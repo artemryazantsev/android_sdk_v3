@@ -42,8 +42,6 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
     @Override
     protected void handleResult(final String url)
     {
-        this.dialog.cancel();
-
         DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL(url);
         authenticationWebViewCallback.onSuccess(url);
     }

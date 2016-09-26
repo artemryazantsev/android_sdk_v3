@@ -83,6 +83,7 @@ public abstract class MobileConnectWebViewClient extends WebViewClient
         if (url.contains("error"))
         {
             handleError(getErrorStatus(url));
+            dialog.cancel();
         }
 
         /*
@@ -94,6 +95,7 @@ public abstract class MobileConnectWebViewClient extends WebViewClient
         if (qualifyUrl(url))
         {
             handleResult(url);
+            dialog.cancel();
         }
 
         return true;

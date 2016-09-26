@@ -102,6 +102,16 @@ public class MobileConnectAndroidInterface
 
         final DiscoveryAuthenticationDialog dialog = new DiscoveryAuthenticationDialog(activityContext);
 
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+        {
+            @Override
+            public void onCancel(DialogInterface dialogInterface)
+            {
+                Log.e("Discovery Dialog", "cancelled");
+                closeWebViewAndNotify(discoveryListener, webView);
+            }
+        });
+
         dialog.setContentView(webViewLayout);
 
         webView.setWebChromeClient(new WebChromeClient());
@@ -114,17 +124,6 @@ public class MobileConnectAndroidInterface
         webView.setWebViewClient(webViewClient);
 
         webView.loadUrl(operatorUrl);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(final DialogInterface dialogInterface)
-            {
-                Log.e("Discovery Dialog", "dismissed");
-                dialogInterface.dismiss();
-                closeWebViewAndNotify(discoveryListener, webView);
-            }
-        });
 
         try
         {
@@ -149,6 +148,18 @@ public class MobileConnectAndroidInterface
         final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
 
         final DiscoveryAuthenticationDialog dialog = new DiscoveryAuthenticationDialog(activityContext);
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
+        {
+            //todo Find out how to close a dialog properly.
+            //todo The following dialogInterface.dismiss(); may not be doing the right thing.
+            @Override
+            public void onCancel(DialogInterface dialogInterface)
+            {
+                Log.e("Authentication Dialog", "cancelled");
+                closeWebViewAndNotify(authenticationListener, webView);
+            }
+        });
 
         dialog.setContentView(webViewLayout);
 
@@ -178,17 +189,6 @@ public class MobileConnectAndroidInterface
         webView.setWebViewClient(webViewClient);
 
         webView.loadUrl(authenticationUrl);
-
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener()
-        {
-            @Override
-            public void onDismiss(final DialogInterface dialogInterface)
-            {
-                Log.e("Authentication Dialog", "dismissed");
-                dialogInterface.dismiss();
-                closeWebViewAndNotify(authenticationListener, webView);
-            }
-        });
 
         try
         {
