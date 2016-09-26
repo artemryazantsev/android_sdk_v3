@@ -1,6 +1,8 @@
 package android.mobileconnect.gsma.com.demo.fragments;
 
+import android.content.Intent;
 import android.mobileconnect.gsma.com.demo.R;
+import android.mobileconnect.gsma.com.demo.ResultActivity;
 import android.mobileconnect.gsma.com.library.AndroidMobileConnectEncodeDecoder;
 import android.mobileconnect.gsma.com.library.AuthenticationListener;
 import android.mobileconnect.gsma.com.library.DiscoveryListener;
@@ -271,7 +273,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
             }
             case COMPLETE:
             {
-                displayIdToken(mobileConnectStatus);
+                displayResult(mobileConnectStatus);
                 if (authType.equals(Scopes.MOBILECONNECTAUTHENTICATION))
                 {
                     if (addressSwitch.isChecked() || profileSwitch.isChecked() || phoneSwitch.isChecked() ||
@@ -374,16 +376,38 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         return discoveryResponse;
     }
 
-    protected void displayIdToken(MobileConnectStatus mobileConnectStatus)
+    protected void displayResult(MobileConnectStatus mobileConnectStatus)
     {
         String idToken = getIdToken(mobileConnectStatus);
-
         if (idToken == null)
         {
-            idToken = "Failed to receive token. Please try again.";
+            idToken = "Failed to receive id token. Please try again.";
         }
 
-        Toast.makeText(getActivity(), idToken, Toast.LENGTH_SHORT).show();
+        String accessToken = getAccessToken(mobileConnectStatus);
+        if (accessToken == null)
+        {
+            accessToken = "Failed to receive access token. Please try again.";
+        }
+
+        String applicationShortName;
+
+        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
+
+        if (discoveryResponse != null)
+        {
+            applicationShortName = discoveryResponse.getApplicationShortName();
+        }
+        else
+        {
+            applicationShortName = "Unable to get application short name";
+        }
+
+        Intent intent = new Intent(getActivity(), ResultActivity.class);
+        intent.putExtra("name", applicationShortName);
+        intent.putExtra("idToken", idToken);
+        intent.putExtra("accessToken", accessToken);
+        startActivity(intent);
     }
 
     protected String getIdToken(final MobileConnectStatus mobileConnectStatus)
@@ -524,7 +548,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                        @Override
                                                        public void onComplete(MobileConnectStatus mobileConnectStatus)
                                                        {
-                                                           displayIdToken(mobileConnectStatus);
+                                                           displayResult(mobileConnectStatus);
                                                        }
                                                    });
     }
