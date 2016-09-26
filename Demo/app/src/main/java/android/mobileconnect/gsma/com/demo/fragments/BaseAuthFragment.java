@@ -1,6 +1,8 @@
 package android.mobileconnect.gsma.com.demo.fragments;
 
+import android.content.Intent;
 import android.mobileconnect.gsma.com.demo.R;
+import android.mobileconnect.gsma.com.demo.ResultActivity;
 import android.mobileconnect.gsma.com.library.AndroidMobileConnectEncodeDecoder;
 import android.mobileconnect.gsma.com.library.AuthenticationListener;
 import android.mobileconnect.gsma.com.library.DiscoveryListener;
@@ -377,11 +379,20 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
     protected void displayResult(MobileConnectStatus mobileConnectStatus)
     {
         String idToken = getIdToken(mobileConnectStatus);
-        String accessToken = getAccessToken(mobileConnectStatus);
+        if (idToken == null)
+        {
+            idToken = "Failed to receive id token. Please try again.";
+        }
 
-        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
+        String accessToken = getAccessToken(mobileConnectStatus);
+        if (accessToken == null)
+        {
+            accessToken = "Failed to receive access token. Please try again.";
+        }
 
         String applicationShortName;
+
+        DiscoveryResponse discoveryResponse = getDiscoveryResponse(mobileConnectStatus);
 
         if (discoveryResponse != null)
         {
@@ -392,12 +403,11 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
             applicationShortName = "Unable to get application short name";
         }
 
-        if (idToken == null)
-        {
-            idToken = "Failed to receive token. Please try again.";
-        }
-
-        Toast.makeText(getActivity(), idToken, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getActivity(), ResultActivity.class);
+        intent.putExtra("name", applicationShortName);
+        intent.putExtra("idToken", idToken);
+        intent.putExtra("accessToken", accessToken);
+        startActivity(intent);
     }
 
     protected String getIdToken(final MobileConnectStatus mobileConnectStatus)
