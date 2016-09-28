@@ -25,10 +25,8 @@ import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
-import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
 import com.gsma.mobileconnect.r2.constants.Scopes;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryService;
 
 import java.net.URI;
@@ -66,13 +64,15 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
     protected Switch signUpSwitch;
 
     // Mobile Connect Fields
-    protected MobileConnectAndroidInterface mobileConnectAndroidInterface;
+    public static MobileConnectAndroidInterface mobileConnectAndroidInterface;
 
     protected MobileConnectConfig mobileConnectConfig;
 
     protected DiscoveryService discoveryService;
 
     private String authType;
+
+    public static MobileConnectStatus mobileConnectStatus;
 
     /**
      * Sets-up the {@link BaseAuthFragment#mobileConnectAndroidInterface} with the configuration based on the values in
@@ -194,9 +194,6 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                                                mobileConnectConfig.getRedirectUrl()
                                                                                                   .toString());
                 break;
-            case START_DISCOVERY:
-                //todo
-                break;
             case START_AUTHENTICATION:
                 AuthenticationOptions.Builder authenticationOptionsBuilder = new AuthenticationOptions.Builder()
                         .withContext(
@@ -261,60 +258,11 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
             }
             case COMPLETE:
             {
-                displayResult(mobileConnectStatus);
-                if (authType.equals(Scopes.MOBILECONNECTAUTHENTICATION))
-                {
-                    if (addressSwitch.isChecked() || profileSwitch.isChecked() || phoneSwitch.isChecked() ||
-                        emailSwitch.isChecked())
-                    {
-                        getUserInfo(mobileConnectStatus);
-                    }
-                }
-                else
-                {
-                    getIdentity(mobileConnectStatus);
-                }
+                this.mobileConnectStatus = mobileConnectStatus;
+                displayResult();
                 break;
             }
-            case USER_INFO:
-            {
-                getUserInfo(mobileConnectStatus);
-                break;
-            }
-            case IDENTITY:
-                break;
         }
-    }
-
-    private void getIdentity(final MobileConnectStatus mobileConnectStatus)
-    {
-        mobileConnectAndroidInterface.requestIdentity(getAccessToken(mobileConnectStatus),
-                                                      new MobileConnectAndroidInterface.IMobileConnectCallback()
-                                                      {
-                                                          @Override
-                                                          public void onComplete(MobileConnectStatus
-                                                                                         mobileConnectStatus)
-                                                          {
-                                                              if (mobileConnectStatus != null)
-                                                              {
-
-                                                              }
-                                                          }
-                                                      });
-    }
-
-    protected void getUserInfo(final MobileConnectStatus mobileConnectStatus)
-    {
-        mobileConnectAndroidInterface.requestUserInfo(getAccessToken(mobileConnectStatus),
-                                                      new MobileConnectAndroidInterface.IMobileConnectCallback()
-                                                      {
-                                                          @Override
-                                                          public void onComplete(MobileConnectStatus
-                                                                                         mobileConnectStatus)
-                                                          {
-                                                              onRequestUserInfoComplete(mobileConnectStatus);
-                                                          }
-                                                      });
     }
 
     private void startAuthentication(MobileConnectStatus mobileConnectStatus,
@@ -339,88 +287,32 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                           });
     }
 
-
-    protected void displayResult(MobileConnectStatus mobileConnectStatus)
+    protected void displayResult()
     {
-        String idToken = getIdToken(mobileConnectStatus);
-        if (idToken == null)
+        Intent intent = new Intent(getActivity(), ResultActivity.class);
+
+        boolean anySwitchesOn = false;
+
+        if (authType.equals(Scopes.MOBILECONNECTAUTHENTICATION))
         {
-            idToken = "Failed to receive id token. Please try again.";
-        }
-
-        String accessToken = getAccessToken(mobileConnectStatus);
-        if (accessToken == null)
-        {
-            accessToken = "Failed to receive access token. Please try again.";
-        }
-
-        String applicationShortName;
-
-        DiscoveryResponse discoveryResponse = mobileConnectAndroidInterface.getDiscoveryResponse();
-
-        if (discoveryResponse != null)
-        {
-            applicationShortName = discoveryResponse.getApplicationShortName();
+            if (addressSwitch.isChecked() || profileSwitch.isChecked() || phoneSwitch.isChecked() ||
+                emailSwitch.isChecked())
+            {
+                anySwitchesOn = true;
+            }
         }
         else
         {
-            applicationShortName = "Unable to get application short name";
+            if (nationalitySwitch.isChecked() || signUpSwitch.isChecked() ||
+               phoneNumberSwitch.isChecked())
+            {
+                anySwitchesOn = true;
+            }
         }
 
-        Intent intent = new Intent(getActivity(), ResultActivity.class);
-        intent.putExtra("name", applicationShortName);
-        intent.putExtra("idToken", idToken);
-        intent.putExtra("accessToken", accessToken);
+        intent.putExtra("anySwitchesOn", anySwitchesOn);
+
         startActivity(intent);
-    }
-
-    protected String getIdToken(final MobileConnectStatus mobileConnectStatus)
-    {
-        if (mobileConnectStatus != null && mobileConnectStatus.getRequestTokenResponse() != null)
-        {
-            RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
-
-            if (requestTokenResponse != null)
-            {
-                RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
-
-                if (responseData != null)
-                {
-                    if (responseData.getIdToken() != null)
-                    {
-                        return responseData.getIdToken();
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    protected String getAccessToken(final MobileConnectStatus mobileConnectStatus)
-    {
-        if (mobileConnectStatus != null && mobileConnectStatus.getRequestTokenResponse() != null)
-        {
-            RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
-
-            if (requestTokenResponse != null)
-            {
-                RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
-
-                if (responseData != null)
-                {
-                    if (responseData.getAccessToken() != null)
-                    {
-                        return responseData.getAccessToken();
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    protected void onRequestUserInfoComplete(MobileConnectStatus mobileConnectStatus)
-    {
-
     }
 
     @Override
@@ -516,7 +408,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                        @Override
                                                        public void onComplete(MobileConnectStatus mobileConnectStatus)
                                                        {
-                                                           displayResult(mobileConnectStatus);
+                                                           displayResult();
                                                        }
                                                    });
     }

@@ -48,6 +48,7 @@
                             android:hint="Phone Number"
                             android:maxLines="1"
                             android:minLines="1"
+                            android:singleLine="true"
                             android:text="+447964197453"/>
 
                     </android.support.design.widget.TextInputLayout>
