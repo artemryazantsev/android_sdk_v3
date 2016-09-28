@@ -293,11 +293,21 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
         boolean anySwitchesOn = false;
 
-        if (addressSwitch.isChecked() || profileSwitch.isChecked() || phoneSwitch.isChecked() ||
-            emailSwitch.isChecked() || nationalitySwitch.isChecked() || signUpSwitch.isChecked() ||
-            phoneNumberSwitch.isChecked())
+        if (authType.equals(Scopes.MOBILECONNECTAUTHENTICATION))
         {
-            anySwitchesOn = true;
+            if (addressSwitch.isChecked() || profileSwitch.isChecked() || phoneSwitch.isChecked() ||
+                emailSwitch.isChecked())
+            {
+                anySwitchesOn = true;
+            }
+        }
+        else
+        {
+            if (nationalitySwitch.isChecked() || signUpSwitch.isChecked() ||
+               phoneNumberSwitch.isChecked())
+            {
+                anySwitchesOn = true;
+            }
         }
 
         intent.putExtra("anySwitchesOn", anySwitchesOn);
