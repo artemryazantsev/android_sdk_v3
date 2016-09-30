@@ -104,7 +104,9 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                                .withCacheResponsesWithSessionId(false)
                                                                .build();
 
-        MobileConnect mobileConnect = MobileConnect.build(mobileConnectConfig, new AndroidMobileConnectEncodeDecoder());
+        MobileConnect mobileConnect = MobileConnect.builder(mobileConnectConfig,
+                                                            new AndroidMobileConnectEncodeDecoder()).build();
+
 
         this.discoveryService = (DiscoveryService) mobileConnect.getDiscoveryService();
 
@@ -192,7 +194,8 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                                                this,
                                                                                mobileConnectStatus.getUrl(),
                                                                                mobileConnectConfig.getRedirectUrl()
-                                                                                                  .toString());
+                                                                                                  .toString(),
+                                                                               null);
                 break;
             case START_AUTHENTICATION:
                 AuthenticationOptions.Builder authenticationOptionsBuilder = new AuthenticationOptions.Builder()
@@ -253,7 +256,8 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                                                this,
                                                                                mobileConnectStatus.getUrl(),
                                                                                state,
-                                                                               nonce);
+                                                                               nonce,
+                                                                               null);
                 break;
             }
             case COMPLETE:
@@ -304,7 +308,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         else
         {
             if (nationalitySwitch.isChecked() || signUpSwitch.isChecked() ||
-               phoneNumberSwitch.isChecked())
+                phoneNumberSwitch.isChecked())
             {
                 anySwitchesOn = true;
             }
@@ -410,7 +414,8 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                        {
                                                            displayResult();
                                                        }
-                                                   });
+                                                   },
+                                                   null);
     }
 
     @Override

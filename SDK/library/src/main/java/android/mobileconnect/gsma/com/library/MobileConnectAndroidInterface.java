@@ -75,24 +75,28 @@ public class MobileConnectAndroidInterface
     public void attemptDiscoveryWithWebView(final Context activityContext,
                                             final DiscoveryListener discoveryListener,
                                             final String operatorUrl,
-                                            final String redirectUrl)
+                                            final String redirectUrl,
+                                            final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
-        initiateWebView(activityContext, discoveryListener, operatorUrl, redirectUrl);
+        initiateWebView(activityContext, discoveryListener, operatorUrl, redirectUrl, mobileConnectRequestOptions);
     }
 
     public void attemptAuthenticationWithWebView(@NonNull final Context activityContext,
                                                  @NonNull final AuthenticationListener authenticationListener,
                                                  @NonNull final String url,
                                                  @NonNull final String state,
-                                                 @NonNull String nonce)
+                                                 @NonNull String nonce,
+                                                 @Nullable final MobileConnectRequestOptions
+                                                         mobileConnectRequestOptions)
     {
-        initiateWebView(activityContext, authenticationListener, url, state, nonce);
+        initiateWebView(activityContext, authenticationListener, url, state, nonce, mobileConnectRequestOptions);
     }
 
     private void initiateWebView(@NonNull final Context activityContext,
                                  @NonNull final DiscoveryListener discoveryListener,
                                  @NonNull final String operatorUrl,
-                                 @NonNull final String redirectUrl)
+                                 @NonNull final String redirectUrl,
+                                 final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
         RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
                                                                       .inflate(R.layout.layout_web_view, null);
@@ -120,7 +124,8 @@ public class MobileConnectAndroidInterface
                                                                                 progressBar,
                                                                                 redirectUrl,
                                                                                 discoveryListener,
-                                                                                this);
+                                                                                this,
+                                                                                mobileConnectRequestOptions);
         webView.setWebViewClient(webViewClient);
 
         webView.loadUrl(operatorUrl);
@@ -139,7 +144,8 @@ public class MobileConnectAndroidInterface
                                  @NonNull final AuthenticationListener authenticationListener,
                                  @NonNull final String authenticationUrl,
                                  @NonNull final String state,
-                                 @NonNull final String nonce)
+                                 @NonNull final String nonce,
+                                 final MobileConnectRequestOptions mobileRequestOptions)
     {
         RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
                                                                       .inflate(R.layout.layout_web_view, null);
@@ -182,7 +188,8 @@ public class MobileConnectAndroidInterface
                                                                                                           url,
                                                                                                           state,
                                                                                                           nonce,
-                                                                                                          authenticationListener);
+                                                                                                          authenticationListener,
+                                                                                                          mobileRequestOptions);
                                                                                               }
                                                                                           });
 
@@ -203,7 +210,8 @@ public class MobileConnectAndroidInterface
     private void handleRedirectAfterAuthentication(final String url,
                                                    final String state,
                                                    final String nonce,
-                                                   final AuthenticationListener authenticationListener)
+                                                   final AuthenticationListener authenticationListener,
+                                                   final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
         URI uri = null;
 
@@ -228,7 +236,7 @@ public class MobileConnectAndroidInterface
             {
                 authenticationListener.authorizationSuccess(mobileConnectStatus);
             }
-        });
+        }, mobileConnectRequestOptions);
     }
 
     private String getAuthUrl(final String authenticationUrl, final String urlWithParameters)
@@ -373,7 +381,8 @@ public class MobileConnectAndroidInterface
     public void requestToken(final URI redirectedUrl,
                              final String expectedState,
                              final String expectedNonce,
-                             @NonNull final IMobileConnectCallback mobileConnectCallback)
+                             @NonNull final IMobileConnectCallback mobileConnectCallback,
+                             final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -383,7 +392,9 @@ public class MobileConnectAndroidInterface
                 return MobileConnectAndroidInterface.this.mobileConnectInterface.requestToken(discoveryResponse,
                                                                                               redirectedUrl,
                                                                                               expectedState,
-                                                                                              expectedNonce);
+                                                                                              expectedNonce,
+                                                                                              mobileConnectRequestOptions);
+                // same here
             }
         }, mobileConnectCallback).execute();
     }
@@ -392,7 +403,8 @@ public class MobileConnectAndroidInterface
     public void handleRedirect(final URI redirectedUrl,
                                final String expectedState,
                                final String expectedNonce,
-                               @NonNull final IMobileConnectCallback mobileConnectCallback)
+                               @NonNull final IMobileConnectCallback mobileConnectCallback,
+                               final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -402,7 +414,9 @@ public class MobileConnectAndroidInterface
                 return MobileConnectAndroidInterface.this.mobileConnectInterface.handleUrlRedirect(redirectedUrl,
                                                                                                    discoveryResponse,
                                                                                                    expectedState,
-                                                                                                   expectedNonce);
+                                                                                                   expectedNonce,
+                                                                                                   mobileConnectRequestOptions);
+                // to put a proper RequestOptions in
             }
         }, mobileConnectCallback).execute();
     }

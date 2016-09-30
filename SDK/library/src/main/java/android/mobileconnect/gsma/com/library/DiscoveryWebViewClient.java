@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ProgressBar;
 
+import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
 import java.net.URI;
@@ -18,15 +19,19 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
 
     private MobileConnectAndroidInterface mobileConnectAndroidInterface;
 
+    private MobileConnectRequestOptions mobileConnectRequestOptions;
+
     public DiscoveryWebViewClient(final DiscoveryAuthenticationDialog dialog,
                                   final ProgressBar progressBar,
                                   final String redirectUrl,
                                   final DiscoveryListener discoveryListener,
-                                  final MobileConnectAndroidInterface mobileConnectAndroidInterface)
+                                  final MobileConnectAndroidInterface mobileConnectAndroidInterface,
+                                  final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
         super(dialog, progressBar, redirectUrl);
         this.discoveryListener = discoveryListener;
         this.mobileConnectAndroidInterface = mobileConnectAndroidInterface;
+        this.mobileConnectRequestOptions = mobileConnectRequestOptions;
     }
 
     @Override
@@ -77,7 +82,8 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
                                                          {
                                                              discoveryListener.onDiscoveryResponse(mobileConnectStatus);
                                                          }
-                                                     });
+                                                     },
+                                                     mobileConnectRequestOptions);
 
     }
 
