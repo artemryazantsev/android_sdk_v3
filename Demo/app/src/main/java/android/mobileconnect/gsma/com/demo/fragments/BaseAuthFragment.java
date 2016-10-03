@@ -186,7 +186,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
             case ERROR:
                 Toast.makeText(getActivity(),
                                String.format("Error - %s", mobileConnectStatus.getErrorMessage()),
-                               Toast.LENGTH_SHORT).show();
+                               Toast.LENGTH_LONG).show();
                 break;
             case OPERATOR_SELECTION:
                 this.mobileConnectAndroidInterface.attemptDiscoveryWithWebView(getActivity(),
