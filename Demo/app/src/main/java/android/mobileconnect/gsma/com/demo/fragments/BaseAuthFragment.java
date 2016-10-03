@@ -104,8 +104,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                                .withCacheResponsesWithSessionId(false)
                                                                .build();
 
-        MobileConnect mobileConnect = MobileConnect.builder(mobileConnectConfig,
-                                                            new AndroidMobileConnectEncodeDecoder()).build();
+        MobileConnect mobileConnect = MobileConnect.build(mobileConnectConfig, new AndroidMobileConnectEncodeDecoder());
 
 
         this.discoveryService = (DiscoveryService) mobileConnect.getDiscoveryService();
