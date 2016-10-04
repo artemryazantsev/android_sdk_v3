@@ -1,7 +1,5 @@
 package android.mobileconnect.gsma.com.library;
 
-import android.support.annotation.Nullable;
-
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
 /**
@@ -10,15 +8,8 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
 public interface DiscoveryListener
 {
     /**
-     * A response has been received by the WebView which may contain the MNC, MCC details
-     *
-     * @param url The URL potentially containing the MCC, MNC
-     */
-    void onDiscoveryRedirect(@Nullable final String url);
-
-    /**
-     * A successful discovery has been completed and has returned a populated
-     * {@link MobileConnectStatus}.
+     * A discovery (successful or not) has been completed and has returned a populated
+     * {@link MobileConnectStatus}. Interrogating the {@link com.gsma.mobileconnect.r2.MobileConnectStatus.ResponseType} within the {@link MobileConnectStatus} will
      *
      * @param mobileConnectStatus The result of the discovery.
      */
@@ -33,7 +24,8 @@ public interface DiscoveryListener
     void discoveryFailed(final MobileConnectStatus mobileConnectStatus);
 
     /**
-     * This is called when the discovery dialog has been dismissed.
+     * This is called when the discovery dialog has been dismissed. This is independent of whether the Discovery
+     * process was successful or not.
      */
     void onDiscoveryDialogClose();
 }

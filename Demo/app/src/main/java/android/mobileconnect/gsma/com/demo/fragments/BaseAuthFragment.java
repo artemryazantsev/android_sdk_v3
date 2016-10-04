@@ -7,11 +7,15 @@ import android.mobileconnect.gsma.com.library.AndroidMobileConnectEncodeDecoder;
 import android.mobileconnect.gsma.com.library.AuthenticationListener;
 import android.mobileconnect.gsma.com.library.DiscoveryListener;
 import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -24,7 +28,6 @@ import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
-import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
 import com.gsma.mobileconnect.r2.constants.Scopes;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryService;
@@ -77,6 +80,9 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
     /**
      * Sets-up the {@link BaseAuthFragment#mobileConnectAndroidInterface} with the configuration based on the values in
      * strings.xml
+     * <p/>
+     * This should be called from the {@link Fragment#onCreateView(LayoutInflater, ViewGroup, Bundle)} and after the
+     * layout has been set.
      */
     protected void setupUIAndMobileConnectAndroid(View view, String authType)
     {
@@ -114,6 +120,12 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         mobileConnectAndroidInterface = new MobileConnectAndroidInterface(mobileConnectInterface, discoveryService);
     }
 
+    /**
+     * Bind the views from the layout and add click-event listener to the Go Button.
+     *
+     * @param view
+     * @param mobileConnectCallback
+     */
     private void setupUI(View view, final MobileConnectAndroidInterface.IMobileConnectCallback mobileConnectCallback)
     {
         goButton = (Button) view.findViewById(R.id.button_go);
@@ -174,6 +186,14 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         });
     }
 
+    /**
+     * This should be called every time after calling any API from the
+     * {@link MobileConnectAndroidInterface}. It interrogates the
+     * {@link com.gsma.mobileconnect.r2.MobileConnectStatus.ResponseType} object from within the
+     * {@link MobileConnectStatus} object and calls the correct API.
+     *
+     * @param mobileConnectStatus The status to be interrogated.
+     */
     protected void handleRedirect(final MobileConnectStatus mobileConnectStatus)
     {
         final String state =
@@ -268,10 +288,21 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         }
     }
 
-    private void startAuthentication(MobileConnectStatus mobileConnectStatus,
-                                     MobileConnectRequestOptions mobileConnectRequestOptions,
-                                     String state,
-                                     String nonce)
+    /**
+     * Calls the
+     * {@link MobileConnectAndroidInterface#startAuthentication(String, String, String, MobileConnectRequestOptions, MobileConnectAndroidInterface.IMobileConnectCallback)} API
+     *
+     * @param mobileConnectStatus         The status returned from the previous API call
+     * @param mobileConnectRequestOptions The request options if any
+     * @param state                       The same state used in the previous API call OR a randomly generated
+     *                                    {@link UUID} if no API was called before.
+     * @param nonce                       The same nonce used in the previous API call OR a randomly generated
+     *                                    {@link UUID} if no API was called before.
+     */
+    private void startAuthentication(@NonNull MobileConnectStatus mobileConnectStatus,
+                                     @Nullable MobileConnectRequestOptions mobileConnectRequestOptions,
+                                     @NonNull String state,
+                                     @NonNull String nonce)
     {
         mobileConnectAndroidInterface.startAuthentication(mobileConnectStatus.getDiscoveryResponse()
                                                                              .getResponseData()
@@ -290,6 +321,9 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                           });
     }
 
+    /**
+     * Launch the {@link ResultActivity} to display the result
+     */
     protected void displayResult()
     {
         Intent intent = new Intent(getActivity(), ResultActivity.class);
@@ -318,24 +352,31 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         startActivity(intent);
     }
 
-    @Override
-    public void onDiscoveryRedirect(@Nullable String s)
-    {
-
-    }
-
+    /**
+     * A discovery has been performed. It may or may not be successful. Calling
+     * {@link #handleRedirect(MobileConnectStatus)} from within here will determine the next step.
+     *
+     * @param mobileConnectStatus The result of the discovery.
+     */
     @Override
     public void onDiscoveryResponse(MobileConnectStatus mobileConnectStatus)
     {
         handleRedirect(mobileConnectStatus);
     }
 
+    /**
+     * The discovery failed.
+     */
     @Override
     public void discoveryFailed(MobileConnectStatus mobileConnectStatus)
     {
         Toast.makeText(getActivity(), "Discovery Failed", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * This is called when the discovery dialog has been dismissed. This is independent of whether the Discovery
+     * process was successful or not.
+     */
     @Override
     public void onDiscoveryDialogClose()
     {
@@ -353,14 +394,13 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         handleRedirect(mobileConnectStatus);
     }
 
+    /**
+     * Authorization failed.
+     *
+     * @param mobileConnectStatus A populated {@link MobileConnectStatus} containing the errors.
+     */
     @Override
-    public void tokenReceived(RequestTokenResponse requestTokenResponse)
-    {
-
-    }
-
-    @Override
-    public void authorizationFailed(MobileConnectStatus mobileConnectStatus)
+    public void authorizationFailed(final MobileConnectStatus mobileConnectStatus)
     {
         String error = null;
 
@@ -376,45 +416,6 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
     public void authorizationSuccess(final MobileConnectStatus mobileConnectStatus)
     {
         handleRedirect(mobileConnectStatus);
-    }
-
-    private void requestToken(MobileConnectStatus mobileConnectStatus)
-    {
-        Toast.makeText(getActivity(), "Authentication Success", Toast.LENGTH_SHORT).show();
-        URI uri = null;
-
-        try
-        {
-            uri = new URI(mobileConnectStatus.getUrl());
-        }
-        catch (URISyntaxException e)
-        {
-            e.printStackTrace();
-        }
-
-        if (uri == null)
-        {
-            Toast.makeText(getActivity(), "Failed to get redirect url", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        String nonce =
-                mobileConnectStatus.getNonce() == null ? mobileConnectStatus.getNonce() : UUID.randomUUID().toString();
-        String state =
-                mobileConnectStatus.getState() == null ? mobileConnectStatus.getState() : UUID.randomUUID().toString();
-
-        mobileConnectAndroidInterface.requestToken(uri,
-                                                   state,
-                                                   nonce,
-                                                   new MobileConnectAndroidInterface.IMobileConnectCallback()
-                                                   {
-                                                       @Override
-                                                       public void onComplete(MobileConnectStatus mobileConnectStatus)
-                                                       {
-                                                           displayResult();
-                                                       }
-                                                   },
-                                                   null);
     }
 
     @Override

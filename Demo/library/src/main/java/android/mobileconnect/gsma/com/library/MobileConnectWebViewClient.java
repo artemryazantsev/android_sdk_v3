@@ -14,6 +14,11 @@ import android.widget.ProgressBar;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
 /**
+ * A Base {@WebViewClient} which intercepts callbacks from the MobileConnect API
+ * <p/>
+ * It specifically looks for special query parameters in the returned URL from the API and informs the subclass via
+ * the abstract methods.
+ * <p/>
  * Created by Usmaan.Dad on 6/22/2016.
  */
 public abstract class MobileConnectWebViewClient extends WebViewClient
@@ -61,8 +66,9 @@ public abstract class MobileConnectWebViewClient extends WebViewClient
         return MobileConnectStatus.error(error, errorDescription, new Exception(errorDescription));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
-    public boolean shouldOverrideUrlLoading(final WebView view, final String url)
+        public boolean shouldOverrideUrlLoading(final WebView view, final String url)
     {
         Log.d(MobileConnectWebViewClient.class.getSimpleName(), "onPageStarted disco url=" + url);
         this.progressBar.setVisibility(View.VISIBLE);
@@ -108,9 +114,27 @@ public abstract class MobileConnectWebViewClient extends WebViewClient
         progressBar.setVisibility(View.GONE);
     }
 
-    protected abstract boolean qualifyUrl(String url);
+    /**
+     * Check if the URL contains the parameters which we are interested in. This is typically called first and if
+     * True is returned, {@link #handleResult(String)}
+     *
+     * @param url The URL to be interrogated.
+     * @return True if the contains the query parameter we're looking for
+     */
+    protected abstract boolean qualifyUrl(final String url);
 
-    protected abstract void handleError(MobileConnectStatus status);
+    /**
+     * In the case of an error returned by the API.
+     *
+     * @param status The {@link MobileConnectStatus} containing the Error.
+     */
+    protected abstract void handleError(final MobileConnectStatus status);
 
-    protected abstract void handleResult(String url);
+    /**
+     * When the URL contains the parameter which we are interested in.
+     * This should be called if {@link #qualifyUrl(String)} returns True.
+     *
+     * @param url The URL containing the desired query parameter
+     */
+    protected abstract void handleResult(final String url);
 }
