@@ -61,7 +61,12 @@ public abstract class MobileConnectWebViewClient extends WebViewClient
     {
         final UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(url);
         final String error = sanitizer.getValue("error");
-        final String errorDescription = sanitizer.getValue("error_description");
+        String errorDescription = sanitizer.getValue("error_description");
+
+        if (errorDescription == null)
+        {
+            errorDescription = sanitizer.getValue("description");
+        }
 
         return MobileConnectStatus.error(error, errorDescription, new Exception(errorDescription));
     }
