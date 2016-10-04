@@ -21,7 +21,6 @@ import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryService;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,7 +28,7 @@ import java.net.URISyntaxException;
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
  * {@link AsyncTask}s and sends the result via a {@link IMobileConnectCallback}
- * <p>
+ * <p/>
  * Created by usmaan.dad on 11/08/2016.
  */
 public class MobileConnectAndroidInterface
@@ -40,18 +39,14 @@ public class MobileConnectAndroidInterface
 
     private String mnc;
 
-    private DiscoveryService discoveryService;
-
     private DiscoveryResponse discoveryResponse;
 
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
-    public MobileConnectAndroidInterface(@NonNull MobileConnectInterface mobileConnectInterface,
-                                         DiscoveryService discoveryService)
+    public MobileConnectAndroidInterface(@NonNull final MobileConnectInterface mobileConnectInterface)
     {
         this.mobileConnectInterface = mobileConnectInterface;
-        this.discoveryService = discoveryService;
     }
 
     /**
@@ -157,8 +152,6 @@ public class MobileConnectAndroidInterface
 
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
-            //todo Find out how to close a dialog properly.
-            //todo The following dialogInterface.dismiss(); may not be doing the right thing.
             @Override
             public void onCancel(DialogInterface dialogInterface)
             {
@@ -229,7 +222,7 @@ public class MobileConnectAndroidInterface
             return;
         }
 
-        handleRedirect(uri, state, nonce, new IMobileConnectCallback()
+        handleUrlRedirect(uri, state, nonce, new IMobileConnectCallback()
         {
             @Override
             public void onComplete(MobileConnectStatus mobileConnectStatus)
@@ -237,23 +230,6 @@ public class MobileConnectAndroidInterface
                 authenticationListener.authorizationSuccess(mobileConnectStatus);
             }
         }, mobileConnectRequestOptions);
-    }
-
-    private String getAuthUrl(final String authenticationUrl, final String urlWithParameters)
-    {
-        Uri uri = Uri.parse(urlWithParameters);
-
-        Uri.Builder builder = Uri.parse(authenticationUrl).buildUpon();
-
-        if (uri != null)
-        {
-            for (String queryParamName : uri.getQueryParameterNames())
-            {
-                builder.appendQueryParameter(queryParamName, uri.getQueryParameter(queryParamName));
-            }
-        }
-
-        return builder.build().toString();
     }
 
     /**
@@ -295,8 +271,7 @@ public class MobileConnectAndroidInterface
      * @param mcc                   Mobile Country Code
      * @param mnc                   Mobile Network Code
      * @param options               Optional parameters
-     * @return MobileConnectStatus object with required information for continuing the Mobile
-     * Connect process
+     *                              Connect process
      */
     @SuppressWarnings("unused")
     public void attemptDiscovery(final String msisdn,
@@ -320,13 +295,12 @@ public class MobileConnectAndroidInterface
 
     /**
      * Asynchronously attempt discovery using the values returned from the operator selection redirect
-     * <p>
+     * <p/>
      *
      * @param mobileConnectCallback The callback in which a {@link MobileConnectStatus} shall be provided after
      *                              completion
      * @param redirectUri           URI redirected to by the completion of the operator selection UI
-     * @return MobileConnectStatus object with required information for continuing the Mobile
-     * Connect process
+     *                              Connect process
      */
     @SuppressWarnings("unused")
     public void attemptDiscoveryAfterOperatorSelection(@NonNull final IMobileConnectCallback mobileConnectCallback,
@@ -353,8 +327,7 @@ public class MobileConnectAndroidInterface
      *                              process and should be checked for equality as a secURIty measure
      * @param nonce                 Unique value to associate a client session with an id token
      * @param options               Optional parameters
-     * @return MobileConnectStatus object with required information for continuing the Mobile
-     * Connect process
+     *                              Connect process
      */
     @SuppressWarnings("unused")
     public void startAuthentication(final String encryptedMSISDN,
@@ -377,6 +350,19 @@ public class MobileConnectAndroidInterface
         }, mobileConnectCallback).execute();
     }
 
+    /**
+     * Request token using the values returned from the authorization redirect
+     *
+     * @param redirectedUrl               URI redirected to by the completion of the authorization UI
+     * @param expectedState               The state value returned from the StartAuthorization call should be
+     *                                    passed here, it will be used to validate the authenticity of the
+     *                                    authorization process
+     * @param expectedNonce               The nonce value returned from the StartAuthorization call should be
+     *                                    passed here, it will be used to ensure the token was not requested
+     *                                    using a replay attack
+     * @param mobileConnectRequestOptions Optional parameters
+     *                                    Connect process
+     */
     @SuppressWarnings("unused")
     public void requestToken(final URI redirectedUrl,
                              final String expectedState,
@@ -399,12 +385,27 @@ public class MobileConnectAndroidInterface
         }, mobileConnectCallback).execute();
     }
 
+    /**
+     * Handles continuation of the process following a completed redirect. Only the redirectedUrl is
+     * required, however if the redirect being handled is the result of calling the Authorization
+     * URL then the remaining parameters are required.
+     *
+     * @param redirectedUrl               Url redirected to by the completion of the previous step
+     * @param expectedState               The state value returned from the StartAuthorization call should be
+     *                                    passed here, it will be used to validate the authenticity of the
+     *                                    authorization process
+     * @param expectedNonce               The nonce value returned from the StartAuthorization call should be
+     *                                    passed here, it will be used to ensure the token was not requested
+     *                                    using a replay attack
+     * @param mobileConnectRequestOptions Optional parameters
+     *                                    Connect process
+     */
     @SuppressWarnings("unused")
-    public void handleRedirect(final URI redirectedUrl,
-                               final String expectedState,
-                               final String expectedNonce,
-                               @NonNull final IMobileConnectCallback mobileConnectCallback,
-                               final MobileConnectRequestOptions mobileConnectRequestOptions)
+    public void handleUrlRedirect(final URI redirectedUrl,
+                                  final String expectedState,
+                                  final String expectedNonce,
+                                  @NonNull final IMobileConnectCallback mobileConnectCallback,
+                                  final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
         {
@@ -416,11 +417,16 @@ public class MobileConnectAndroidInterface
                                                                                                    expectedState,
                                                                                                    expectedNonce,
                                                                                                    mobileConnectRequestOptions);
-                // to put a proper RequestOptions in
             }
         }, mobileConnectCallback).execute();
     }
 
+    /**
+     * Request user info using the access token returned by <see cref="requestToken(DiscoveryResponse,
+     * URI, String, String)"/>
+     *
+     * @param accessToken Access token from requestToken stage
+     */
     @SuppressWarnings("unused")
     public void requestIdentity(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
@@ -435,6 +441,12 @@ public class MobileConnectAndroidInterface
         }, mobileConnectCallback).execute();
     }
 
+    /**
+     * Request user info using the access token returned by <see cref="requestToken(DiscoveryResponse,
+     * URI, String, String)"/>
+     *
+     * @param accessToken Access token from requestToken stage
+     */
     public void requestUserInfo(final String accessToken, final IMobileConnectCallback mobileConnectCallback)
     {
         new MobileConnectAsyncTask(new IMobileConnectOperation()
@@ -453,12 +465,12 @@ public class MobileConnectAndroidInterface
         return mcc;
     }
 
-    public void setMcc(String mcc)
+    public void setMcc(final String mcc)
     {
         this.mcc = mcc;
     }
 
-    public void setMnc(String mnc)
+    public void setMnc(final String mnc)
     {
         this.mnc = mnc;
     }
@@ -468,14 +480,17 @@ public class MobileConnectAndroidInterface
         return mnc;
     }
 
+    /**
+     * An AsyncTask to wrap all API calls to {@link MobileConnectInterface} asynchronously.
+     */
     private class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectStatus>
     {
         private IMobileConnectOperation mobileConnectOperation;
 
         private IMobileConnectCallback IMobileConnectCallback;
 
-        public MobileConnectAsyncTask(@NonNull IMobileConnectOperation mobileConnectOperation,
-                                      @NonNull IMobileConnectCallback IMobileConnectCallback)
+        public MobileConnectAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
+                                      @NonNull final IMobileConnectCallback IMobileConnectCallback)
         {
 
             this.mobileConnectOperation = mobileConnectOperation;
@@ -483,13 +498,13 @@ public class MobileConnectAndroidInterface
         }
 
         @Override
-        protected MobileConnectStatus doInBackground(@Nullable Void... voids)
+        protected MobileConnectStatus doInBackground(@Nullable final Void... voids)
         {
             return mobileConnectOperation.operation();
         }
 
         @Override
-        protected void onPostExecute(MobileConnectStatus mobileConnectStatus)
+        protected void onPostExecute(final MobileConnectStatus mobileConnectStatus)
         {
             super.onPostExecute(mobileConnectStatus);
             if (IMobileConnectCallback != null)
@@ -507,6 +522,6 @@ public class MobileConnectAndroidInterface
 
     public interface IMobileConnectCallback
     {
-        void onComplete(MobileConnectStatus mobileConnectStatus);
+        void onComplete(final MobileConnectStatus mobileConnectStatus);
     }
 }

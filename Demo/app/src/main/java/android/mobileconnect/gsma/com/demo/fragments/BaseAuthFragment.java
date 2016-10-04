@@ -30,13 +30,16 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.constants.Scopes;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryService;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
 /**
+ * The base class for
+ * {@link AuthenticationFragment} and  {@link AuthorizationFragment} containing common API calls to
+ * {@link MobileConnectAndroidInterface}
+ * <p/>
  * Created by usmaan.dad on 25/08/2016.
  */
 public class BaseAuthFragment extends Fragment implements DiscoveryListener,
@@ -71,8 +74,6 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
     protected MobileConnectConfig mobileConnectConfig;
 
-    protected DiscoveryService discoveryService;
-
     private String authType;
 
     public static MobileConnectStatus mobileConnectStatus;
@@ -84,11 +85,11 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
      * This should be called from the {@link Fragment#onCreateView(LayoutInflater, ViewGroup, Bundle)} and after the
      * layout has been set.
      */
-    protected void setupUIAndMobileConnectAndroid(View view, String authType)
+    protected void setupUIAndMobileConnectAndroid(final View view, final String authType)
     {
         this.authType = authType;
 
-        setupUI(view, this);
+        setupUI(view);
 
         URI discoveryUri = null;
         URI redirectUri = null;
@@ -112,21 +113,17 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
         MobileConnect mobileConnect = MobileConnect.build(mobileConnectConfig, new AndroidMobileConnectEncodeDecoder());
 
-
-        this.discoveryService = (DiscoveryService) mobileConnect.getDiscoveryService();
-
         MobileConnectInterface mobileConnectInterface = mobileConnect.getMobileConnectInterface();
 
-        mobileConnectAndroidInterface = new MobileConnectAndroidInterface(mobileConnectInterface, discoveryService);
+        mobileConnectAndroidInterface = new MobileConnectAndroidInterface(mobileConnectInterface);
     }
 
     /**
      * Bind the views from the layout and add click-event listener to the Go Button.
      *
-     * @param view
-     * @param mobileConnectCallback
+     * @param view The Layout which is being inflated for the relevant fragment
      */
-    private void setupUI(View view, final MobileConnectAndroidInterface.IMobileConnectCallback mobileConnectCallback)
+    private void setupUI(final View view)
     {
         goButton = (Button) view.findViewById(R.id.button_go);
         msisdnCheckBox = (CheckBox) view.findViewById(R.id.check_box_msisdn);
@@ -147,7 +144,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
             {
 
                 String msisdn = null;
-                DiscoveryOptions.Builder discoveryOptionsBuilder = new DiscoveryOptions.Builder();
+                final DiscoveryOptions.Builder discoveryOptionsBuilder = new DiscoveryOptions.Builder();
 
                 if (msisdnCheckBox.isChecked())
                 {
@@ -157,7 +154,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
                 discoveryOptionsBuilder.withRedirectUrl(mobileConnectConfig.getRedirectUrl());
 
-                MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder()
+                final MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder()
                         .withDiscoveryOptions(
                         discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
 
@@ -165,7 +162,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                                null,
                                                                null,
                                                                requestOptions,
-                                                               mobileConnectCallback);
+                                                               BaseAuthFragment.this);
             }
         });
 
@@ -209,12 +206,12 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                Toast.LENGTH_LONG).show();
                 break;
             case OPERATOR_SELECTION:
-                this.mobileConnectAndroidInterface.attemptDiscoveryWithWebView(getActivity(),
-                                                                               this,
-                                                                               mobileConnectStatus.getUrl(),
-                                                                               mobileConnectConfig.getRedirectUrl()
-                                                                                                  .toString(),
-                                                                               null);
+                mobileConnectAndroidInterface.attemptDiscoveryWithWebView(getActivity(),
+                                                                          this,
+                                                                          mobileConnectStatus.getUrl(),
+                                                                          mobileConnectConfig.getRedirectUrl()
+                                                                                             .toString(),
+                                                                          null);
                 break;
             case START_AUTHENTICATION:
                 AuthenticationOptions.Builder authenticationOptionsBuilder = new AuthenticationOptions.Builder()
@@ -224,8 +221,9 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                 final MobileConnectRequestOptions.Builder mobileConnectRequestOptionsBuilder = new
                         MobileConnectRequestOptions.Builder();
 
-                StringBuilder stringBuilder = new StringBuilder(authType);
+                final StringBuilder stringBuilder = new StringBuilder(authType);
 
+                // Build up the scopes depending on the type of Auth, i.e. Authorization or Authentication.
                 if (authType.equals(Scopes.MOBILECONNECTAUTHENTICATION))
                 {
                     if (addressSwitch != null && addressSwitch.isChecked())
@@ -263,7 +261,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
                 authenticationOptionsBuilder.withScope(stringBuilder.toString());
 
-                MobileConnectRequestOptions mobileConnectRequestOptions = mobileConnectRequestOptionsBuilder
+                final MobileConnectRequestOptions mobileConnectRequestOptions = mobileConnectRequestOptionsBuilder
                         .withAuthenticationOptions(
                         authenticationOptionsBuilder.build()).build();
 
@@ -281,7 +279,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
             }
             case COMPLETE:
             {
-                this.mobileConnectStatus = mobileConnectStatus;
+                BaseAuthFragment.mobileConnectStatus = mobileConnectStatus;
                 displayResult();
                 break;
             }
@@ -299,10 +297,10 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
      * @param nonce                       The same nonce used in the previous API call OR a randomly generated
      *                                    {@link UUID} if no API was called before.
      */
-    private void startAuthentication(@NonNull MobileConnectStatus mobileConnectStatus,
-                                     @Nullable MobileConnectRequestOptions mobileConnectRequestOptions,
-                                     @NonNull String state,
-                                     @NonNull String nonce)
+    private void startAuthentication(@NonNull final MobileConnectStatus mobileConnectStatus,
+                                     @Nullable final MobileConnectRequestOptions mobileConnectRequestOptions,
+                                     @NonNull final String state,
+                                     @NonNull final String nonce)
     {
         mobileConnectAndroidInterface.startAuthentication(mobileConnectStatus.getDiscoveryResponse()
                                                                              .getResponseData()
@@ -326,7 +324,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
      */
     protected void displayResult()
     {
-        Intent intent = new Intent(getActivity(), ResultActivity.class);
+        final Intent intent = new Intent(getActivity(), ResultActivity.class);
 
         boolean anySwitchesOn = false;
 
@@ -359,16 +357,16 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
      * @param mobileConnectStatus The result of the discovery.
      */
     @Override
-    public void onDiscoveryResponse(MobileConnectStatus mobileConnectStatus)
+    public void onDiscoveryResponse(final MobileConnectStatus mobileConnectStatus)
     {
         handleRedirect(mobileConnectStatus);
     }
 
     /**
-     * The discovery failed.
+     * The Authorization performed via the WebView failed.
      */
     @Override
-    public void discoveryFailed(MobileConnectStatus mobileConnectStatus)
+    public void discoveryFailed(final MobileConnectStatus mobileConnectStatus)
     {
         Toast.makeText(getActivity(), "Discovery Failed", Toast.LENGTH_SHORT).show();
     }
@@ -389,13 +387,13 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
      * @param mobileConnectStatus The status returned
      */
     @Override
-    public void onComplete(MobileConnectStatus mobileConnectStatus)
+    public void onComplete(final MobileConnectStatus mobileConnectStatus)
     {
         handleRedirect(mobileConnectStatus);
     }
 
     /**
-     * Authorization failed.
+     * The Authorization performed via the WebView failed.
      *
      * @param mobileConnectStatus A populated {@link MobileConnectStatus} containing the errors.
      */
@@ -412,6 +410,11 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * The Authorization performed via the WebView was a success.
+     *
+     * @param mobileConnectStatus The status returned from Authorization
+     */
     @Override
     public void authorizationSuccess(final MobileConnectStatus mobileConnectStatus)
     {
