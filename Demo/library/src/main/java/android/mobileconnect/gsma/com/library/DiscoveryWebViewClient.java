@@ -35,16 +35,16 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     }
 
     @Override
-    protected boolean qualifyUrl(String url)
+    protected boolean qualifyUrl(final String url)
     {
         if (url.contains("mcc_mnc="))
         {
-            Uri uri = Uri.parse(url);
+            final Uri uri = Uri.parse(url);
 
             if (uri != null)
             {
-                String param = uri.getQueryParameter("mcc_mnc");
-                String[] mccAndMnc = param.split("_");
+                final String param = uri.getQueryParameter("mcc_mnc");
+                final String[] mccAndMnc = param.split("_");
 
                 if (mccAndMnc.length == 2)
                 {
@@ -59,23 +59,23 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     }
 
     @Override
-    protected void handleError(MobileConnectStatus status)
+    protected void handleError(final MobileConnectStatus status)
     {
         discoveryListener.discoveryFailed(status);
     }
 
     @Override
-    protected void handleResult(String url)
+    protected void handleResult(final String url)
     {
         DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL(url);
         Log.d("url", url);
 
         URI uri = getUri(url);
 
-        mobileConnectAndroidInterface.handleRedirect(uri,
-                                                     UUID.randomUUID().toString(),
-                                                     UUID.randomUUID().toString(),
-                                                     new MobileConnectAndroidInterface.IMobileConnectCallback()
+        mobileConnectAndroidInterface.handleUrlRedirect(uri,
+                                                        UUID.randomUUID().toString(),
+                                                        UUID.randomUUID().toString(),
+                                                        new MobileConnectAndroidInterface.IMobileConnectCallback()
                                                      {
                                                          @Override
                                                          public void onComplete(MobileConnectStatus mobileConnectStatus)
@@ -83,7 +83,7 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
                                                              discoveryListener.onDiscoveryResponse(mobileConnectStatus);
                                                          }
                                                      },
-                                                     mobileConnectRequestOptions);
+                                                        mobileConnectRequestOptions);
 
     }
 
