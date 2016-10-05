@@ -68,6 +68,11 @@ public abstract class MobileConnectWebViewClient extends WebViewClient
             errorDescription = sanitizer.getValue("description");
         }
 
+        if (errorDescription == null)
+        {
+            errorDescription = "An error occurred.";
+        }
+
         return MobileConnectStatus.error(error, errorDescription, new Exception(errorDescription));
     }
 
