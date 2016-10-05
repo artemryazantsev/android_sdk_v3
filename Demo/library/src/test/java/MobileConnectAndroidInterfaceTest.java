@@ -7,7 +7,6 @@ import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryService;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -62,13 +61,10 @@ public class MobileConnectAndroidInterfaceTest
         final MobileConnect mobileConnect = MobileConnect.build(mobileConnectConfig,
                                                                 new AndroidMobileConnectEncodeDecoder());
 
-        DiscoveryService discoveryService = (DiscoveryService) mobileConnect.getDiscoveryService();
-
         MobileConnectInterface mobileConnectInterface = mobileConnect.getMobileConnectInterface();
 
         MobileConnectAndroidInterface mobileConnectAndroidInterface = new MobileConnectAndroidInterface(
-                mobileConnectInterface,
-                discoveryService);
+                mobileConnectInterface);
 
         DiscoveryOptions.Builder discoveryOptionsBuilder = new DiscoveryOptions.Builder();
 

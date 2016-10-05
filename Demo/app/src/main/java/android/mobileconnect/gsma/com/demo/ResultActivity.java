@@ -64,20 +64,20 @@ public class ResultActivity extends AppCompatActivity
         final String idToken = getIdToken(BaseAuthFragment.mobileConnectStatus);
         final String accessToken = getAccessToken(BaseAuthFragment.mobileConnectStatus);
 
-        String applicationShortName;
+        String clientName;
 
         DiscoveryResponse discoveryResponse = BaseAuthFragment.mobileConnectAndroidInterface.getDiscoveryResponse();
 
         if (discoveryResponse != null)
         {
-            applicationShortName = discoveryResponse.getApplicationShortName();
+            clientName = discoveryResponse.getClientName();
         }
         else
         {
-            applicationShortName = "Unable to get application short name";
+            clientName = "Unable to get client name";
         }
 
-        nameTextView.setText(applicationShortName);
+        nameTextView.setText(clientName);
         if (idToken == null)
         {
             idTokenTextView.setText("Failed to receive access token. Please try again");
