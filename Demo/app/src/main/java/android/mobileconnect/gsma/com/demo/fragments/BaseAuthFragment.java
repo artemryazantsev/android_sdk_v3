@@ -104,7 +104,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
             e.printStackTrace();
         }
 
-        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_key))
+        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_id))
                                                                .withClientSecret(getString(R.string.client_secret))
                                                                .withDiscoveryUrl(discoveryUri)
                                                                .withRedirectUrl(redirectUri)

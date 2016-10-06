@@ -76,13 +76,15 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
                                                         UUID.randomUUID().toString(),
                                                         UUID.randomUUID().toString(),
                                                         new MobileConnectAndroidInterface.IMobileConnectCallback()
-                                                     {
-                                                         @Override
-                                                         public void onComplete(MobileConnectStatus mobileConnectStatus)
-                                                         {
-                                                             discoveryListener.onDiscoveryResponse(mobileConnectStatus);
-                                                         }
-                                                     },
+                                                        {
+                                                            @Override
+                                                            public void onComplete(MobileConnectStatus
+                                                                                           mobileConnectStatus)
+                                                            {
+                                                                discoveryListener.onDiscoveryResponse(
+                                                                        mobileConnectStatus);
+                                                            }
+                                                        },
                                                         mobileConnectRequestOptions);
 
     }
