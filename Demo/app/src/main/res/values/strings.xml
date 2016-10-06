@@ -2,10 +2,10 @@
     <string name="app_name">Demo</string>
 
     <!-- Mobile Connect Credentials -->
-    <string name="client_id">d85e3416-9f18-49d2-b11a-023712e3a617</string>
-    <string name="client_secret">9cd7ce03-8f72-42c5-bc71-b094ea81f59c</string>
-    <string name="discovery_url">https://discovery.integration.sandbox.mobileconnect.io/v2/discovery</string>
-    <string name="redirect_url">https://localhost:8001/mobileconnect.html</string>
-    <string name="mnc">901</string>
-    <string name="mcc">01</string>
+    <string name="client_id"></string>
+    <string name="client_secret"></string>
+    <string name="discovery_url"></string>
+    <string name="redirect_url"></string>
+    <string name="mnc"></string>
+    <string name="mcc"></string>
 </resources>
