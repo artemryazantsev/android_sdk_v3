@@ -3,9 +3,9 @@ package android.mobileconnect.gsma.com.demo.fragments;
 import android.content.Intent;
 import android.mobileconnect.gsma.com.demo.R;
 import android.mobileconnect.gsma.com.demo.ResultActivity;
-import android.mobileconnect.gsma.com.library.AndroidMobileConnectEncodeDecoder;
-import android.mobileconnect.gsma.com.library.AuthenticationListener;
-import android.mobileconnect.gsma.com.library.DiscoveryListener;
+import android.mobileconnect.gsma.com.library.compatibility.AndroidMobileConnectEncodeDecoder;
+import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
+import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
 import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -202,11 +202,14 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         switch (mobileConnectStatus.getResponseType())
         {
             case ERROR:
+            {
                 Toast.makeText(getActivity(),
                                String.format("Error - %s", mobileConnectStatus.getErrorMessage()),
                                Toast.LENGTH_LONG).show();
                 break;
+            }
             case OPERATOR_SELECTION:
+            {
                 mobileConnectAndroidInterface.attemptDiscoveryWithWebView(getActivity(),
                                                                           this,
                                                                           mobileConnectStatus.getUrl(),
@@ -214,7 +217,9 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                                                              .toString(),
                                                                           null);
                 break;
+            }
             case START_AUTHENTICATION:
+            {
                 AuthenticationOptions.Builder authenticationOptionsBuilder = new AuthenticationOptions.Builder()
                         .withContext(
                         "demo").withBindingMessage("demo auth");
@@ -239,6 +244,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
                 startAuthentication(mobileConnectStatus, mobileConnectRequestOptions, state, nonce);
                 break;
+            }
             case AUTHENTICATION:
             {
                 mobileConnectAndroidInterface.attemptAuthenticationWithWebView(getActivity(),

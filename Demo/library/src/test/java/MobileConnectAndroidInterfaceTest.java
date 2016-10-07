@@ -1,4 +1,4 @@
-import android.mobileconnect.gsma.com.library.AndroidMobileConnectEncodeDecoder;
+import android.mobileconnect.gsma.com.library.compatibility.AndroidMobileConnectEncodeDecoder;
 import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
 
 import com.gsma.mobileconnect.r2.MobileConnect;

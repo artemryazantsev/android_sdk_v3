@@ -2,8 +2,14 @@ package android.mobileconnect.gsma.com.library;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
+import android.mobileconnect.gsma.com.library.callback.AuthenticationWebViewCallback;
+import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
+import android.mobileconnect.gsma.com.library.callback.IMobileConnectOperation;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.mobileconnect.gsma.com.library.view.InteractableWebView;
+import android.mobileconnect.gsma.com.library.webviewclient.AuthenticationWebViewClient;
+import android.mobileconnect.gsma.com.library.webviewclient.DiscoveryWebViewClient;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
