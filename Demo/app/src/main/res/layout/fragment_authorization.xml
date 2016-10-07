@@ -73,21 +73,25 @@
                     android:showDividers="middle">
 
                     <Switch
+                        android:id="@+id/switch_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Address"/>
 
                     <Switch
+                        android:id="@+id/switch_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Email"/>
 
                     <Switch
+                        android:id="@+id/switch_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Phone"/>
 
                     <Switch
+                        android:id="@+id/switch_profile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Profile"/>

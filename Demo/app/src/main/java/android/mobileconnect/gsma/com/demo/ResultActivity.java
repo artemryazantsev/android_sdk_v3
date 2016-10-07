@@ -202,9 +202,7 @@ public class ResultActivity extends AppCompatActivity
 
                         if (isUserInfo)
                         {
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout
-                                                                                                     .getLayoutParams
-                                                                                                             ());
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout.getLayoutParams());
                             params.leftMargin = 8;
 
                             valueTextView.setLayoutParams(params);

@@ -224,40 +224,11 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
                 final StringBuilder stringBuilder = new StringBuilder(authType);
 
-                // Build up the scopes depending on the type of Auth, i.e. Authorization or Authentication.
-                if (authType.equals(Scopes.MOBILECONNECTAUTHENTICATION))
+                populateUserInfoScopes(stringBuilder);
+
+                if (authType.equals(Scopes.MOBILECONNECTAUTHORIZATION))
                 {
-                    if (addressSwitch != null && addressSwitch.isChecked())
-                    {
-                        stringBuilder.append(" address");
-                    }
-                    if (emailSwitch != null && emailSwitch.isChecked())
-                    {
-                        stringBuilder.append(" email");
-                    }
-                    if (phoneSwitch != null && phoneSwitch.isChecked())
-                    {
-                        stringBuilder.append(" phone");
-                    }
-                    if (profileSwitch != null && profileSwitch.isChecked())
-                    {
-                        stringBuilder.append(" profile");
-                    }
-                }
-                else if (authType.equals(Scopes.MOBILECONNECTAUTHORIZATION))
-                {
-                    if (nationalitySwitch != null && nationalitySwitch.isChecked())
-                    {
-                        stringBuilder.append(String.format(" %s", Scopes.MOBILECONNECTIDENTITYNATIONALID));
-                    }
-                    if (phoneNumberSwitch != null && phoneNumberSwitch.isChecked())
-                    {
-                        stringBuilder.append(String.format(" %s", Scopes.MOBILECONNECTIDENTITYPHONE));
-                    }
-                    if (signUpSwitch != null && signUpSwitch.isChecked())
-                    {
-                        stringBuilder.append(String.format(" %s", Scopes.MOBILECONNECTIDENTITYSIGNUP));
-                    }
+                    populateIdentityScopes(stringBuilder);
                 }
 
                 authenticationOptionsBuilder.withScope(stringBuilder.toString());
@@ -284,6 +255,42 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                 displayResult();
                 break;
             }
+        }
+    }
+
+    private void populateIdentityScopes(StringBuilder stringBuilder)
+    {
+        if (nationalitySwitch != null && nationalitySwitch.isChecked())
+        {
+            stringBuilder.append(String.format(" %s", Scopes.MOBILECONNECTIDENTITYNATIONALID));
+        }
+        if (phoneNumberSwitch != null && phoneNumberSwitch.isChecked())
+        {
+            stringBuilder.append(String.format(" %s", Scopes.MOBILECONNECTIDENTITYPHONE));
+        }
+        if (signUpSwitch != null && signUpSwitch.isChecked())
+        {
+            stringBuilder.append(String.format(" %s", Scopes.MOBILECONNECTIDENTITYSIGNUP));
+        }
+    }
+
+    private void populateUserInfoScopes(StringBuilder stringBuilder)
+    {
+        if (addressSwitch != null && addressSwitch.isChecked())
+        {
+            stringBuilder.append(" address");
+        }
+        if (emailSwitch != null && emailSwitch.isChecked())
+        {
+            stringBuilder.append(" email");
+        }
+        if (phoneSwitch != null && phoneSwitch.isChecked())
+        {
+            stringBuilder.append(" phone");
+        }
+        if (profileSwitch != null && profileSwitch.isChecked())
+        {
+            stringBuilder.append(" profile");
         }
     }
 
