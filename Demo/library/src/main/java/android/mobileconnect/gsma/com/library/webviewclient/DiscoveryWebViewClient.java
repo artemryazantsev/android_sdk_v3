@@ -1,5 +1,7 @@
-package android.mobileconnect.gsma.com.library;
+package android.mobileconnect.gsma.com.library.webviewclient;
 
+import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
+import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -67,7 +69,6 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     @Override
     protected void handleResult(final String url)
     {
-        DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL(url);
         Log.d("url", url);
 
         URI uri = getUri(url);

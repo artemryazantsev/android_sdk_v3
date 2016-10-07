@@ -1,4 +1,4 @@
-package android.mobileconnect.gsma.com.library;
+package android.mobileconnect.gsma.com.library.webviewclient;
 
 import android.annotation.TargetApi;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;

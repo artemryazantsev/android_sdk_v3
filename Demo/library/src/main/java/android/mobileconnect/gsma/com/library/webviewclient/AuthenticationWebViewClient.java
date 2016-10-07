@@ -1,5 +1,7 @@
-package android.mobileconnect.gsma.com.library;
+package android.mobileconnect.gsma.com.library.webviewclient;
 
+import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
+import android.mobileconnect.gsma.com.library.callback.AuthenticationWebViewCallback;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.widget.ProgressBar;
 
@@ -37,7 +39,6 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
     @Override
     protected void handleResult(final String url)
     {
-        DiscoveryModel.getInstance().setDiscoveryServiceRedirectedURL(url);
         authenticationWebViewCallback.onSuccess(url);
     }
 }

@@ -1,4 +1,4 @@
-package android.mobileconnect.gsma.com.library;
+package android.mobileconnect.gsma.com.library.compatibility;
 
 import android.util.Base64;
 
