@@ -442,6 +442,52 @@ public class MobileConnectAndroidInterface
     }
 
     /**
+     * Refresh token using using the refresh token provided in the RequestToken response
+     *
+     * @param refreshToken Refresh token returned from RequestToken request
+     * @return MobileConnectStatus Object with required information for continuing the mobile
+     * connect process
+     */
+    @SuppressWarnings("unused")
+    public void refreshToken(final String refreshToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
+    {
+        new MobileConnectAsyncTask(new IMobileConnectOperation()
+        {
+            @Override
+            public MobileConnectStatus operation()
+            {
+                return MobileConnectAndroidInterface.this.mobileConnectInterface.refreshToken(refreshToken,
+                                                                                              discoveryResponse);
+            }
+        }, mobileConnectCallback).execute();
+    }
+
+    /**
+     * Revoke token using using the access / refresh token provided in the RequestToken response
+     *
+     * @param token         Access/Refresh token returned from RequestToken request
+     * @param tokenTypeHint Hint to indicate the type of token being passed in
+     * @return MobileConnectStatus Object with required information for continuing the mobile
+     * connect process
+     */
+    @SuppressWarnings("unused")
+    public void revokeToken(final String token,
+                            final String tokenTypeHint,
+                            @NonNull final IMobileConnectCallback mobileConnectCallback)
+    {
+        new MobileConnectAsyncTask(new IMobileConnectOperation()
+        {
+            @Override
+            public MobileConnectStatus operation()
+            {
+                return MobileConnectAndroidInterface.this.mobileConnectInterface.revokeToken(token,
+                                                                                             tokenTypeHint,
+                                                                                             discoveryResponse);
+            }
+        }, mobileConnectCallback).execute();
+    }
+
+    /**
      * Request user info using the access token returned by <see cref="requestToken(DiscoveryResponse,
      * URI, String, String)"/>
      *
