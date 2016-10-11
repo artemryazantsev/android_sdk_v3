@@ -42,11 +42,17 @@ public interface MobileConnectContract
                                final MobileConnectRequestOptions mobileConnectRequestOptions);
     }
 
+    /**
+     * On completion of an API to {@link android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface}
+     */
     interface IMobileConnectCallback
     {
         void onComplete(final MobileConnectStatus mobileConnectStatus);
     }
 
+    /**
+     * The method which shall be ran within an {@link android.os.AsyncTask}
+     */
     interface IMobileConnectOperation
     {
         MobileConnectStatus operation();

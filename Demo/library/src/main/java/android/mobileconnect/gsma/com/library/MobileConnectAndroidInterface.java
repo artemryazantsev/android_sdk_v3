@@ -9,7 +9,6 @@ import android.mobileconnect.gsma.com.library.callback.IMobileConnectOperation;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.mobileconnect.gsma.com.library.view.InteractableWebView;
 import android.mobileconnect.gsma.com.library.webviewclient.AuthenticationWebViewClient;
-import android.mobileconnect.gsma.com.library.webviewclient.DiscoveryWebViewClient;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -37,6 +36,7 @@ import java.net.URISyntaxException;
  * <p/>
  * Created by usmaan.dad on 11/08/2016.
  */
+//TODO this class is slowly being replaced by the MVP pattern in the 'main' package
 public class MobileConnectAndroidInterface
 {
     private final MobileConnectInterface mobileConnectInterface;
@@ -121,13 +121,12 @@ public class MobileConnectAndroidInterface
 
         webView.setWebChromeClient(new WebChromeClient());
 
-        final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
-                                                                                progressBar,
-                                                                                redirectUrl,
-                                                                                discoveryListener,
-                                                                                this,
-                                                                                mobileConnectRequestOptions);
-        webView.setWebViewClient(webViewClient);
+        //        final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
+        //                                                                                progressBar,
+        //                                                                                redirectUrl,
+        //                                                                                this,
+        //                                                                                mobileConnectRequestOptions);
+        //        webView.setWebViewClient(webViewClient);
 
         webView.loadUrl(operatorUrl);
 

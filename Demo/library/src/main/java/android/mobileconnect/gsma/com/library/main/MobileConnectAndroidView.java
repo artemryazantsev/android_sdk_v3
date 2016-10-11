@@ -144,9 +144,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
         final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
                                                                                 progressBar,
                                                                                 redirectUrl,
-                                                                                discoveryListener,
-                                                                                discoveryWebViewCallback,
-                                                                                mobileConnectRequestOptions);
+                                                                                discoveryWebViewCallback);
 
         webView.setWebViewClient(webViewClient);
         webView.loadUrl(operatorUrl);
