@@ -7,6 +7,8 @@ import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
+import java.net.URI;
+
 public interface MobileConnectContract
 {
     interface View
@@ -31,7 +33,13 @@ public interface MobileConnectContract
                               @Nullable final String mcc,
                               @Nullable final String mnc,
                               @Nullable final MobileConnectRequestOptions options,
-                              @NonNull  final IMobileConnectCallback mobileConnectCallback);
+                              @NonNull final IMobileConnectCallback mobileConnectCallback);
+
+        void handleUrlRedirect(final URI redirectedUrl,
+                               final String expectedState,
+                               final String expectedNonce,
+                               @NonNull final IMobileConnectCallback mobileConnectCallback,
+                               final MobileConnectRequestOptions mobileConnectRequestOptions);
     }
 
     interface IMobileConnectCallback

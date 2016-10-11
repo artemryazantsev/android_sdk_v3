@@ -6,44 +6,48 @@ import android.support.annotation.Nullable;
 
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
-import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
+import org.greenrobot.eventbus.EventBus;
+
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
+import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
 
 /**
  * An AsyncTask to wrap all API calls to {@link MobileConnectInterface} asynchronously.
  */
-public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectStatus> {
+public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectStatus>
+{
     private IMobileConnectOperation mobileConnectOperation;
 
     private IMobileConnectCallback IMobileConnectCallback;
 
-    private DiscoveryResponse discoveryResponse;
-
-    public DiscoveryResponse getDiscoveryResponse() {
-        return discoveryResponse;
-    }
+    private EventBus eventBus;
 
     public MobileConnectAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
-                                  @NonNull final IMobileConnectCallback IMobileConnectCallback) {
+                                  @NonNull final IMobileConnectCallback IMobileConnectCallback)
+    {
 
         this.mobileConnectOperation = mobileConnectOperation;
         this.IMobileConnectCallback = IMobileConnectCallback;
+        this.eventBus = EventBus.getDefault();
     }
 
     @Override
-    protected MobileConnectStatus doInBackground(@Nullable final Void... voids) {
+    protected MobileConnectStatus doInBackground(@Nullable final Void... voids)
+    {
         return mobileConnectOperation.operation();
     }
 
     @Override
-    protected void onPostExecute(final MobileConnectStatus mobileConnectStatus) {
+    protected void onPostExecute(final MobileConnectStatus mobileConnectStatus)
+    {
         super.onPostExecute(mobileConnectStatus);
-        if (IMobileConnectCallback != null) {
+        if (IMobileConnectCallback != null)
+        {
             if (mobileConnectStatus.getDiscoveryResponse() != null &&
-                    !mobileConnectStatus.getDiscoveryResponse().hasExpired()) {
-                discoveryResponse = mobileConnectStatus.getDiscoveryResponse();
+                !mobileConnectStatus.getDiscoveryResponse().hasExpired())
+            {
+                eventBus.post(mobileConnectStatus.getDiscoveryResponse());
             }
             IMobileConnectCallback.onComplete(mobileConnectStatus);
         }

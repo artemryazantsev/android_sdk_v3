@@ -10,6 +10,9 @@ import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.net.URI;
 
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
@@ -21,25 +24,29 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
  * <p/>
  * Created by usmaan.dad on 11/08/2016.
  */
-public class MobileConnectAndroidPresenter implements MobileConnectContract.UserActionsListener {
+public class MobileConnectAndroidPresenter implements MobileConnectContract.UserActionsListener
+{
     private final MobileConnectInterface mobileConnectInterface;
 
     private MobileConnectContract.View view;
 
-    private String mcc;
-    private String mnc;
-
     private DiscoveryResponse discoveryResponse;
+
+    private EventBus eventBus;
 
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
-    public MobileConnectAndroidPresenter(@NonNull final MobileConnectInterface mobileConnectInterface) {
+    public MobileConnectAndroidPresenter(@NonNull final MobileConnectInterface mobileConnectInterface)
+    {
         this.mobileConnectInterface = mobileConnectInterface;
+        eventBus = EventBus.getDefault();
+        eventBus.register(this);
     }
 
     @Override
-    public void setView(MobileConnectContract.View view) {
+    public void setView(MobileConnectContract.View view)
+    {
         this.view = view;
     }
 
@@ -49,10 +56,22 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
      * @return The cached DiscoveryResponse
      */
     @Override
-    public DiscoveryResponse getDiscoveryResponse() {
+    public DiscoveryResponse getDiscoveryResponse()
+    {
         return this.discoveryResponse;
     }
 
+    /**
+     * An EventBus
+     *
+     * @param discoveryResponse
+     */
+    @SuppressWarnings("unused")
+    @Subscribe
+    public void onDiscoveryReceived(final DiscoveryResponse discoveryResponse)
+    {
+        this.discoveryResponse = discoveryResponse;
+    }
 
     /**
      * Asynchronously attempt discovery using the supplied parameters. If msisdn, mcc and mnc are null the result
@@ -74,17 +93,19 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
                                  final MobileConnectRequestOptions options,
                                  @NonNull final MobileConnectContract.IMobileConnectCallback mobileConnectCallback)
     {
-        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation() {
-                @Override
-                public MobileConnectStatus operation() {
-                    return MobileConnectAndroidPresenter.this.mobileConnectInterface.attemptDiscovery(msisdn,
-                            mcc,
-                            mnc,
-                            options);
-                }
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
+            @Override
+            public MobileConnectStatus operation()
+            {
+                return MobileConnectAndroidPresenter.this.mobileConnectInterface.attemptDiscovery(msisdn,
+                                                                                                  mcc,
+                                                                                                  mnc,
+                                                                                                  options);
+            }
         };
+
         this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
-        //this.discoveryResponse = mobileConnectCallback.getDiscoveryResponse();
     }
 
     /**
@@ -98,14 +119,19 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
      */
     @SuppressWarnings("unused")
     public void attemptDiscoveryAfterOperatorSelection(@NonNull final IMobileConnectCallback mobileConnectCallback,
-                                                       @Nullable final URI redirectUri) {
-        new MobileConnectAsyncTask(new IMobileConnectOperation() {
+                                                       @Nullable final URI redirectUri)
+    {
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
             @Override
-            public MobileConnectStatus operation() {
+            public MobileConnectStatus operation()
+            {
                 return MobileConnectAndroidPresenter.this.mobileConnectInterface.attemptDiscoveryAfterOperatorSelection(
                         redirectUri);
             }
-        }, mobileConnectCallback).execute();
+        };
+
+        this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
     }
 
     /**
@@ -125,17 +151,23 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
                                     final String state,
                                     final String nonce,
                                     final MobileConnectRequestOptions options,
-                                    @NonNull final IMobileConnectCallback mobileConnectCallback) {
-        new MobileConnectAsyncTask(new IMobileConnectOperation() {
+                                    @NonNull final IMobileConnectCallback mobileConnectCallback)
+    {
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
             @Override
-            public MobileConnectStatus operation() {
+            public MobileConnectStatus operation()
+            {
                 return MobileConnectAndroidPresenter.this.mobileConnectInterface.startAuthentication(discoveryResponse,
-                        encryptedMSISDN,
-                        state,
-                        nonce,
-                        options);
+                                                                                                     encryptedMSISDN,
+                                                                                                     state,
+                                                                                                     nonce,
+                                                                                                     options);
             }
-        }, mobileConnectCallback).execute();
+        };
+
+        this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
+
     }
 
     /**
@@ -156,18 +188,22 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
                              final String expectedState,
                              final String expectedNonce,
                              @NonNull final IMobileConnectCallback mobileConnectCallback,
-                             final MobileConnectRequestOptions mobileConnectRequestOptions) {
-        new MobileConnectAsyncTask(new IMobileConnectOperation() {
+                             final MobileConnectRequestOptions mobileConnectRequestOptions)
+    {
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
             @Override
-            public MobileConnectStatus operation() {
+            public MobileConnectStatus operation()
+            {
                 return MobileConnectAndroidPresenter.this.mobileConnectInterface.requestToken(discoveryResponse,
-                        redirectedUrl,
-                        expectedState,
-                        expectedNonce,
-                        mobileConnectRequestOptions);
-                // same here
+                                                                                              redirectedUrl,
+                                                                                              expectedState,
+                                                                                              expectedNonce,
+                                                                                              mobileConnectRequestOptions);
             }
-        }, mobileConnectCallback).execute();
+        };
+
+        this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
     }
 
     /**
@@ -190,17 +226,22 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
                                   final String expectedState,
                                   final String expectedNonce,
                                   @NonNull final IMobileConnectCallback mobileConnectCallback,
-                                  final MobileConnectRequestOptions mobileConnectRequestOptions) {
-        new MobileConnectAsyncTask(new IMobileConnectOperation() {
+                                  final MobileConnectRequestOptions mobileConnectRequestOptions)
+    {
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
             @Override
-            public MobileConnectStatus operation() {
-                return MobileConnectAndroidPresenter.this.mobileConnectInterface.handleUrlRedirect(redirectedUrl,
-                        discoveryResponse,
-                        expectedState,
-                        expectedNonce,
-                        mobileConnectRequestOptions);
+            public MobileConnectStatus operation()
+            {
+                return MobileConnectAndroidPresenter.this.mobileConnectInterface.requestToken(discoveryResponse,
+                                                                                              redirectedUrl,
+                                                                                              expectedState,
+                                                                                              expectedNonce,
+                                                                                              mobileConnectRequestOptions);
             }
-        }, mobileConnectCallback).execute();
+        };
+
+        this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
     }
 
     /**
@@ -210,14 +251,19 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
      * @param accessToken Access token from requestToken stage
      */
     @SuppressWarnings("unused")
-    public void requestIdentity(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback) {
-        new MobileConnectAsyncTask(new IMobileConnectOperation() {
+    public void requestIdentity(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
+    {
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
             @Override
-            public MobileConnectStatus operation() {
+            public MobileConnectStatus operation()
+            {
                 return MobileConnectAndroidPresenter.this.mobileConnectInterface.requestIdentity(discoveryResponse,
-                        accessToken);
+                                                                                                 accessToken);
             }
-        }, mobileConnectCallback).execute();
+        };
+
+        this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
     }
 
     /**
@@ -228,14 +274,19 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
      * connect process
      */
     @SuppressWarnings("unused")
-    public void refreshToken(final String refreshToken, @NonNull final IMobileConnectCallback mobileConnectCallback) {
-        new MobileConnectAsyncTask(new IMobileConnectOperation() {
+    public void refreshToken(final String refreshToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
+    {
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
             @Override
-            public MobileConnectStatus operation() {
+            public MobileConnectStatus operation()
+            {
                 return MobileConnectAndroidPresenter.this.mobileConnectInterface.refreshToken(refreshToken,
-                        discoveryResponse);
+                                                                                              discoveryResponse);
             }
-        }, mobileConnectCallback).execute();
+        };
+
+        this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
     }
 
     /**
@@ -249,15 +300,20 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
     @SuppressWarnings("unused")
     public void revokeToken(final String token,
                             final String tokenTypeHint,
-                            @NonNull final IMobileConnectCallback mobileConnectCallback) {
-        new MobileConnectAsyncTask(new IMobileConnectOperation() {
+                            @NonNull final IMobileConnectCallback mobileConnectCallback)
+    {
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
             @Override
-            public MobileConnectStatus operation() {
+            public MobileConnectStatus operation()
+            {
                 return MobileConnectAndroidPresenter.this.mobileConnectInterface.revokeToken(token,
-                        tokenTypeHint,
-                        discoveryResponse);
+                                                                                             tokenTypeHint,
+                                                                                             discoveryResponse);
             }
-        }, mobileConnectCallback).execute();
+        };
+
+        this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
     }
 
     /**
@@ -266,30 +322,18 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
      *
      * @param accessToken Access token from requestToken stage
      */
-    public void requestUserInfo(final String accessToken, final IMobileConnectCallback mobileConnectCallback) {
-        new MobileConnectAsyncTask(new IMobileConnectOperation() {
+    public void requestUserInfo(final String accessToken, final IMobileConnectCallback mobileConnectCallback)
+    {
+        IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
+        {
             @Override
-            public MobileConnectStatus operation() {
+            public MobileConnectStatus operation()
+            {
                 return MobileConnectAndroidPresenter.this.mobileConnectInterface.requestUserInfo(discoveryResponse,
-                        accessToken);
+                                                                                                 accessToken);
             }
-        }, mobileConnectCallback).execute();
-    }
+        };
 
-    public String getMcc() {
-        return mcc;
+        this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
     }
-
-    public void setMcc(final String mcc) {
-        this.mcc = mcc;
-    }
-
-    public void setMnc(final String mnc) {
-        this.mnc = mnc;
-    }
-
-    public String getMnc() {
-        return mnc;
-    }
-
 }

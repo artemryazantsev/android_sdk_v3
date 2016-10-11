@@ -6,6 +6,7 @@ import android.mobileconnect.gsma.com.library.R;
 import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
 import android.mobileconnect.gsma.com.library.callback.AuthenticationWebViewCallback;
 import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
+import android.mobileconnect.gsma.com.library.callback.WebViewCallBack;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.mobileconnect.gsma.com.library.view.InteractableWebView;
 import android.mobileconnect.gsma.com.library.webviewclient.AuthenticationWebViewClient;
@@ -26,10 +27,10 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.UUID;
 
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
@@ -109,16 +110,45 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
 
         webView.setWebChromeClient(new WebChromeClient());
 
-        //TODO Create WebViewClient with correct dependecnies & set it for the webView
-        /*
+        final WebViewCallBack discoveryWebViewCallback = new WebViewCallBack()
+        {
+            @Override
+            public void onError(final MobileConnectStatus mobileConnectStatus)
+            {
+                discoveryListener.discoveryFailed(mobileConnectStatus);
+            }
+
+            @Override
+            public void onSuccess(final String url)
+            {
+                URI uri = getUri(url);
+
+                MobileConnectAndroidView.this.presenter.handleUrlRedirect(uri,
+                                                                          UUID.randomUUID().toString(),
+                                                                          UUID.randomUUID().toString(),
+                                                                          new IMobileConnectCallback()
+                                                                          {
+                                                                              @Override
+                                                                              public void onComplete
+                                                                                      (MobileConnectStatus
+                                                                                               mobileConnectStatus)
+                                                                              {
+                                                                                  discoveryListener.onDiscoveryResponse(
+                                                                                          mobileConnectStatus);
+                                                                              }
+                                                                          },
+                                                                          mobileConnectRequestOptions);
+            }
+        };
+
         final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
                                                                                 progressBar,
                                                                                 redirectUrl,
                                                                                 discoveryListener,
-                                                                                this.presenter,
+                                                                                discoveryWebViewCallback,
                                                                                 mobileConnectRequestOptions);
+
         webView.setWebViewClient(webViewClient);
-        */
         webView.loadUrl(operatorUrl);
 
         try
@@ -129,6 +159,22 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
         {
             Log.e("Discovery Dialog", exception.getMessage());
         }
+    }
+
+    @Nullable
+    private URI getUri(final String url)
+    {
+        URI uri;
+        try
+        {
+            uri = new URI(url);
+        }
+        catch (URISyntaxException e)
+        {
+            uri = null;
+            Log.e("Invalid Redirect URI", e.getMessage());
+        }
+        return uri;
     }
 
     private void initiateWebView(@NonNull final Context activityContext,
@@ -382,15 +428,15 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
     @SuppressWarnings("unused")
     public void requestIdentity(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-//        new MobileConnectAsyncTask(new IMobileConnectOperation()
-//        {
-//            @Override
-//            public MobileConnectStatus operation()
-//            {
-//                return MobileConnectAndroidView.this.mobileConnectInterface.requestIdentity(discoveryResponse,
-//                                                                                                 accessToken);
-//            }
-//        }, mobileConnectCallback).execute();
+        //        new MobileConnectAsyncTask(new IMobileConnectOperation()
+        //        {
+        //            @Override
+        //            public MobileConnectStatus operation()
+        //            {
+        //                return MobileConnectAndroidView.this.mobileConnectInterface.requestIdentity(discoveryResponse,
+        //                                                                                                 accessToken);
+        //            }
+        //        }, mobileConnectCallback).execute();
     }
 
     /**
@@ -403,15 +449,16 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
     @SuppressWarnings("unused")
     public void refreshToken(final String refreshToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-//        new MobileConnectAsyncTask(new IMobileConnectOperation()
-//        {
-//            @Override
-//            public MobileConnectStatus operation()
-//            {
-//                return MobileConnectAndroidView.this.mobileConnectInterface.refreshToken(refreshToken,
-//                                                                                              discoveryResponse);
-//            }
-//        }, mobileConnectCallback).execute();
+        //        new MobileConnectAsyncTask(new IMobileConnectOperation()
+        //        {
+        //            @Override
+        //            public MobileConnectStatus operation()
+        //            {
+        //                return MobileConnectAndroidView.this.mobileConnectInterface.refreshToken(refreshToken,
+        //
+        // discoveryResponse);
+        //            }
+        //        }, mobileConnectCallback).execute();
     }
 
     /**
@@ -427,16 +474,17 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
                             final String tokenTypeHint,
                             @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-//        new MobileConnectAsyncTask(new IMobileConnectOperation()
-//        {
-//            @Override
-//            public MobileConnectStatus operation()
-//            {
-//                return MobileConnectAndroidView.this.mobileConnectInterface.revokeToken(token,
-//                                                                                             tokenTypeHint,
-//                                                                                             discoveryResponse);
-//            }
-//        }, mobileConnectCallback).execute();
+        //        new MobileConnectAsyncTask(new IMobileConnectOperation()
+        //        {
+        //            @Override
+        //            public MobileConnectStatus operation()
+        //            {
+        //                return MobileConnectAndroidView.this.mobileConnectInterface.revokeToken(token,
+        //                                                                                             tokenTypeHint,
+        //
+        // discoveryResponse);
+        //            }
+        //        }, mobileConnectCallback).execute();
     }
 
     /**
@@ -447,34 +495,34 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      */
     public void requestUserInfo(final String accessToken, final IMobileConnectCallback mobileConnectCallback)
     {
-//        new MobileConnectAsyncTask(new IMobileConnectOperation()
-//        {
-//            @Override
-//            public MobileConnectStatus operation()
-//            {
-//                return MobileConnectAndroidView.this.mobileConnectInterface.requestUserInfo(discoveryResponse,
-//                                                                                                 accessToken);
-//            }
-//        }, mobileConnectCallback).execute();
+        //        new MobileConnectAsyncTask(new IMobileConnectOperation()
+        //        {
+        //            @Override
+        //            public MobileConnectStatus operation()
+        //            {
+        //                return MobileConnectAndroidView.this.mobileConnectInterface.requestUserInfo(discoveryResponse,
+        //                                                                                                 accessToken);
+        //            }
+        //        }, mobileConnectCallback).execute();
     }
 
-//    public String getMcc()
-//    {
-//        return mcc;
-//    }
-//
-//    public void setMcc(final String mcc)
-//    {
-//        this.mcc = mcc;
-//    }
-//
-//    public void setMnc(final String mnc)
-//    {
-//        this.mnc = mnc;
-//    }
-//
-//    public String getMnc()
-//    {
-//        return mnc;
-//    }
+    //    public String getMcc()
+    //    {
+    //        return mcc;
+    //    }
+    //
+    //    public void setMcc(final String mcc)
+    //    {
+    //        this.mcc = mcc;
+    //    }
+    //
+    //    public void setMnc(final String mnc)
+    //    {
+    //        this.mnc = mnc;
+    //    }
+    //
+    //    public String getMnc()
+    //    {
+    //        return mnc;
+    //    }
 }
