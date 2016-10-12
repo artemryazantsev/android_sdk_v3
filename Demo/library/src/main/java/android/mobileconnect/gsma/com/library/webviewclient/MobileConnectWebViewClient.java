@@ -21,17 +21,17 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
  * <p/>
  * Created by Usmaan.Dad on 6/22/2016.
  */
-public abstract class MobileConnectWebViewClient extends WebViewClient
+abstract class MobileConnectWebViewClient extends WebViewClient
 {
     protected ProgressBar progressBar;
 
     protected DiscoveryAuthenticationDialog dialog;
 
-    protected String redirectUrl;
+    private String redirectUrl;
 
-    public MobileConnectWebViewClient(final DiscoveryAuthenticationDialog dialog,
-                                      final ProgressBar progressBar,
-                                      final String redirectUrl)
+    MobileConnectWebViewClient(final DiscoveryAuthenticationDialog dialog,
+                               final ProgressBar progressBar,
+                               final String redirectUrl)
     {
         this.progressBar = progressBar;
         this.dialog = dialog;

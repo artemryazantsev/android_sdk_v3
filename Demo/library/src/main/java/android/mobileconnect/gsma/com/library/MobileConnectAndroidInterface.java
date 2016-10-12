@@ -7,7 +7,7 @@ import android.mobileconnect.gsma.com.library.callback.AuthenticationWebViewCall
 import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
 import android.mobileconnect.gsma.com.library.callback.IMobileConnectOperation;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
-import android.mobileconnect.gsma.com.library.view.InteractableWebView;
+import android.mobileconnect.gsma.com.library.view.InteractiveWebView;
 import android.mobileconnect.gsma.com.library.webviewclient.AuthenticationWebViewClient;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -102,7 +102,7 @@ public class MobileConnectAndroidInterface
         RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
                                                                       .inflate(R.layout.layout_web_view, null);
 
-        final InteractableWebView webView = (InteractableWebView) webViewLayout.findViewById(R.id.web_view);
+        final InteractiveWebView webView = (InteractiveWebView) webViewLayout.findViewById(R.id.web_view);
         final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
 
         final DiscoveryAuthenticationDialog dialog = new DiscoveryAuthenticationDialog(activityContext);
@@ -150,7 +150,7 @@ public class MobileConnectAndroidInterface
         RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
                                                                       .inflate(R.layout.layout_web_view, null);
 
-        final InteractableWebView webView = (InteractableWebView) webViewLayout.findViewById(R.id.web_view);
+        final InteractiveWebView webView = (InteractiveWebView) webViewLayout.findViewById(R.id.web_view);
         final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
 
         final DiscoveryAuthenticationDialog dialog = new DiscoveryAuthenticationDialog(activityContext);

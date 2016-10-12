@@ -10,27 +10,27 @@ import android.webkit.WebView;
 /**
  * Created by Usmaan.Dad on 6/17/2016.
  */
-public class InteractableWebView extends WebView
+public class InteractiveWebView extends WebView
 {
-    public InteractableWebView(Context context)
+    public InteractiveWebView(final Context context)
     {
         super(context);
         initialise(context);
     }
 
-    public InteractableWebView(Context context, AttributeSet attrs)
+    public InteractiveWebView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         initialise(context);
     }
 
-    public InteractableWebView(Context context, AttributeSet attrs, int defStyleAttr)
+    public InteractiveWebView(final Context context, final AttributeSet attrs, final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         initialise(context);
     }
 
-    private void initialise(Context context)
+    private void initialise(final Context context)
     {
         if (!isInEditMode())
         {
