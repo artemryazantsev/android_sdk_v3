@@ -45,6 +45,8 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
 {
     private final MobileConnectContract.UserActionsListener presenter;
 
+    private DiscoveryResponseObservable discoveryResponseObservable;
+
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
@@ -123,21 +125,22 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
             {
                 URI uri = getUri(url);
 
-                MobileConnectAndroidView.this.presenter.handleUrlRedirect(uri,
-                                                                          UUID.randomUUID().toString(),
-                                                                          UUID.randomUUID().toString(),
-                                                                          new IMobileConnectCallback()
-                                                                          {
-                                                                              @Override
-                                                                              public void onComplete
-                                                                                      (MobileConnectStatus
-                                                                                               mobileConnectStatus)
-                                                                              {
-                                                                                  discoveryListener.onDiscoveryResponse(
-                                                                                          mobileConnectStatus);
-                                                                              }
-                                                                          },
-                                                                          mobileConnectRequestOptions);
+                MobileConnectAndroidView.this.presenter.performHandleUrlRedirect(uri,
+                                                                                 UUID.randomUUID().toString(),
+                                                                                 UUID.randomUUID().toString(),
+                                                                                 new IMobileConnectCallback()
+                                                                                 {
+                                                                                     @Override
+                                                                                     public void onComplete(
+                                                                                             MobileConnectStatus
+                                                                                                     mobileConnectStatus)
+                                                                                     {
+                                                                                         discoveryListener
+                                                                                                 .onDiscoveryResponse(
+                                                                                                 mobileConnectStatus);
+                                                                                     }
+                                                                                 },
+                                                                                 mobileConnectRequestOptions);
             }
         };
 
@@ -240,11 +243,12 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
         }
     }
 
-    private void handleRedirectAfterAuthentication(final String url,
-                                                   final String state,
-                                                   final String nonce,
-                                                   final AuthenticationListener authenticationListener,
-                                                   final MobileConnectRequestOptions mobileConnectRequestOptions)
+    @Override
+    public void handleRedirectAfterAuthentication(final String url,
+                                                  final String state,
+                                                  final String nonce,
+                                                  final AuthenticationListener authenticationListener,
+                                                  final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
         URI uri = null;
 
@@ -300,11 +304,29 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
         listener.onAuthorizationDialogClose();
     }
 
+    /**
+     * It is mandatory to call this before any operations are called.
+     */
+    @Override
+    public void initialise()
+    {
+        this.discoveryResponseObservable = new DiscoveryResponseObservable();
+    }
+
+    /**
+     * It is mandatory to call this when your view is being destroyed.
+     */
+    @Override
+    public void cleanUp()
+    {
+        this.discoveryResponseObservable.deleteObservers();
+    }
+
     @Override
     public void performAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        new MobileConnectAsyncTask(mobileConnectOperation, mobileConnectCallback).execute();
+        new MobileConnectAsyncTask(mobileConnectOperation, mobileConnectCallback, discoveryResponseObservable).execute();
     }
 
     /**
@@ -339,11 +361,12 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      * @param redirectUri           URI redirected to by the completion of the operator selection UI
      *                              Connect process
      */
+    @Override
     @SuppressWarnings("unused")
     public void attemptDiscoveryAfterOperatorSelection(@NonNull final IMobileConnectCallback mobileConnectCallback,
                                                        @Nullable final URI redirectUri)
     {
-        //this.presenter.performDiscoveryWithOperationSelection(redirectUri, mobileConnectCallback);
+        this.presenter.performDiscoveryAfterOperatorSelection(mobileConnectCallback, redirectUri);
     }
 
     /**
@@ -359,13 +382,14 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      *                              Connect process
      */
     @SuppressWarnings("unused")
+    @Override
     public void startAuthentication(final String encryptedMSISDN,
                                     final String state,
                                     final String nonce,
                                     final MobileConnectRequestOptions options,
                                     @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        //this.presenter.performAuthentication();
+        this.presenter.performAuthentication(encryptedMSISDN, state, nonce, options, mobileConnectCallback);
     }
 
     /**
@@ -382,13 +406,18 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      *                                    Connect process
      */
     @SuppressWarnings("unused")
+    @Override
     public void requestToken(final URI redirectedUrl,
                              final String expectedState,
                              final String expectedNonce,
                              @NonNull final IMobileConnectCallback mobileConnectCallback,
                              final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
-        //this.presenter.performTokenRequest();
+        this.presenter.performRequestToken(redirectedUrl,
+                                           expectedState,
+                                           expectedNonce,
+                                           mobileConnectCallback,
+                                           mobileConnectRequestOptions);
     }
 
     /**
@@ -407,14 +436,18 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      *                                    Connect process
      */
     @SuppressWarnings("unused")
+    @Override
     public void handleUrlRedirect(final URI redirectedUrl,
                                   final String expectedState,
                                   final String expectedNonce,
                                   @NonNull final IMobileConnectCallback mobileConnectCallback,
                                   final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
-        //this.presenter.performUrlRedirection();
-
+        this.presenter.performHandleUrlRedirect(redirectedUrl,
+                                                expectedState,
+                                                expectedNonce,
+                                                mobileConnectCallback,
+                                                mobileConnectRequestOptions);
     }
 
     /**
@@ -424,17 +457,10 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      * @param accessToken Access token from requestToken stage
      */
     @SuppressWarnings("unused")
+    @Override
     public void requestIdentity(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        //        new MobileConnectAsyncTask(new IMobileConnectOperation()
-        //        {
-        //            @Override
-        //            public MobileConnectStatus operation()
-        //            {
-        //                return MobileConnectAndroidView.this.mobileConnectInterface.requestIdentity(discoveryResponse,
-        //                                                                                                 accessToken);
-        //            }
-        //        }, mobileConnectCallback).execute();
+        this.presenter.performRequestIdentity(accessToken, mobileConnectCallback);
     }
 
     /**
@@ -445,18 +471,10 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      * connect process
      */
     @SuppressWarnings("unused")
+    @Override
     public void refreshToken(final String refreshToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        //        new MobileConnectAsyncTask(new IMobileConnectOperation()
-        //        {
-        //            @Override
-        //            public MobileConnectStatus operation()
-        //            {
-        //                return MobileConnectAndroidView.this.mobileConnectInterface.refreshToken(refreshToken,
-        //
-        // discoveryResponse);
-        //            }
-        //        }, mobileConnectCallback).execute();
+        this.presenter.performRefreshToken(refreshToken, mobileConnectCallback);
     }
 
     /**
@@ -468,21 +486,12 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      * connect process
      */
     @SuppressWarnings("unused")
+    @Override
     public void revokeToken(final String token,
                             final String tokenTypeHint,
                             @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        //        new MobileConnectAsyncTask(new IMobileConnectOperation()
-        //        {
-        //            @Override
-        //            public MobileConnectStatus operation()
-        //            {
-        //                return MobileConnectAndroidView.this.mobileConnectInterface.revokeToken(token,
-        //                                                                                             tokenTypeHint,
-        //
-        // discoveryResponse);
-        //            }
-        //        }, mobileConnectCallback).execute();
+        this.presenter.performRevokeToken(token, tokenTypeHint, mobileConnectCallback);
     }
 
     /**
@@ -491,36 +500,10 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      *
      * @param accessToken Access token from requestToken stage
      */
+    @SuppressWarnings("unused")
+    @Override
     public void requestUserInfo(final String accessToken, final IMobileConnectCallback mobileConnectCallback)
     {
-        //        new MobileConnectAsyncTask(new IMobileConnectOperation()
-        //        {
-        //            @Override
-        //            public MobileConnectStatus operation()
-        //            {
-        //                return MobileConnectAndroidView.this.mobileConnectInterface.requestUserInfo(discoveryResponse,
-        //                                                                                                 accessToken);
-        //            }
-        //        }, mobileConnectCallback).execute();
+        this.presenter.performRequestUserInfo(accessToken, mobileConnectCallback);
     }
-
-    //    public String getMcc()
-    //    {
-    //        return mcc;
-    //    }
-    //
-    //    public void setMcc(final String mcc)
-    //    {
-    //        this.mcc = mcc;
-    //    }
-    //
-    //    public void setMnc(final String mnc)
-    //    {
-    //        this.mnc = mnc;
-    //    }
-    //
-    //    public String getMnc()
-    //    {
-    //        return mnc;
-    //    }
 }

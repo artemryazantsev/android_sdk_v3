@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
-import org.greenrobot.eventbus.EventBus;
-
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
 
@@ -21,15 +19,16 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
 
     private IMobileConnectCallback IMobileConnectCallback;
 
-    private EventBus eventBus;
+    private DiscoveryResponseObservable discoveryResponseObservable;
 
     public MobileConnectAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
-                                  @NonNull final IMobileConnectCallback IMobileConnectCallback)
+                                  @NonNull final IMobileConnectCallback IMobileConnectCallback,
+                                  @Nullable final DiscoveryResponseObservable discoveryResponseObservable)
     {
 
         this.mobileConnectOperation = mobileConnectOperation;
         this.IMobileConnectCallback = IMobileConnectCallback;
-        this.eventBus = EventBus.getDefault();
+        this.discoveryResponseObservable = discoveryResponseObservable;
     }
 
     @Override
@@ -42,12 +41,13 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
     protected void onPostExecute(final MobileConnectStatus mobileConnectStatus)
     {
         super.onPostExecute(mobileConnectStatus);
-        if (IMobileConnectCallback != null)
+        if (IMobileConnectCallback != null && discoveryResponseObservable != null)
         {
             if (mobileConnectStatus.getDiscoveryResponse() != null &&
                 !mobileConnectStatus.getDiscoveryResponse().hasExpired())
             {
-                eventBus.post(mobileConnectStatus.getDiscoveryResponse());
+                discoveryResponseObservable.setValue(mobileConnectStatus.getDiscoveryResponse());
+                discoveryResponseObservable.notifyObservers();
             }
             IMobileConnectCallback.onComplete(mobileConnectStatus);
         }
