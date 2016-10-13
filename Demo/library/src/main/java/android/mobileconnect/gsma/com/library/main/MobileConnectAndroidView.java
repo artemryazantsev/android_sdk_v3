@@ -27,6 +27,7 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,9 +44,7 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
  */
 public class MobileConnectAndroidView implements MobileConnectContract.View
 {
-    private final MobileConnectContract.UserActionsListener presenter;
-
-    private DiscoveryResponseObservable discoveryResponseObservable;
+    private final MobileConnectContract.UserActionsListener presenter;;
 
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
@@ -84,6 +83,11 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
         initiateWebView(activityContext, authenticationListener, url, state, nonce, mobileConnectRequestOptions);
     }
 
+    public DiscoveryResponse getDiscoveryResponse()
+    {
+        return this.presenter.getDiscoveryResponse();
+    }
+
     private void initiateWebView(@NonNull final Context activityContext,
                                  @NonNull final DiscoveryListener discoveryListener,
                                  @NonNull final String operatorUrl,
@@ -118,6 +122,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
             public void onError(final MobileConnectStatus mobileConnectStatus)
             {
                 discoveryListener.discoveryFailed(mobileConnectStatus);
+                dialog.cancel();
             }
 
             @Override
@@ -138,6 +143,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
                                                                                          discoveryListener
                                                                                                  .onDiscoveryResponse(
                                                                                                  mobileConnectStatus);
+                                                                                         dialog.cancel();
                                                                                      }
                                                                                  },
                                                                                  mobileConnectRequestOptions);
@@ -283,7 +289,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      * @param listener The callback to notify of the closing of the Dialog
      * @param webView  The view to stop loading.
      */
-    private void closeWebViewAndNotify(final DiscoveryListener listener, final WebView webView)
+    private void closeWebViewAndNotify(final DiscoveryListener listener, final InteractiveWebView webView)
     {
         webView.stopLoading();
         webView.loadData("", "text/html", null);
@@ -310,7 +316,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
     @Override
     public void initialise()
     {
-        this.discoveryResponseObservable = new DiscoveryResponseObservable();
+        this.presenter.initialise();
     }
 
     /**
@@ -319,14 +325,14 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
     @Override
     public void cleanUp()
     {
-        this.discoveryResponseObservable.deleteObservers();
+        this.presenter.cleanUp();
     }
 
     @Override
     public void performAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        new MobileConnectAsyncTask(mobileConnectOperation, mobileConnectCallback, discoveryResponseObservable).execute();
+        new MobileConnectAsyncTask(mobileConnectOperation, mobileConnectCallback, this.presenter.getDiscoveryResponseObservable()).execute();
     }
 
     /**

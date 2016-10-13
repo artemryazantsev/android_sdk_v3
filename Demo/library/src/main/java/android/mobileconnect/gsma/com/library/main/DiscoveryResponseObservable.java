@@ -13,7 +13,7 @@ public class DiscoveryResponseObservable extends Observable
 
     public DiscoveryResponse getValue()
     {
-        return discoveryResponse;
+        return this.discoveryResponse;
     }
 
     public void setValue(final DiscoveryResponse discoveryResponse)

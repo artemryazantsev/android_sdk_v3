@@ -14,6 +14,7 @@ public class InteractiveWebView extends WebView
 {
     public InteractiveWebView(final Context context)
     {
+
         super(context);
         initialise(context);
     }

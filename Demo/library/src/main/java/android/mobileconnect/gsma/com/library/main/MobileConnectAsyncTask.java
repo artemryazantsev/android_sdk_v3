@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
+import org.greenrobot.eventbus.EventBus;
+
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
 
@@ -41,13 +43,16 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
     protected void onPostExecute(final MobileConnectStatus mobileConnectStatus)
     {
         super.onPostExecute(mobileConnectStatus);
-        if (IMobileConnectCallback != null && discoveryResponseObservable != null)
+        if (IMobileConnectCallback != null)
         {
             if (mobileConnectStatus.getDiscoveryResponse() != null &&
                 !mobileConnectStatus.getDiscoveryResponse().hasExpired())
             {
-                discoveryResponseObservable.setValue(mobileConnectStatus.getDiscoveryResponse());
-                discoveryResponseObservable.notifyObservers();
+                //                discoveryResponseObservable.setValue(mobileConnectStatus.getDiscoveryResponse());
+                //                discoveryResponseObservable.notifyObservers();
+                final EventBus eventBus = EventBus.getDefault();
+
+                eventBus.postSticky(new DiscoveryResponseEvent(mobileConnectStatus.getDiscoveryResponse()));
             }
             IMobileConnectCallback.onComplete(mobileConnectStatus);
         }

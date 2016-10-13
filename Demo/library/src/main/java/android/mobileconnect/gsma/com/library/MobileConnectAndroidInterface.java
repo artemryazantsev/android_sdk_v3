@@ -6,6 +6,7 @@ import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
 import android.mobileconnect.gsma.com.library.callback.AuthenticationWebViewCallback;
 import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
 import android.mobileconnect.gsma.com.library.callback.IMobileConnectOperation;
+import android.mobileconnect.gsma.com.library.callback.WebViewCallBack;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.mobileconnect.gsma.com.library.view.InteractiveWebView;
 import android.mobileconnect.gsma.com.library.webviewclient.AuthenticationWebViewClient;
@@ -36,6 +37,7 @@ import java.net.URISyntaxException;
  * <p/>
  * Created by usmaan.dad on 11/08/2016.
  */
+@Deprecated
 //TODO this class is slowly being replaced by the MVP pattern in the 'main' package
 public class MobileConnectAndroidInterface
 {
@@ -121,12 +123,27 @@ public class MobileConnectAndroidInterface
 
         webView.setWebChromeClient(new WebChromeClient());
 
-        //        final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
-        //                                                                                progressBar,
-        //                                                                                redirectUrl,
-        //                                                                                this,
-        //                                                                                mobileConnectRequestOptions);
-        //        webView.setWebViewClient(webViewClient);
+        WebViewCallBack webViewCallBack = new WebViewCallBack()
+        {
+            @Override
+            public void onError(MobileConnectStatus mobileConnectStatus)
+            {
+                discoveryListener.discoveryFailed(mobileConnectStatus);
+            }
+
+            @Override
+            public void onSuccess(String url)
+            {
+                discoveryListener.onDiscoveryResponse(null);
+            }
+        };
+
+//        final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
+//                                                                                progressBar,
+//                                                                                redirectUrl,
+//                                                                                this,
+//                                                                                mobileConnectRequestOptions);
+//        webView.setWebViewClient(webViewClient);
 
         webView.loadUrl(operatorUrl);
 

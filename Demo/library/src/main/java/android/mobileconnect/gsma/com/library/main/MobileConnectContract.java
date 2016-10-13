@@ -86,6 +86,8 @@ public interface MobileConnectContract
 
         DiscoveryResponse getDiscoveryResponse();
 
+        void setDiscoveryResponse(final DiscoveryResponse discoveryResponse);
+
         void performDiscovery(@Nullable final String msisdn,
                               @Nullable final String mcc,
                               @Nullable final String mnc,
@@ -124,6 +126,12 @@ public interface MobileConnectContract
                                 @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         void performRequestUserInfo(final String accessToken, final IMobileConnectCallback mobileConnectCallback);
+
+        void initialise();
+
+        void cleanUp();
+
+        DiscoveryResponseObservable getDiscoveryResponseObservable();
     }
 
     /**

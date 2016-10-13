@@ -3,7 +3,7 @@ package android.mobileconnect.gsma.com.demo;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.mobileconnect.gsma.com.demo.fragments.BaseAuthFragment;
-import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
+import android.mobileconnect.gsma.com.library.main.MobileConnectContract;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -66,7 +66,7 @@ public class ResultActivity extends AppCompatActivity
 
         String clientName;
 
-        DiscoveryResponse discoveryResponse = BaseAuthFragment.mobileConnectAndroidInterface.getDiscoveryResponse();
+        DiscoveryResponse discoveryResponse = BaseAuthFragment.mobileConnectAndroidView.getDiscoveryResponse();
 
         if (discoveryResponse != null)
         {
@@ -101,22 +101,21 @@ public class ResultActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                BaseAuthFragment.mobileConnectAndroidInterface.requestUserInfo(accessToken,
-                                                                               new MobileConnectAndroidInterface
-                                                                                       .IMobileConnectCallback()
-                                                                               {
-                                                                                   @Override
-                                                                                   public void onComplete(
-                                                                                           MobileConnectStatus
-                                                                                                   mobileConnectStatus)
-                                                                                   {
-                                                                                       userInfoButton.setVisibility
-                                                                                               (View.GONE);
-                                                                                       displayIdentityResponse(
-                                                                                               mobileConnectStatus,
-                                                                                               true);
-                                                                                   }
-                                                                               });
+                BaseAuthFragment.mobileConnectAndroidView.requestUserInfo(accessToken,
+                                                                          new MobileConnectContract
+                                                                                  .IMobileConnectCallback()
+                                                                          {
+                                                                              @Override
+                                                                              public void onComplete
+                                                                                      (MobileConnectStatus
+                                                                                               mobileConnectStatus)
+                                                                              {
+                                                                                  userInfoButton.setVisibility(View.GONE);
+                                                                                  displayIdentityResponse(
+                                                                                          mobileConnectStatus,
+                                                                                          true);
+                                                                              }
+                                                                          });
             }
         });
 
@@ -125,22 +124,21 @@ public class ResultActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                BaseAuthFragment.mobileConnectAndroidInterface.requestIdentity(accessToken,
-                                                                               new MobileConnectAndroidInterface
-                                                                                       .IMobileConnectCallback()
-                                                                               {
-                                                                                   @Override
-                                                                                   public void onComplete(
-                                                                                           MobileConnectStatus
-                                                                                                   mobileConnectStatus)
-                                                                                   {
-                                                                                       identityButton.setVisibility
-                                                                                               (View.GONE);
-                                                                                       displayIdentityResponse(
-                                                                                               mobileConnectStatus,
-                                                                                               false);
-                                                                                   }
-                                                                               });
+                BaseAuthFragment.mobileConnectAndroidView.requestIdentity(accessToken,
+                                                                          new MobileConnectContract
+                                                                                  .IMobileConnectCallback()
+                                                                          {
+                                                                              @Override
+                                                                              public void onComplete
+                                                                                      (MobileConnectStatus
+                                                                                               mobileConnectStatus)
+                                                                              {
+                                                                                  identityButton.setVisibility(View.GONE);
+                                                                                  displayIdentityResponse(
+                                                                                          mobileConnectStatus,
+                                                                                          false);
+                                                                              }
+                                                                          });
             }
         });
 
@@ -202,7 +200,9 @@ public class ResultActivity extends AppCompatActivity
 
                         if (isUserInfo)
                         {
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout.getLayoutParams());
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout
+                                                                                                     .getLayoutParams
+                                                                                                             ());
                             params.leftMargin = 8;
 
                             valueTextView.setLayoutParams(params);
