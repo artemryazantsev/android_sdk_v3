@@ -144,6 +144,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
                 MobileConnectAndroidView.this.presenter.performHandleUrlRedirect(uri,
                                                                                  UUID.randomUUID().toString(),
                                                                                  UUID.randomUUID().toString(),
+                                                                                 mobileConnectRequestOptions,
                                                                                  new IMobileConnectCallback()
                                                                                  {
                                                                                      @Override
@@ -156,8 +157,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
                                                                                                  mobileConnectStatus);
                                                                                          dialog.cancel();
                                                                                      }
-                                                                                 },
-                                                                                 mobileConnectRequestOptions);
+                                                                                 });
             }
         };
 
@@ -276,7 +276,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
                                                   final AuthenticationListener authenticationListener,
                                                   final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
-        URI uri = null;
+        final URI uri;
 
         try
         {
@@ -285,21 +285,21 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
         catch (URISyntaxException e)
         {
             e.printStackTrace();
-        }
-
-        if (uri == null)
-        {
+            final MobileConnectStatus mobileConnectStatus = MobileConnectStatus.error(e.getMessage(),
+                                                                                      "Redirect failed",
+                                                                                      e);
+            authenticationListener.authenticationFailed(mobileConnectStatus);
             return;
         }
 
-        handleUrlRedirect(uri, state, nonce, new IMobileConnectCallback()
+        handleUrlRedirect(uri, state, nonce, mobileConnectRequestOptions, new IMobileConnectCallback()
         {
             @Override
             public void onComplete(MobileConnectStatus mobileConnectStatus)
             {
                 authenticationListener.authenticationSuccess(mobileConnectStatus);
             }
-        }, mobileConnectRequestOptions);
+        });
     }
 
     /**
@@ -375,7 +375,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
                                  final MobileConnectRequestOptions options,
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        this.presenter.performDiscovery(msisdn, mnc, mnc, options, mobileConnectCallback);
+        this.presenter.performDiscovery(msisdn, mcc, mnc, options, mobileConnectCallback);
     }
 
     /**
@@ -429,21 +429,20 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      *                                    passed here, it will be used to ensure the token was not requested
      *                                    using a replay attack
      * @param mobileConnectRequestOptions Optional parameters
-     *                                    Connect process
      */
     @SuppressWarnings("unused")
     @Override
     public void requestToken(final URI redirectedUrl,
                              final String expectedState,
                              final String expectedNonce,
-                             @NonNull final IMobileConnectCallback mobileConnectCallback,
-                             final MobileConnectRequestOptions mobileConnectRequestOptions)
+                             final MobileConnectRequestOptions mobileConnectRequestOptions,
+                             @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         this.presenter.performRequestToken(redirectedUrl,
                                            expectedState,
                                            expectedNonce,
-                                           mobileConnectCallback,
-                                           mobileConnectRequestOptions);
+                                           mobileConnectRequestOptions,
+                                           mobileConnectCallback);
     }
 
     /**
@@ -459,21 +458,20 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      *                                    passed here, it will be used to ensure the token was not requested
      *                                    using a replay attack
      * @param mobileConnectRequestOptions Optional parameters
-     *                                    Connect process
      */
     @SuppressWarnings("unused")
     @Override
     public void handleUrlRedirect(final URI redirectedUrl,
                                   final String expectedState,
                                   final String expectedNonce,
-                                  @NonNull final IMobileConnectCallback mobileConnectCallback,
-                                  final MobileConnectRequestOptions mobileConnectRequestOptions)
+                                  final MobileConnectRequestOptions mobileConnectRequestOptions,
+                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         this.presenter.performHandleUrlRedirect(redirectedUrl,
                                                 expectedState,
                                                 expectedNonce,
-                                                mobileConnectCallback,
-                                                mobileConnectRequestOptions);
+                                                mobileConnectRequestOptions,
+                                                mobileConnectCallback);
     }
 
     /**
@@ -528,7 +526,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
      */
     @SuppressWarnings("unused")
     @Override
-    public void requestUserInfo(final String accessToken, final IMobileConnectCallback mobileConnectCallback)
+    public void requestUserInfo(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         this.presenter.performRequestUserInfo(accessToken, mobileConnectCallback);
     }

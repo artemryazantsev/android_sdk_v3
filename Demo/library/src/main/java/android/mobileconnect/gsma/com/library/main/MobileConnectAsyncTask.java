@@ -18,14 +18,14 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
 {
     private IMobileConnectOperation mobileConnectOperation;
 
-    private IMobileConnectCallback IMobileConnectCallback;
+    private IMobileConnectCallback mobileConnectCallback;
 
     public MobileConnectAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
                                   @NonNull final IMobileConnectCallback IMobileConnectCallback)
     {
 
         this.mobileConnectOperation = mobileConnectOperation;
-        this.IMobileConnectCallback = IMobileConnectCallback;
+        this.mobileConnectCallback = IMobileConnectCallback;
     }
 
     @Override
@@ -38,14 +38,14 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
     protected void onPostExecute(final MobileConnectStatus mobileConnectStatus)
     {
         super.onPostExecute(mobileConnectStatus);
-        if (IMobileConnectCallback != null)
+        if (mobileConnectCallback != null)
         {
             if (mobileConnectStatus.getDiscoveryResponse() != null &&
                 !mobileConnectStatus.getDiscoveryResponse().hasExpired())
             {
                 BusManager.post(mobileConnectStatus.getDiscoveryResponse());
             }
-            IMobileConnectCallback.onComplete(mobileConnectStatus);
+            mobileConnectCallback.onComplete(mobileConnectStatus);
         }
     }
 }

@@ -176,10 +176,8 @@ public class MobileConnectAndroidPresenterTest {
 
         //When
         this.presenter.performRequestToken(redirectUri,
-                expectedState,
-                expectedNonce,
-                mockIMobileConnectCallback,
-                options);
+                                           expectedState,
+                                           expectedNonce, options, mockIMobileConnectCallback);
 
         //Then
         Mockito.verify(mockView)
@@ -199,10 +197,8 @@ public class MobileConnectAndroidPresenterTest {
 
         //When
         this.presenter.performHandleUrlRedirect(redirectUri,
-                expectedState,
-                expectedNonce,
-                mockIMobileConnectCallback,
-                options);
+                                                expectedState,
+                                                expectedNonce, options, mockIMobileConnectCallback);
 
         //Then
         Mockito.verify(mockView)

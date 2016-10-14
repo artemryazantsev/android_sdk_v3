@@ -57,15 +57,15 @@ public interface MobileConnectContract
         void requestToken(URI redirectedUrl,
                           String expectedState,
                           String expectedNonce,
-                          @NonNull IMobileConnectCallback mobileConnectCallback,
-                          MobileConnectRequestOptions mobileConnectRequestOptions);
+                          MobileConnectRequestOptions mobileConnectRequestOptions,
+                          @NonNull IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
         void handleUrlRedirect(URI redirectedUrl,
                                String expectedState,
                                String expectedNonce,
-                               @NonNull IMobileConnectCallback mobileConnectCallback,
-                               MobileConnectRequestOptions mobileConnectRequestOptions);
+                               MobileConnectRequestOptions mobileConnectRequestOptions,
+                               @NonNull IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
         void requestIdentity(String accessToken, @NonNull IMobileConnectCallback mobileConnectCallback);
@@ -104,14 +104,14 @@ public interface MobileConnectContract
         void performRequestToken(final URI redirectedUrl,
                                  final String expectedState,
                                  final String expectedNonce,
-                                 @NonNull final IMobileConnectCallback mobileConnectCallback,
-                                 final MobileConnectRequestOptions mobileConnectRequestOptions);
+                                 final MobileConnectRequestOptions mobileConnectRequestOptions,
+                                 @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         void performHandleUrlRedirect(final URI redirectedUrl,
                                       final String expectedState,
                                       final String expectedNonce,
-                                      @NonNull final IMobileConnectCallback mobileConnectCallback,
-                                      final MobileConnectRequestOptions mobileConnectRequestOptions);
+                                      final MobileConnectRequestOptions mobileConnectRequestOptions,
+                                      @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         void performRequestIdentity(final String accessToken,
                                     @NonNull final IMobileConnectCallback mobileConnectCallback);
@@ -131,7 +131,7 @@ public interface MobileConnectContract
     }
 
     /**
-     * On completion of an API to {@link android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface}
+     * On completion of an API to {@link android.mobileconnect.gsma.com.library.main.MobileConnectAndroidView}
      */
     interface IMobileConnectCallback
     {

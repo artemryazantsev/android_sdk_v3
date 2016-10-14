@@ -161,23 +161,21 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
 
     /**
      * Request token using the values returned from the authorization redirect
-     *
-     * @param redirectedUrl               URI redirected to by the completion of the authorization UI
+     *  @param redirectedUrl               URI redirected to by the completion of the authorization UI
      * @param expectedState               The state value returned from the StartAuthorization call should be
      *                                    passed here, it will be used to validate the authenticity of the
      *                                    authorization process
      * @param expectedNonce               The nonce value returned from the StartAuthorization call should be
-     *                                    passed here, it will be used to ensure the token was not requested
-     *                                    using a replay attack
+ *                                    passed here, it will be used to ensure the token was not requested
+ *                                    using a replay attack
      * @param mobileConnectRequestOptions Optional parameters
-     *                                    Connect process
      */
     @SuppressWarnings("unused")
     public void performRequestToken(final URI redirectedUrl,
                                     final String expectedState,
                                     final String expectedNonce,
-                                    @NonNull final IMobileConnectCallback mobileConnectCallback,
-                                    final MobileConnectRequestOptions mobileConnectRequestOptions)
+                                    final MobileConnectRequestOptions mobileConnectRequestOptions,
+                                    @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
         {
@@ -199,23 +197,21 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
      * Handles continuation of the process following a completed redirect. Only the redirectedUrl is
      * required, however if the redirect being handled is the result of calling the Authorization
      * URL then the remaining parameters are required.
-     *
-     * @param redirectedUrl               Url redirected to by the completion of the previous step
+     *  @param redirectedUrl               Url redirected to by the completion of the previous step
      * @param expectedState               The state value returned from the StartAuthorization call should be
      *                                    passed here, it will be used to validate the authenticity of the
      *                                    authorization process
      * @param expectedNonce               The nonce value returned from the StartAuthorization call should be
-     *                                    passed here, it will be used to ensure the token was not requested
-     *                                    using a replay attack
+ *                                    passed here, it will be used to ensure the token was not requested
+ *                                    using a replay attack
      * @param mobileConnectRequestOptions Optional parameters
-     *                                    Connect process
      */
     @Override
     public void performHandleUrlRedirect(final URI redirectedUrl,
                                          final String expectedState,
                                          final String expectedNonce,
-                                         @NonNull final IMobileConnectCallback mobileConnectCallback,
-                                         final MobileConnectRequestOptions mobileConnectRequestOptions)
+                                         final MobileConnectRequestOptions mobileConnectRequestOptions,
+                                         @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
         {
