@@ -32,8 +32,8 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     }
 
     @Override
-    protected void handleResult(final String url)
+    protected WebViewCallBack getWebViewCallback()
     {
-        webViewCallBack.onSuccess(url);
+        return webViewCallBack;
     }
 }

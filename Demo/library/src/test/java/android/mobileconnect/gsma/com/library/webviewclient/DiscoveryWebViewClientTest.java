@@ -23,18 +23,18 @@ public class DiscoveryWebViewClientTest
     private DiscoveryWebViewClient discoveryWebViewClient;
 
     @Mock
-    private WebViewCallBack webViewCallback;
+    private WebViewCallBack mockWebViewCallback;
 
     @Mock
-    private MobileConnectStatus mobileConnectStatus;
+    private MobileConnectStatus mockMobileConnectStatus;
 
     @Mock
-    private DiscoveryAuthenticationDialog dialog;
+    private DiscoveryAuthenticationDialog mockDialog;
 
     @Before
     public void setUp() throws Exception
     {
-        discoveryWebViewClient = new DiscoveryWebViewClient(dialog, null, null, webViewCallback);
+        discoveryWebViewClient = new DiscoveryWebViewClient(mockDialog, null, null, mockWebViewCallback);
     }
 
     @Test
@@ -68,10 +68,10 @@ public class DiscoveryWebViewClientTest
     {
         // Given
         // When
-        discoveryWebViewClient.handleError(mobileConnectStatus);
+        discoveryWebViewClient.handleError(mockMobileConnectStatus);
 
         // Then
-        Mockito.verify(webViewCallback).onError(mobileConnectStatus);
+        Mockito.verify(mockWebViewCallback).onError(mockMobileConnectStatus);
     }
 
     @Test
@@ -83,6 +83,12 @@ public class DiscoveryWebViewClientTest
         discoveryWebViewClient.handleResult(url);
 
         // Then
-        Mockito.verify(webViewCallback).onSuccess(url);
+        Mockito.verify(mockWebViewCallback).onSuccess(url);
+    }
+
+    @Test
+    public void getWebViewCallback() throws Exception
+    {
+        assertEquals(discoveryWebViewClient.getWebViewCallback(), mockWebViewCallback);
     }
 }

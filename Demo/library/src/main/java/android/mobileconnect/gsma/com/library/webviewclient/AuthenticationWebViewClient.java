@@ -11,7 +11,7 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
 {
     private final WebViewCallBack webViewCallBack;
 
-    AuthenticationListener listener;
+    private AuthenticationListener listener;
 
     public AuthenticationWebViewClient(final DiscoveryAuthenticationDialog dialog,
                                        final ProgressBar progressBar,
@@ -34,5 +34,11 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
     protected void handleError(final MobileConnectStatus status)
     {
         this.listener.authenticationFailed(status);
+    }
+
+    @Override
+    protected WebViewCallBack getWebViewCallback()
+    {
+        return webViewCallBack;
     }
 }

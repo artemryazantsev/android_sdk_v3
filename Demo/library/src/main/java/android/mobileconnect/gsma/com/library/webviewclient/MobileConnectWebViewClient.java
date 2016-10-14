@@ -1,6 +1,7 @@
 package android.mobileconnect.gsma.com.library.webviewclient;
 
 import android.annotation.TargetApi;
+import android.mobileconnect.gsma.com.library.interfaces.WebViewCallBack;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.net.UrlQuerySanitizer;
 import android.util.Log;
@@ -125,6 +126,17 @@ abstract class MobileConnectWebViewClient extends WebViewClient
     }
 
     /**
+     * When the URL contains the parameter which we are interested in.
+     * This should be called if {@link #qualifyUrl(String)} returns True.
+     *
+     * @param url The URL containing the desired query parameter
+     */
+    protected void handleResult(final String url)
+    {
+        getWebViewCallback().onSuccess(url);
+    }
+
+    /**
      * Check if the URL contains the parameters which we are interested in. This is typically called first and if
      * True is returned, {@link #handleResult(String)}
      *
@@ -140,14 +152,5 @@ abstract class MobileConnectWebViewClient extends WebViewClient
      */
     protected abstract void handleError(final MobileConnectStatus status);
 
-    /**
-     * When the URL contains the parameter which we are interested in.
-     * This should be called if {@link #qualifyUrl(String)} returns True.
-     *
-     * @param url The URL containing the desired query parameter
-     */
-    protected void handleResult(final String url)
-    {
-        webViewCallBack.onSuccess(url);
-    }
+    protected abstract WebViewCallBack getWebViewCallback();
 }

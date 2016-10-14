@@ -21,6 +21,10 @@ android {
         disable 'InvalidPackage', 'InflateParams', 'SetJavaScriptEnabled'
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
