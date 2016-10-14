@@ -2,7 +2,6 @@ package android.mobileconnect.gsma.com.library.webviewclient;
 
 import android.mobileconnect.gsma.com.library.interfaces.WebViewCallBack;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
@@ -35,7 +34,6 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     @Override
     protected void handleResult(final String url)
     {
-        Log.d("url", url);
         webViewCallBack.onSuccess(url);
     }
 }

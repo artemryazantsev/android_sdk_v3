@@ -35,10 +35,4 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
     {
         this.listener.authenticationFailed(status);
     }
-
-    @Override
-    protected void handleResult(final String url)
-    {
-        webViewCallBack.onSuccess(url);
-    }
 }

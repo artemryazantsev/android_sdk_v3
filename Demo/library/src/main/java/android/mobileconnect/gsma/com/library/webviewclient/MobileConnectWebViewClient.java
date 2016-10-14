@@ -78,7 +78,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
 
     @SuppressWarnings("deprecation")
     @Override
-        public boolean shouldOverrideUrlLoading(final WebView view, final String url)
+    public boolean shouldOverrideUrlLoading(final WebView view, final String url)
     {
         Log.d(MobileConnectWebViewClient.class.getSimpleName(), "onPageStarted disco url=" + url);
         this.progressBar.setVisibility(View.VISIBLE);
@@ -146,5 +146,8 @@ abstract class MobileConnectWebViewClient extends WebViewClient
      *
      * @param url The URL containing the desired query parameter
      */
-    protected abstract void handleResult(final String url);
+    protected void handleResult(final String url)
+    {
+        webViewCallBack.onSuccess(url);
+    }
 }
