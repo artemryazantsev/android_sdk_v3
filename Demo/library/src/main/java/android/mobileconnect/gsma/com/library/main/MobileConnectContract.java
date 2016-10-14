@@ -1,6 +1,6 @@
 package android.mobileconnect.gsma.com.library.main;
 
-import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
+import android.mobileconnect.gsma.com.library.interfaces.AuthenticationListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -85,8 +85,6 @@ public interface MobileConnectContract
         void setView(View view);
 
         DiscoveryResponse getDiscoveryResponse();
-
-        void setDiscoveryResponse(final DiscoveryResponse discoveryResponse);
 
         void performDiscovery(@Nullable final String msisdn,
                               @Nullable final String mcc,

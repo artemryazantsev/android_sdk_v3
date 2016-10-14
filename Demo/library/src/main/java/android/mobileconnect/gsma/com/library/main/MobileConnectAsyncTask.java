@@ -1,14 +1,12 @@
 package android.mobileconnect.gsma.com.library.main;
 
+import android.mobileconnect.gsma.com.library.bus.BusManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
-import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-
-import org.greenrobot.eventbus.EventBus;
 
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
@@ -45,7 +43,7 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
             if (mobileConnectStatus.getDiscoveryResponse() != null &&
                 !mobileConnectStatus.getDiscoveryResponse().hasExpired())
             {
-                EventBus.getDefault().postSticky(mobileConnectStatus.getDiscoveryResponse());
+                BusManager.post(mobileConnectStatus.getDiscoveryResponse());
             }
             IMobileConnectCallback.onComplete(mobileConnectStatus);
         }

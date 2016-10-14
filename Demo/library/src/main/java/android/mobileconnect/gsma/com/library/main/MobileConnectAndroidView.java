@@ -3,9 +3,9 @@ package android.mobileconnect.gsma.com.library.main;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.mobileconnect.gsma.com.library.R;
-import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
-import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
-import android.mobileconnect.gsma.com.library.callback.WebViewCallBack;
+import android.mobileconnect.gsma.com.library.interfaces.AuthenticationListener;
+import android.mobileconnect.gsma.com.library.interfaces.DiscoveryListener;
+import android.mobileconnect.gsma.com.library.interfaces.WebViewCallBack;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.mobileconnect.gsma.com.library.view.InteractiveWebView;
 import android.mobileconnect.gsma.com.library.webviewclient.AuthenticationWebViewClient;
@@ -43,7 +43,7 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
  */
 public class MobileConnectAndroidView implements MobileConnectContract.View
 {
-    private final MobileConnectContract.UserActionsListener presenter;
+    private MobileConnectContract.UserActionsListener presenter;
 
     ;
 
@@ -54,6 +54,16 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
     {
         this.presenter = new MobileConnectAndroidPresenter(mobileConnectInterface);
         this.presenter.setView(this);
+    }
+
+    public MobileConnectContract.UserActionsListener getPresenter()
+    {
+        return presenter;
+    }
+
+    public void setPresenter(MobileConnectContract.UserActionsListener presenter)
+    {
+        this.presenter = presenter;
     }
 
     /**

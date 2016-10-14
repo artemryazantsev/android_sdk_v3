@@ -1,5 +1,6 @@
 package android.mobileconnect.gsma.com.library.main;
 
+import android.mobileconnect.gsma.com.library.bus.BusManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,9 +10,7 @@ import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
+import com.squareup.otto.Subscribe;
 
 import java.net.URI;
 
@@ -40,8 +39,8 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
         this.mobileConnectInterface = mobileConnectInterface;
     }
 
-    @Subscribe
     @SuppressWarnings("unused")
+    @Subscribe
     public void onEvent(final DiscoveryResponse discoveryResponse)
     {
         this.discoveryResponse = discoveryResponse;
@@ -62,12 +61,6 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
     public DiscoveryResponse getDiscoveryResponse()
     {
         return this.discoveryResponse;
-    }
-
-    @Override
-    public void setDiscoveryResponse(final DiscoveryResponse discoveryResponse)
-    {
-        this.discoveryResponse = discoveryResponse;
     }
 
     /**
@@ -338,18 +331,12 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
     @Override
     public void initialise()
     {
-        if (!EventBus.getDefault().isRegistered(this))
-        {
-            EventBus.getDefault().register(this);
-        }
+        BusManager.register(this);
     }
 
     @Override
     public void cleanUp()
     {
-        if (EventBus.getDefault().isRegistered(this))
-        {
-            EventBus.getDefault().unregister(this);
-        }
+        BusManager.unregister(this);
     }
 }

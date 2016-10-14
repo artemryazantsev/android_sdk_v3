@@ -1,5 +1,7 @@
 package android.mobileconnect.gsma.com.library.main;
 
+import android.mobileconnect.gsma.com.library.bus.BusManager;
+
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
@@ -7,7 +9,6 @@ import com.gsma.mobileconnect.r2.json.DiscoveryResponseData;
 
 import junit.framework.Assert;
 
-import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -38,33 +39,6 @@ public class MobileConnectAndroidPresenterTest {
     }
 
     @Test
-    public void onEvent() throws Exception
-    {
-        // Given
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        DiscoveryResponse.Builder builder = new DiscoveryResponse.Builder();
-        builder.withResponseData(new DiscoveryResponseData.Builder().build());
-        final DiscoveryResponse discoveryResponse = builder.build();
-
-        presenter.initialise();
-
-        //When
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                EventBus.getDefault().postSticky(discoveryResponse);
-                countDownLatch.countDown();
-            }
-        }).start();
-
-        //Then
-        countDownLatch.await();
-        Assert.assertNotNull(presenter.getDiscoveryResponse());
-        presenter.cleanUp();
-    }
-
-    @Test
     public void setView() throws Exception
     {
 
@@ -92,6 +66,45 @@ public class MobileConnectAndroidPresenterTest {
     public void cleanUp() throws Exception
     {
 
+    }
+
+    @Test
+    public void onEvent() throws Exception
+    {
+        // Given
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        DiscoveryResponse.Builder builder = new DiscoveryResponse.Builder();
+        builder.withResponseData(new DiscoveryResponseData.Builder().build());
+        final DiscoveryResponse discoveryResponse = builder.build();
+
+        presenter.initialise();
+
+        //When
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BusManager.post(discoveryResponse);
+                countDownLatch.countDown();
+            }
+        }).start();
+
+        //Then
+        countDownLatch.await();
+        Assert.assertNotNull(presenter.getDiscoveryResponse());
+        presenter.cleanUp();
+    }
+
+    @Test
+    public void testInitialise() {
+        presenter.setView(mockView);
+        presenter.initialise();
+        try {
+            BusManager.register(presenter);
+            Assert.fail("Expected an IllegalArgumentException to be thrown");
+        } catch (IllegalArgumentException e) {
+            presenter.cleanUp();
+        }
     }
 
     @Test

@@ -1,4 +1,4 @@
-package android.mobileconnect.gsma.com.library.callback;
+package android.mobileconnect.gsma.com.library.interfaces;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
