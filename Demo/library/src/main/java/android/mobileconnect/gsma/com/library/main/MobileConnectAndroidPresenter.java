@@ -14,8 +14,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.net.URI;
-import java.util.Observable;
-import java.util.Observer;
 
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
 import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
@@ -26,13 +24,11 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
  * <p/>
  * Created by usmaan.dad on 11/08/2016.
  */
-public class MobileConnectAndroidPresenter implements MobileConnectContract.UserActionsListener, Observer
+public class MobileConnectAndroidPresenter implements MobileConnectContract.UserActionsListener
 {
     private final MobileConnectInterface mobileConnectInterface;
 
     private MobileConnectContract.View view;
-
-    private DiscoveryResponseObservable discoveryResponseObservable;
 
     private DiscoveryResponse discoveryResponse;
 
@@ -46,9 +42,9 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
 
     @Subscribe
     @SuppressWarnings("unused")
-    public void onEvent(final DiscoveryResponseEvent discoveryResponseEvent)
+    public void onEvent(final DiscoveryResponse discoveryResponse)
     {
-        this.discoveryResponse = discoveryResponseEvent.getDiscoveryResponse();
+        this.discoveryResponse = discoveryResponse;
     }
 
     @Override
@@ -233,11 +229,11 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
             @Override
             public MobileConnectStatus operation()
             {
-                return MobileConnectAndroidPresenter.this.mobileConnectInterface.requestToken(discoveryResponse,
-                                                                                              redirectedUrl,
-                                                                                              expectedState,
-                                                                                              expectedNonce,
-                                                                                              mobileConnectRequestOptions);
+                return MobileConnectAndroidPresenter.this.mobileConnectInterface.handleUrlRedirect(redirectedUrl,
+                                                                                                   discoveryResponse,
+                                                                                                   expectedState,
+                                                                                                   expectedNonce,
+                                                                                                   mobileConnectRequestOptions);
             }
         };
 
@@ -342,31 +338,18 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
     @Override
     public void initialise()
     {
-        EventBus.getDefault().register(this);
-//        this.discoveryResponseObservable = new DiscoveryResponseObservable();
-//        this.discoveryResponseObservable.addObserver(this);
+        if (!EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
     public void cleanUp()
     {
-        EventBus.getDefault().unregister(this);
-//        this.discoveryResponseObservable.deleteObservers();
-//        this.discoveryResponseObservable = null;
-    }
-
-    @Override
-    public void update(final Observable observable, final Object o)
-    {
-//        if (observable == this.discoveryResponseObservable)
-//        {
-//            final DiscoveryResponseObservable discoveryResponseObservable = (DiscoveryResponseObservable) observable;
-//            this.discoveryResponse = discoveryResponseObservable.getValue();
-//        }
-    }
-
-    public DiscoveryResponseObservable getDiscoveryResponseObservable()
-    {
-        return this.discoveryResponseObservable;
+        if (EventBus.getDefault().isRegistered(this))
+        {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

@@ -130,8 +130,6 @@ public interface MobileConnectContract
         void initialise();
 
         void cleanUp();
-
-        DiscoveryResponseObservable getDiscoveryResponseObservable();
     }
 
     /**

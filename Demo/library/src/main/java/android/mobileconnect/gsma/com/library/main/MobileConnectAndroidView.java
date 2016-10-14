@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.mobileconnect.gsma.com.library.R;
 import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
-import android.mobileconnect.gsma.com.library.callback.AuthenticationWebViewCallback;
 import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
 import android.mobileconnect.gsma.com.library.callback.WebViewCallBack;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
@@ -44,7 +43,9 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
  */
 public class MobileConnectAndroidView implements MobileConnectContract.View
 {
-    private final MobileConnectContract.UserActionsListener presenter;;
+    private final MobileConnectContract.UserActionsListener presenter;
+
+    ;
 
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
@@ -220,8 +221,17 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
                                                                                           progressBar,
                                                                                           authenticationListener,
                                                                                           redirectUrl,
-                                                                                          new AuthenticationWebViewCallback()
+                                                                                          new WebViewCallBack()
                                                                                           {
+                                                                                              @Override
+                                                                                              public void onError(
+                                                                                                      MobileConnectStatus mobileConnectStatus)
+                                                                                              {
+                                                                                                  authenticationListener
+                                                                                                          .authenticationFailed(
+                                                                                                                  mobileConnectStatus);
+                                                                                              }
+
                                                                                               @Override
                                                                                               public void onSuccess(
                                                                                                       String url)
@@ -277,7 +287,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
             @Override
             public void onComplete(MobileConnectStatus mobileConnectStatus)
             {
-                authenticationListener.authorizationSuccess(mobileConnectStatus);
+                authenticationListener.authenticationSuccess(mobileConnectStatus);
             }
         }, mobileConnectRequestOptions);
     }
@@ -307,7 +317,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
     {
         webView.stopLoading();
         webView.loadData("", "text/html", null);
-        listener.onAuthorizationDialogClose();
+        listener.onAuthenticationDialogClose();
     }
 
     /**
@@ -332,7 +342,7 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
     public void performAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        new MobileConnectAsyncTask(mobileConnectOperation, mobileConnectCallback, this.presenter.getDiscoveryResponseObservable()).execute();
+        new MobileConnectAsyncTask(mobileConnectOperation, mobileConnectCallback).execute();
     }
 
     /**

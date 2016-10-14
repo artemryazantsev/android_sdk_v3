@@ -40,9 +40,8 @@ import java.util.UUID;
 /**
  * The base class for
  * {@link AuthenticationFragment} and  {@link AuthorizationFragment} containing common API calls to
- * {@link MobileConnectAndroidInterface}
+ * {@link MobileConnectAndroidView}
  * <p/>
- * Created by usmaan.dad on 25/08/2016.
  */
 public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                           AuthenticationListener,
@@ -424,7 +423,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
      * @param mobileConnectStatus A populated {@link MobileConnectStatus} containing the errors.
      */
     @Override
-    public void authorizationFailed(final MobileConnectStatus mobileConnectStatus)
+    public void authenticationFailed(final MobileConnectStatus mobileConnectStatus)
     {
         String error = null;
 
@@ -442,13 +441,13 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
      * @param mobileConnectStatus The status returned from Authorization
      */
     @Override
-    public void authorizationSuccess(final MobileConnectStatus mobileConnectStatus)
+    public void authenticationSuccess(final MobileConnectStatus mobileConnectStatus)
     {
         handleRedirect(mobileConnectStatus);
     }
 
     @Override
-    public void onAuthorizationDialogClose()
+    public void onAuthenticationDialogClose()
     {
         Toast.makeText(getActivity(), "Dialog closed", Toast.LENGTH_SHORT).show();
     }

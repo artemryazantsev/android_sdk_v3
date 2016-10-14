@@ -1,7 +1,7 @@
 package android.mobileconnect.gsma.com.library.webviewclient;
 
 import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
-import android.mobileconnect.gsma.com.library.callback.AuthenticationWebViewCallback;
+import android.mobileconnect.gsma.com.library.callback.WebViewCallBack;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.widget.ProgressBar;
 
@@ -9,7 +9,7 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
 public class AuthenticationWebViewClient extends MobileConnectWebViewClient
 {
-    private final AuthenticationWebViewCallback authenticationWebViewCallback;
+    private final WebViewCallBack webViewCallBack;
 
     AuthenticationListener listener;
 
@@ -17,11 +17,11 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
                                        final ProgressBar progressBar,
                                        final AuthenticationListener listener,
                                        final String redirectUri,
-                                       final AuthenticationWebViewCallback authenticationWebViewCallback)
+                                       final WebViewCallBack webViewCallBack)
     {
         super(dialog, progressBar, redirectUri);
         this.listener = listener;
-        this.authenticationWebViewCallback = authenticationWebViewCallback;
+        this.webViewCallBack = webViewCallBack;
     }
 
     @Override
@@ -33,12 +33,12 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
     @Override
     protected void handleError(final MobileConnectStatus status)
     {
-        this.listener.authorizationFailed(status);
+        this.listener.authenticationFailed(status);
     }
 
     @Override
     protected void handleResult(final String url)
     {
-        authenticationWebViewCallback.onSuccess(url);
+        webViewCallBack.onSuccess(url);
     }
 }

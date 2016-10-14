@@ -3,7 +3,10 @@ package android.mobileconnect.gsma.com.library.callback;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
 /**
- * Created by usmaan.dad on 12/08/2016.
+ * Implementation of this should be done inside the
+ * {@link android.mobileconnect.gsma.com.library.main.MobileConnectAsyncTask}
+ *
+ * @since 2.0
  */
 public interface IMobileConnectOperation
 {

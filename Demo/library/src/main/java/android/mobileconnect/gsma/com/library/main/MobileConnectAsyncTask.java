@@ -21,16 +21,12 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
 
     private IMobileConnectCallback IMobileConnectCallback;
 
-    private DiscoveryResponseObservable discoveryResponseObservable;
-
     public MobileConnectAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
-                                  @NonNull final IMobileConnectCallback IMobileConnectCallback,
-                                  @Nullable final DiscoveryResponseObservable discoveryResponseObservable)
+                                  @NonNull final IMobileConnectCallback IMobileConnectCallback)
     {
 
         this.mobileConnectOperation = mobileConnectOperation;
         this.IMobileConnectCallback = IMobileConnectCallback;
-        this.discoveryResponseObservable = discoveryResponseObservable;
     }
 
     @Override
@@ -48,11 +44,9 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
             if (mobileConnectStatus.getDiscoveryResponse() != null &&
                 !mobileConnectStatus.getDiscoveryResponse().hasExpired())
             {
-                //                discoveryResponseObservable.setValue(mobileConnectStatus.getDiscoveryResponse());
-                //                discoveryResponseObservable.notifyObservers();
                 final EventBus eventBus = EventBus.getDefault();
 
-                eventBus.postSticky(new DiscoveryResponseEvent(mobileConnectStatus.getDiscoveryResponse()));
+                eventBus.postSticky(mobileConnectStatus.getDiscoveryResponse());
             }
             IMobileConnectCallback.onComplete(mobileConnectStatus);
         }

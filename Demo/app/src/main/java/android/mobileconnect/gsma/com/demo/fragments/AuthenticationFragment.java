@@ -9,9 +9,6 @@ import android.view.ViewGroup;
 
 import com.gsma.mobileconnect.r2.constants.Scopes;
 
-/**
- * Created by usmaan.dad on 24/08/2016.
- */
 public class AuthenticationFragment extends BaseAuthFragment implements ITitle
 {
     public static AuthenticationFragment newInstance()

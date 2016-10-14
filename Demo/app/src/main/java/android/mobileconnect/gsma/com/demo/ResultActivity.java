@@ -21,9 +21,6 @@ import com.gsma.mobileconnect.r2.identity.IdentityResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by usmaan.dad on 26/09/2016.
- */
 public class ResultActivity extends AppCompatActivity
 {
     private TextView nameTextView;

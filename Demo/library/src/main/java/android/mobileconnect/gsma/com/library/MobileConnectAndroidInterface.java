@@ -3,7 +3,6 @@ package android.mobileconnect.gsma.com.library;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
-import android.mobileconnect.gsma.com.library.callback.AuthenticationWebViewCallback;
 import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
 import android.mobileconnect.gsma.com.library.callback.IMobileConnectOperation;
 import android.mobileconnect.gsma.com.library.callback.WebViewCallBack;
@@ -138,12 +137,12 @@ public class MobileConnectAndroidInterface
             }
         };
 
-//        final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
-//                                                                                progressBar,
-//                                                                                redirectUrl,
-//                                                                                this,
-//                                                                                mobileConnectRequestOptions);
-//        webView.setWebViewClient(webViewClient);
+        //        final DiscoveryWebViewClient webViewClient = new DiscoveryWebViewClient(dialog,
+        //                                                                                progressBar,
+        //                                                                                redirectUrl,
+        //                                                                                this,
+        //                                                                                mobileConnectRequestOptions);
+        //        webView.setWebViewClient(webViewClient);
 
         webView.loadUrl(operatorUrl);
 
@@ -193,8 +192,17 @@ public class MobileConnectAndroidInterface
                                                                                           progressBar,
                                                                                           authenticationListener,
                                                                                           redirectUrl,
-                                                                                          new AuthenticationWebViewCallback()
+                                                                                          new WebViewCallBack()
                                                                                           {
+                                                                                              @Override
+                                                                                              public void onError(
+                                                                                                      MobileConnectStatus mobileConnectStatus)
+                                                                                              {
+                                                                                                  authenticationListener
+                                                                                                          .authenticationFailed(
+                                                                                                                  mobileConnectStatus);
+                                                                                              }
+
                                                                                               @Override
                                                                                               public void onSuccess(
                                                                                                       String url)
@@ -249,7 +257,7 @@ public class MobileConnectAndroidInterface
             @Override
             public void onComplete(MobileConnectStatus mobileConnectStatus)
             {
-                authenticationListener.authorizationSuccess(mobileConnectStatus);
+                authenticationListener.authenticationSuccess(mobileConnectStatus);
             }
         }, mobileConnectRequestOptions);
     }
@@ -279,7 +287,7 @@ public class MobileConnectAndroidInterface
     {
         webView.stopLoading();
         webView.loadData("", "text/html", null);
-        listener.onAuthorizationDialogClose();
+        listener.onAuthenticationDialogClose();
     }
 
     /**

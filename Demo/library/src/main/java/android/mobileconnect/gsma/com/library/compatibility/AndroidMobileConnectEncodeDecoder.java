@@ -1,6 +1,7 @@
 package android.mobileconnect.gsma.com.library.compatibility;
 
 import android.util.Base64;
+import android.util.Log;
 
 import com.gsma.mobileconnect.r2.encoding.IMobileConnectEncodeDecoder;
 
@@ -19,6 +20,7 @@ public class AndroidMobileConnectEncodeDecoder implements IMobileConnectEncodeDe
     @Override
     public byte[] decodeFromBase64(final String value)
     {
+        Log.i("decoding", value);
         return Base64.decode(value, Base64.URL_SAFE);
     }
 }
