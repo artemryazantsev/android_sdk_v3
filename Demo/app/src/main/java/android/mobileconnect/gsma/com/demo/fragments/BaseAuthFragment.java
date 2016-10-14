@@ -3,7 +3,6 @@ package android.mobileconnect.gsma.com.demo.fragments;
 import android.content.Intent;
 import android.mobileconnect.gsma.com.demo.R;
 import android.mobileconnect.gsma.com.demo.ResultActivity;
-import android.mobileconnect.gsma.com.library.MobileConnectAndroidInterface;
 import android.mobileconnect.gsma.com.library.callback.AuthenticationListener;
 import android.mobileconnect.gsma.com.library.callback.DiscoveryListener;
 import android.mobileconnect.gsma.com.library.compatibility.AndroidMobileConnectEncodeDecoder;
