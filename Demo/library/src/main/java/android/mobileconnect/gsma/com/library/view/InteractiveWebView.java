@@ -8,7 +8,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 /**
- * Created by Usmaan.Dad on 6/17/2016.
+ * A custom {@link WebView} to enable Javascript
+ *
+ * @since 2.0
  */
 public class InteractiveWebView extends WebView
 {

@@ -39,7 +39,8 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
  * {@link AsyncTask}s and sends the result via a {@link IMobileConnectCallback}
  * <p/>
- * Created by usmaan.dad on 11/08/2016.
+ *
+ * @since 2.0
  */
 public class MobileConnectAndroidView implements MobileConnectContract.View
 {

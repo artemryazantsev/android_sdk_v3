@@ -10,6 +10,11 @@ import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
 import java.net.URI;
 
+/**
+ * A contract to make the {@link MobileConnectAndroidPresenter} conform to {@link MobileConnectAndroidView}
+ *
+ * @since 2.0
+ */
 public interface MobileConnectContract
 {
     interface View

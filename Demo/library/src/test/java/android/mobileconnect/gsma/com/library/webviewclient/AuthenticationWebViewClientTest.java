@@ -34,7 +34,10 @@ public class AuthenticationWebViewClientTest
     public void setUp() throws Exception
     {
         MockitoAnnotations.initMocks(this);
-        authenticationWebViewClient = new AuthenticationWebViewClient(null, null, mockListener, null,
+        authenticationWebViewClient = new AuthenticationWebViewClient(null,
+                                                                      null,
+                                                                      mockListener,
+                                                                      null,
                                                                       mockWebViewCallback);
     }
 

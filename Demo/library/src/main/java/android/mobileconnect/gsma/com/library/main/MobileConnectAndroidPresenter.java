@@ -21,7 +21,8 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
  * {@link AsyncTask}s and sends the result via a {@link MobileConnectContract.IMobileConnectCallback}
  * <p/>
- * Created by usmaan.dad on 11/08/2016.
+ *
+ * @since 2.0
  */
 public class MobileConnectAndroidPresenter implements MobileConnectContract.UserActionsListener
 {
@@ -161,13 +162,14 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
 
     /**
      * Request token using the values returned from the authorization redirect
-     *  @param redirectedUrl               URI redirected to by the completion of the authorization UI
+     *
+     * @param redirectedUrl               URI redirected to by the completion of the authorization UI
      * @param expectedState               The state value returned from the StartAuthorization call should be
      *                                    passed here, it will be used to validate the authenticity of the
      *                                    authorization process
      * @param expectedNonce               The nonce value returned from the StartAuthorization call should be
- *                                    passed here, it will be used to ensure the token was not requested
- *                                    using a replay attack
+     *                                    passed here, it will be used to ensure the token was not requested
+     *                                    using a replay attack
      * @param mobileConnectRequestOptions Optional parameters
      */
     @SuppressWarnings("unused")
@@ -197,13 +199,14 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
      * Handles continuation of the process following a completed redirect. Only the redirectedUrl is
      * required, however if the redirect being handled is the result of calling the Authorization
      * URL then the remaining parameters are required.
-     *  @param redirectedUrl               Url redirected to by the completion of the previous step
+     *
+     * @param redirectedUrl               Url redirected to by the completion of the previous step
      * @param expectedState               The state value returned from the StartAuthorization call should be
      *                                    passed here, it will be used to validate the authenticity of the
      *                                    authorization process
      * @param expectedNonce               The nonce value returned from the StartAuthorization call should be
- *                                    passed here, it will be used to ensure the token was not requested
- *                                    using a replay attack
+     *                                    passed here, it will be used to ensure the token was not requested
+     *                                    using a replay attack
      * @param mobileConnectRequestOptions Optional parameters
      */
     @Override

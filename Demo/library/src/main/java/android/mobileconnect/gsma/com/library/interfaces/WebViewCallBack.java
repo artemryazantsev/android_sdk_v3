@@ -3,9 +3,11 @@ package android.mobileconnect.gsma.com.library.interfaces;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
 /**
+ * Used to get called by the {@link android.mobileconnect.gsma.com.library.webviewclient.MobileConnectWebViewClient}
+ * sub-classes.
  *
+ * @since 2.0
  */
-
 public interface WebViewCallBack
 {
     /**

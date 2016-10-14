@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.mobileconnect.gsma.com.library.interfaces.WebViewCallBack;
 import android.mobileconnect.gsma.com.library.view.DiscoveryAuthenticationDialog;
 import android.net.Uri;
-import android.os.Build;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;

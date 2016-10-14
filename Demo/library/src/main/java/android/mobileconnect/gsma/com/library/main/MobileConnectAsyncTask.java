@@ -13,6 +13,8 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
 
 /**
  * An AsyncTask to wrap all API calls to {@link MobileConnectInterface} asynchronously.
+ *
+ * @since 2.0
  */
 public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectStatus>
 {

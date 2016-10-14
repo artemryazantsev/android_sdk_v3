@@ -7,6 +7,11 @@ import android.widget.ProgressBar;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
+/**
+ * A custom {@link android.webkit.WebViewClient} to handle Authorization in a {@link android.webkit.WebView}
+ *
+ * @since 2.0
+ */
 public class AuthenticationWebViewClient extends MobileConnectWebViewClient
 {
     private final WebViewCallBack webViewCallBack;

@@ -25,7 +25,8 @@ public class InteractiveWebViewTest extends ActivityInstrumentationTestCase2<Tes
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         super.setUp();
         // Injecting the Instrumentation instance is required
         // for your test to run with AndroidJUnitRunner.

@@ -9,7 +9,8 @@ import android.view.WindowManager;
  * A simple {@link Dialog} which simply expands to the size of the parent window.
  * <p>
  * A singleton instance is provided which should be used when using
- * Created by Usmaan.Dad on 6/17/2016.
+ *
+ * @since 2.0
  */
 public class DiscoveryAuthenticationDialog extends Dialog
 {
