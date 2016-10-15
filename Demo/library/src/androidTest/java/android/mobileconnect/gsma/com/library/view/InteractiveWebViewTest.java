@@ -1,45 +1,52 @@
 package android.mobileconnect.gsma.com.library.view;
 
 import android.mobileconnect.gsma.com.library.TestActivity;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
 /**
  * Created by usmaan.dad on 12/10/2016.
  */
 @RunWith(AndroidJUnit4.class)
-@SmallTest
 public class InteractiveWebViewTest extends ActivityInstrumentationTestCase2<TestActivity>
 {
-    private TestActivity activity;
-
     public InteractiveWebViewTest()
     {
         super(TestActivity.class);
     }
 
-    @Before
-    public void setUp() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
-        super.setUp();
-        // Injecting the Instrumentation instance is required
-        // for your test to run with AndroidJUnitRunner.
-        injectInstrumentation(InstrumentationRegistry.getInstrumentation());
-        activity = getActivity();
+        super.tearDown();
     }
 
     @Test
-    public void constructors()
+    public void testWebSettings()
     {
         // Given
-        InteractiveWebView webView = new InteractiveWebView(activity);
+        final InteractiveWebView interactiveWebView = Mockito.mock(InteractiveWebView.class);
+        final WebSettings settings = interactiveWebView.getSettings();
 
         // When
+        // Then
+        assertNotNull(interactiveWebView);
+        assertEquals(WebView.SCROLLBARS_INSIDE_OVERLAY, interactiveWebView.getScrollBarStyle());
+        assertTrue(interactiveWebView.isFocusable());
+
+        assertTrue(settings.getJavaScriptEnabled());
+        assertEquals(WebSettings.LOAD_NO_CACHE, settings.getCacheMode());
+        assertTrue(settings.supportMultipleWindows());
+        assertTrue(settings.getDomStorageEnabled());
+        assertTrue(settings.getDatabaseEnabled());
+        assertTrue(settings.supportZoom());
+        assertTrue(settings.getUseWideViewPort());
     }
 }

@@ -46,8 +46,6 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
 {
     private MobileConnectContract.UserActionsListener presenter;
 
-    ;
-
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
