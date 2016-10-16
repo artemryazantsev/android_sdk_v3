@@ -1,20 +1,11 @@
 package android.mobileconnect.gsma.com.library.view;
 
 import android.mobileconnect.gsma.com.library.TestActivity;
-import android.support.test.runner.AndroidJUnit4;
+import android.support.test.annotation.UiThreadTest;
 import android.test.ActivityInstrumentationTestCase2;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-
-/**
- * Created by usmaan.dad on 12/10/2016.
- */
-@RunWith(AndroidJUnit4.class)
 public class InteractiveWebViewTest extends ActivityInstrumentationTestCase2<TestActivity>
 {
     public InteractiveWebViewTest()
@@ -22,31 +13,44 @@ public class InteractiveWebViewTest extends ActivityInstrumentationTestCase2<Tes
         super(TestActivity.class);
     }
 
-    @After
+    public void setUp() throws Exception
+    {
+        super.setUp();
+    }
+
     public void tearDown() throws Exception
     {
+        getActivity().finish();
         super.tearDown();
     }
 
-    @Test
+    @UiThreadTest
     public void testWebSettings()
     {
-        // Given
-        final InteractiveWebView interactiveWebView = Mockito.mock(InteractiveWebView.class);
-        final WebSettings settings = interactiveWebView.getSettings();
+        getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // Given
+                InteractiveWebView interactiveWebView = new InteractiveWebView(getActivity());
 
-        // When
-        // Then
-        assertNotNull(interactiveWebView);
-        assertEquals(WebView.SCROLLBARS_INSIDE_OVERLAY, interactiveWebView.getScrollBarStyle());
-        assertTrue(interactiveWebView.isFocusable());
+                final WebSettings settings = interactiveWebView.getSettings();
 
-        assertTrue(settings.getJavaScriptEnabled());
-        assertEquals(WebSettings.LOAD_NO_CACHE, settings.getCacheMode());
-        assertTrue(settings.supportMultipleWindows());
-        assertTrue(settings.getDomStorageEnabled());
-        assertTrue(settings.getDatabaseEnabled());
-        assertTrue(settings.supportZoom());
-        assertTrue(settings.getUseWideViewPort());
+                // When
+                // Then
+                assertNotNull(interactiveWebView);
+                assertEquals(WebView.SCROLLBARS_INSIDE_OVERLAY, interactiveWebView.getScrollBarStyle());
+                assertTrue(interactiveWebView.isFocusable());
+
+                assertTrue(settings.getJavaScriptEnabled());
+                assertEquals(WebSettings.LOAD_NO_CACHE, settings.getCacheMode());
+                assertFalse(settings.supportMultipleWindows());
+                assertTrue(settings.getDomStorageEnabled());
+                assertTrue(settings.getDatabaseEnabled());
+                assertFalse(settings.supportZoom());
+                assertFalse(settings.getUseWideViewPort());
+            }
+        });
     }
 }
