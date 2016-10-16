@@ -32,8 +32,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
-import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
-import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
+import static android.mobileconnect.gsma.com.library.main.IMobileConnectContract.IMobileConnectCallback;
+import static android.mobileconnect.gsma.com.library.main.IMobileConnectContract.IMobileConnectOperation;
 
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
@@ -42,9 +42,9 @@ import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.
  *
  * @since 2.0
  */
-public class MobileConnectAndroidView implements MobileConnectContract.View
+public class MobileConnectAndroidView implements IMobileConnectContract.IView
 {
-    private MobileConnectContract.UserActionsListener presenter;
+    private IMobileConnectContract.IUserActionsListener presenter;
 
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
@@ -55,12 +55,12 @@ public class MobileConnectAndroidView implements MobileConnectContract.View
         this.presenter.setView(this);
     }
 
-    public MobileConnectContract.UserActionsListener getPresenter()
+    public IMobileConnectContract.IUserActionsListener getPresenter()
     {
         return presenter;
     }
 
-    public void setPresenter(MobileConnectContract.UserActionsListener presenter)
+    public void setPresenter(IMobileConnectContract.IUserActionsListener presenter)
     {
         this.presenter = presenter;
     }

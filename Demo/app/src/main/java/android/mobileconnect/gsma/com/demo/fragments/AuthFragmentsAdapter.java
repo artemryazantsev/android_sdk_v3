@@ -10,14 +10,14 @@ public class AuthFragmentsAdapter extends FragmentStatePagerAdapter
 {
     List<Fragment> fragments;
 
-    public AuthFragmentsAdapter(List<Fragment> fragments, FragmentManager fm)
+    public AuthFragmentsAdapter(final List<Fragment> fragments, final FragmentManager fm)
     {
         super(fm);
         this.fragments = fragments;
     }
 
     @Override
-    public Fragment getItem(int i)
+    public Fragment getItem(final int i)
     {
         return fragments.get(i);
     }
@@ -29,7 +29,7 @@ public class AuthFragmentsAdapter extends FragmentStatePagerAdapter
     }
 
     @Override
-    public CharSequence getPageTitle(int position)
+    public CharSequence getPageTitle(final int position)
     {
         return ((ITitle) fragments.get(position)).getTitle();
     }

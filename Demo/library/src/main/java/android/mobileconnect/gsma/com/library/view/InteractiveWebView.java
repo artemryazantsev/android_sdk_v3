@@ -2,6 +2,7 @@ package android.mobileconnect.gsma.com.library.view;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -16,6 +17,27 @@ public class InteractiveWebView extends WebView
     public InteractiveWebView(final Context context)
     {
         super(context);
+        initialise();
+    }
+
+    public InteractiveWebView(final Context context, final AttributeSet attrs)
+    {
+        super(context, attrs);
+        initialise();
+    }
+
+    public InteractiveWebView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
+        initialise();
+    }
+
+    public InteractiveWebView(final Context context,
+                              final AttributeSet attrs,
+                              final int defStyleAttr,
+                              final int defStyleRes)
+    {
+        super(context, attrs, defStyleAttr, defStyleRes);
         initialise();
     }
 

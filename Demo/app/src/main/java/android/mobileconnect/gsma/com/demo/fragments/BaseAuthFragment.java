@@ -6,8 +6,8 @@ import android.mobileconnect.gsma.com.demo.ResultActivity;
 import android.mobileconnect.gsma.com.library.compatibility.AndroidMobileConnectEncodeDecoder;
 import android.mobileconnect.gsma.com.library.interfaces.AuthenticationListener;
 import android.mobileconnect.gsma.com.library.interfaces.DiscoveryListener;
+import android.mobileconnect.gsma.com.library.main.IMobileConnectContract;
 import android.mobileconnect.gsma.com.library.main.MobileConnectAndroidView;
-import android.mobileconnect.gsma.com.library.main.MobileConnectContract;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,9 +42,9 @@ import java.util.UUID;
  * {@link MobileConnectAndroidView}
  * <p/>
  */
-public class BaseAuthFragment extends Fragment implements DiscoveryListener,
-                                                          AuthenticationListener,
-                                                          MobileConnectContract.IMobileConnectCallback
+public abstract class BaseAuthFragment extends Fragment implements DiscoveryListener,
+                                                                   AuthenticationListener,
+                                                                   IMobileConnectContract.IMobileConnectCallback
 {
     // Views
     protected Button goButton;
@@ -69,9 +69,6 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
     protected Switch signUpSwitch;
 
-    // Mobile Connect Fields
-    //    public static MobileConnectAndroidInterface mobileConnectAndroidInterface;
-
     public static MobileConnectAndroidView mobileConnectAndroidView;
 
     protected MobileConnectConfig mobileConnectConfig;
@@ -79,20 +76,6 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
     private String authType;
 
     public static MobileConnectStatus mobileConnectStatus;
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        mobileConnectAndroidView.initialise();
-    }
-
-    @Override
-    public void onStop()
-    {
-        mobileConnectAndroidView.cleanUp();
-        super.onStop();
-    }
 
     /**
      * Sets-up the {@link BaseAuthFragment#mobileConnectAndroidView} with the configuration based on the values in
@@ -133,6 +116,20 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
         MobileConnectInterface mobileConnectInterface = mobileConnect.getMobileConnectInterface();
 
         mobileConnectAndroidView = new MobileConnectAndroidView(mobileConnectInterface);
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        mobileConnectAndroidView.initialise();
+    }
+
+    @Override
+    public void onStop()
+    {
+        mobileConnectAndroidView.cleanUp();
+        super.onStop();
     }
 
     /**
@@ -198,7 +195,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
     /**
      * This should be called every time after calling any API from the
-     * {@link MobileConnectAndroidInterface}. It interrogates the
+     * {@link MobileConnectAndroidView}. It interrogates the
      * {@link com.gsma.mobileconnect.r2.MobileConnectStatus.ResponseType} object from within the
      * {@link MobileConnectStatus} object and calls the correct API.
      *
@@ -313,7 +310,9 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
 
     /**
      * Calls the
-     * {@link MobileConnectAndroidInterface#startAuthentication(String, String, String, MobileConnectRequestOptions, MobileConnectAndroidInterface.IMobileConnectCallback)} API
+     * {@link MobileConnectAndroidView#startAuthentication(String, String, String, MobileConnectRequestOptions,
+     * IMobileConnectContract.IMobileConnectCallback)} (String, String, String, MobileConnectRequestOptions,
+     * MobileConnectAndroidInterface.IMobileConnectCallback)} API
      *
      * @param mobileConnectStatus         The status returned from the previous API call
      * @param mobileConnectRequestOptions The request options if any
@@ -333,7 +332,7 @@ public class BaseAuthFragment extends Fragment implements DiscoveryListener,
                                                      state,
                                                      nonce,
                                                      mobileConnectRequestOptions,
-                                                     new MobileConnectContract.IMobileConnectCallback()
+                                                     new IMobileConnectContract.IMobileConnectCallback()
                                                      {
                                                          @Override
                                                          public void onComplete(MobileConnectStatus mobileConnectStatus)

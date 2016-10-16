@@ -125,6 +125,12 @@
                     android:layout_height="wrap_content"
                     android:text="Get Identity"/>
 
+                <Button
+                    android:id="@+id/button_refresh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Refresh Token"/>
+
             </LinearLayout>
 
             <android.support.v7.widget.CardView

@@ -23,13 +23,13 @@ import static org.mockito.Matchers.eq;
 
 public class MobileConnectAndroidPresenterTest
 {
-    private MobileConnectContract.UserActionsListener presenter;
+    private IMobileConnectContract.IUserActionsListener presenter;
 
     @Mock
     private MobileConnectInterface mockMobileConnectInterface;
 
     @Mock
-    private MobileConnectContract.View mockView;
+    private IMobileConnectContract.IView mockView;
 
     @Before
     public void setUp() throws Exception
@@ -123,14 +123,14 @@ public class MobileConnectAndroidPresenterTest
         String mcc = "mcc";
         String mnc = "mnc";
         MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder().build();
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
         //When
         this.presenter.performDiscovery(msisdn, mcc, mnc, options, mockIMobileConnectCallback);
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 
@@ -139,7 +139,7 @@ public class MobileConnectAndroidPresenterTest
     {
         //Given
         URI redirectUri = new URI("uri");
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
 
         //When
@@ -147,7 +147,7 @@ public class MobileConnectAndroidPresenterTest
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 
@@ -159,7 +159,7 @@ public class MobileConnectAndroidPresenterTest
         String expectedNonce = "expectedNonce";
         String expectedState = "expectedState";
         MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder().build();
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
 
         //When
@@ -171,7 +171,7 @@ public class MobileConnectAndroidPresenterTest
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 
@@ -183,7 +183,7 @@ public class MobileConnectAndroidPresenterTest
         String expectedNonce = "expectedNonce";
         String expectedState = "expectedState";
         MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder().build();
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
 
         //When
@@ -195,7 +195,7 @@ public class MobileConnectAndroidPresenterTest
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 
@@ -207,7 +207,7 @@ public class MobileConnectAndroidPresenterTest
         String expectedNonce = "expectedNonce";
         String expectedState = "expectedState";
         MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder().build();
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
 
         //When
@@ -219,7 +219,7 @@ public class MobileConnectAndroidPresenterTest
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 
@@ -228,7 +228,7 @@ public class MobileConnectAndroidPresenterTest
     {
         //Given
         String accessToken = "accessToken";
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
 
         //When
@@ -236,7 +236,7 @@ public class MobileConnectAndroidPresenterTest
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 
@@ -245,7 +245,7 @@ public class MobileConnectAndroidPresenterTest
     {
         //Given
         String accessToken = "accessToken";
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
 
         //When
@@ -253,7 +253,7 @@ public class MobileConnectAndroidPresenterTest
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 
@@ -263,7 +263,7 @@ public class MobileConnectAndroidPresenterTest
         //Given
         String token = "token";
         String tokenTypeHint = "tokenTypeHint";
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
 
         //When
@@ -271,7 +271,7 @@ public class MobileConnectAndroidPresenterTest
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 
@@ -280,7 +280,7 @@ public class MobileConnectAndroidPresenterTest
     {
         //Given
         String accessToken = "accessToken";
-        MobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(MobileConnectContract
+        IMobileConnectContract.IMobileConnectCallback mockIMobileConnectCallback = Mockito.mock(IMobileConnectContract
                                                                                                        .IMobileConnectCallback.class);
 
         //When
@@ -288,7 +288,7 @@ public class MobileConnectAndroidPresenterTest
 
         //Then
         Mockito.verify(mockView)
-               .performAsyncTask(any(MobileConnectContract.IMobileConnectOperation.class),
+               .performAsyncTask(any(IMobileConnectContract.IMobileConnectOperation.class),
                                  eq(mockIMobileConnectCallback));
     }
 }

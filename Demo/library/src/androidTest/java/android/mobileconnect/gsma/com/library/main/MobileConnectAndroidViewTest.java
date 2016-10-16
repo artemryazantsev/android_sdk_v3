@@ -26,9 +26,9 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
 {
     private MobileConnectAndroidView mobileConnectAndroidView;
 
-    private MobileConnectContract.UserActionsListener mockPresenter;
+    private IMobileConnectContract.IUserActionsListener mockPresenter;
 
-    private MobileConnectContract.IMobileConnectCallback mobileConnectCallback;
+    private IMobileConnectContract.IMobileConnectCallback mobileConnectCallback;
 
     public MobileConnectAndroidViewTest()
     {
@@ -39,7 +39,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
     {
         super.setUp();
 
-        mobileConnectCallback = new MobileConnectContract.IMobileConnectCallback()
+        mobileConnectCallback = new IMobileConnectContract.IMobileConnectCallback()
         {
             @Override
             public void onComplete(MobileConnectStatus mobileConnectStatus)
@@ -66,7 +66,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
 
         mobileConnectAndroidView = new MobileConnectAndroidView(mobileConnectInterface);
 
-        mockPresenter = Mockito.mock(MobileConnectContract.UserActionsListener.class);
+        mockPresenter = Mockito.mock(IMobileConnectContract.IUserActionsListener.class);
         mobileConnectAndroidView.setPresenter(mockPresenter);
     }
 
@@ -257,7 +257,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
                                          Matchers.eq(state),
                                          Matchers.eq(nonce),
                                          Matchers.eq(mobileConnectRequestOptions),
-                                         Matchers.any(MobileConnectContract.IMobileConnectCallback.class));
+                                         Matchers.any(IMobileConnectContract.IMobileConnectCallback.class));
     }
 
     public void testGetDiscoveryResponse()
@@ -275,11 +275,11 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         // Given
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-        final MobileConnectContract.IMobileConnectOperation mockMobileConnectOperation = Mockito.mock(
-                MobileConnectContract.IMobileConnectOperation.class);
+        final IMobileConnectContract.IMobileConnectOperation mockMobileConnectOperation = Mockito.mock(
+                IMobileConnectContract.IMobileConnectOperation.class);
         MobileConnectStatus mockMobileConnectStatus = Mockito.mock(MobileConnectStatus.class);
-        final MobileConnectContract.IMobileConnectCallback mockMobileConnectCallback = Mockito.mock(
-                MobileConnectContract.IMobileConnectCallback.class);
+        final IMobileConnectContract.IMobileConnectCallback mockMobileConnectCallback = Mockito.mock(
+                IMobileConnectContract.IMobileConnectCallback.class);
 
         Mockito.when(mockMobileConnectOperation.operation()).thenReturn(mockMobileConnectStatus);
 

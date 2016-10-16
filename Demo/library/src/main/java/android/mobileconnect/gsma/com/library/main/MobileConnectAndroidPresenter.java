@@ -14,21 +14,21 @@ import com.squareup.otto.Subscribe;
 
 import java.net.URI;
 
-import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
-import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
+import static android.mobileconnect.gsma.com.library.main.IMobileConnectContract.IMobileConnectCallback;
+import static android.mobileconnect.gsma.com.library.main.IMobileConnectContract.IMobileConnectOperation;
 
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
- * {@link AsyncTask}s and sends the result via a {@link MobileConnectContract.IMobileConnectCallback}
+ * {@link AsyncTask}s and sends the result via a {@link IMobileConnectContract.IMobileConnectCallback}
  * <p/>
  *
  * @since 2.0
  */
-public class MobileConnectAndroidPresenter implements MobileConnectContract.UserActionsListener
+public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUserActionsListener
 {
     private final MobileConnectInterface mobileConnectInterface;
 
-    private MobileConnectContract.View view;
+    private IMobileConnectContract.IView view;
 
     private DiscoveryResponse discoveryResponse;
 
@@ -48,7 +48,7 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
     }
 
     @Override
-    public void setView(MobileConnectContract.View view)
+    public void setView(IMobileConnectContract.IView view)
     {
         this.view = view;
     }
@@ -82,7 +82,7 @@ public class MobileConnectAndroidPresenter implements MobileConnectContract.User
                                  final String mcc,
                                  final String mnc,
                                  final MobileConnectRequestOptions options,
-                                 @NonNull final MobileConnectContract.IMobileConnectCallback mobileConnectCallback)
+                                 @NonNull final IMobileConnectContract.IMobileConnectCallback mobileConnectCallback)
     {
         IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
         {

@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
-import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectCallback;
-import static android.mobileconnect.gsma.com.library.main.MobileConnectContract.IMobileConnectOperation;
+import static android.mobileconnect.gsma.com.library.main.IMobileConnectContract.IMobileConnectCallback;
+import static android.mobileconnect.gsma.com.library.main.IMobileConnectContract.IMobileConnectOperation;
 
 /**
  * An AsyncTask to wrap all API calls to {@link MobileConnectInterface} asynchronously.

@@ -15,9 +15,9 @@ import java.net.URI;
  *
  * @since 2.0
  */
-public interface MobileConnectContract
+public interface IMobileConnectContract
 {
-    interface View
+    interface IView
     {
         /**
          * It is mandatory to call this before any operations are called.
@@ -85,9 +85,9 @@ public interface MobileConnectContract
         void requestUserInfo(String accessToken, IMobileConnectCallback mobileConnectCallback);
     }
 
-    interface UserActionsListener
+    interface IUserActionsListener
     {
-        void setView(View view);
+        void setView(IView view);
 
         DiscoveryResponse getDiscoveryResponse();
 

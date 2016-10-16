@@ -3,7 +3,7 @@ package android.mobileconnect.gsma.com.demo;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.mobileconnect.gsma.com.demo.fragments.BaseAuthFragment;
-import android.mobileconnect.gsma.com.library.main.MobileConnectContract;
+import android.mobileconnect.gsma.com.library.main.IMobileConnectContract;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +33,8 @@ public class ResultActivity extends AppCompatActivity
 
     private Button identityButton;
 
+    private Button refreshButton;
+
     private LinearLayout actionButtonsLayout;
 
     private LinearLayout userInfoLayout;
@@ -50,6 +52,7 @@ public class ResultActivity extends AppCompatActivity
         accessTokenTextView = (TextView) findViewById(R.id.text_view_access_token);
         userInfoButton = (Button) findViewById(R.id.button_user_info);
         identityButton = (Button) findViewById(R.id.button_identity);
+        refreshButton = (Button) findViewById(R.id.button_refresh);
         actionButtonsLayout = (LinearLayout) findViewById(R.id.layout_action_buttons);
         userInfoLayout = (LinearLayout) findViewById(R.id.layout_user_info);
         identityLayout = (LinearLayout) findViewById(R.id.layout_identity);
@@ -99,7 +102,7 @@ public class ResultActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 BaseAuthFragment.mobileConnectAndroidView.requestUserInfo(accessToken,
-                                                                          new MobileConnectContract
+                                                                          new IMobileConnectContract
                                                                                   .IMobileConnectCallback()
                                                                           {
                                                                               @Override
@@ -122,7 +125,7 @@ public class ResultActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 BaseAuthFragment.mobileConnectAndroidView.requestIdentity(accessToken,
-                                                                          new MobileConnectContract
+                                                                          new IMobileConnectContract
                                                                                   .IMobileConnectCallback()
                                                                           {
                                                                               @Override
@@ -131,6 +134,29 @@ public class ResultActivity extends AppCompatActivity
                                                                                                mobileConnectStatus)
                                                                               {
                                                                                   identityButton.setVisibility(View.GONE);
+                                                                                  displayIdentityResponse(
+                                                                                          mobileConnectStatus,
+                                                                                          false);
+                                                                              }
+                                                                          });
+            }
+        });
+
+        refreshButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                BaseAuthFragment.mobileConnectAndroidView.refreshToken(accessToken,
+                                                                          new IMobileConnectContract
+                                                                                  .IMobileConnectCallback()
+                                                                          {
+                                                                              @Override
+                                                                              public void onComplete
+                                                                                      (MobileConnectStatus
+                                                                                               mobileConnectStatus)
+                                                                              {
+                                                                                  refreshButton.setVisibility(View.GONE);
                                                                                   displayIdentityResponse(
                                                                                           mobileConnectStatus,
                                                                                           false);

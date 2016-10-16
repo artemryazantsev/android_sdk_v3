@@ -24,18 +24,18 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 
-        AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance();
-        AuthorizationFragment authorizationFragment = AuthorizationFragment.newInstance();
+        final AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance();
+        final AuthorizationFragment authorizationFragment = AuthorizationFragment.newInstance();
 
         List<Fragment> authFragments = new ArrayList<>();
         authFragments.add(authenticationFragment);
         authFragments.add(authorizationFragment);
 
-        AuthFragmentsAdapter authFragmentsAdapter = new AuthFragmentsAdapter(authFragments,
-                                                                             getSupportFragmentManager());
+        final AuthFragmentsAdapter authFragmentsAdapter = new AuthFragmentsAdapter(authFragments,
+                                                                                   getSupportFragmentManager());
 
         viewPager.setAdapter(authFragmentsAdapter);
         tabLayout.setupWithViewPager(viewPager);
