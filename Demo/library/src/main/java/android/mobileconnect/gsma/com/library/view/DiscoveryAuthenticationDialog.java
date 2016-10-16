@@ -14,8 +14,6 @@ import android.view.WindowManager;
  */
 public class DiscoveryAuthenticationDialog extends Dialog
 {
-    private WindowManager.LayoutParams layoutParams;
-
     public DiscoveryAuthenticationDialog(final Context context)
     {
         super(context);
@@ -23,14 +21,16 @@ public class DiscoveryAuthenticationDialog extends Dialog
     }
 
     /**
-     * Initialises the current instance of the {@link Dialog} such that it's made to match the size of the parent
-     * window.
+     * Make the dialog match the size of the parent layout's window.
      */
     private void initialise()
     {
         setCancelable(true);
+        setCanceledOnTouchOutside(true);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        layoutParams = new WindowManager.LayoutParams();
+
+        final WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
         layoutParams.copyFrom(getWindow().getAttributes());
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
@@ -38,7 +38,7 @@ public class DiscoveryAuthenticationDialog extends Dialog
         setOnShowListener(new OnShowListener()
         {
             @Override
-            public void onShow(DialogInterface dialog)
+            public void onShow(final DialogInterface dialog)
             {
                 getWindow().setAttributes(layoutParams);
             }
