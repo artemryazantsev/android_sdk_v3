@@ -5,9 +5,6 @@ import android.support.test.annotation.UiThreadTest;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.WindowManager;
 
-/**
- * Created by usmaan.dad on 16/10/2016.
- */
 
 public class DiscoveryAuthenticationDialogTest extends ActivityInstrumentationTestCase2
 {

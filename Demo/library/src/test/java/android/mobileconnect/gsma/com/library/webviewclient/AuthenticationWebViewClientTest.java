@@ -13,9 +13,6 @@ import org.mockito.MockitoAnnotations;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * Created by usmaan.dad on 14/10/2016.
- */
 
 public class AuthenticationWebViewClientTest
 {

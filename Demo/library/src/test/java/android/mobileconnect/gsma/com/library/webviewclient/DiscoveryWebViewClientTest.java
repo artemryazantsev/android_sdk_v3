@@ -14,9 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * Created by usmaan.dad on 14/10/2016.
- */
+
 @RunWith(MockitoJUnitRunner.class)
 public class DiscoveryWebViewClientTest
 {

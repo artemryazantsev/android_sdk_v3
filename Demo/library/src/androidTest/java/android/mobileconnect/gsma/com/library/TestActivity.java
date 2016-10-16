@@ -3,9 +3,8 @@ package android.mobileconnect.gsma.com.library;
 import android.support.v7.app.AppCompatActivity;
 
 /**
- * Created by usmaan.dad on 12/10/2016.
+ * A sample {@link AppCompatActivity} for the purpose of running Instrumentation Tests
  */
-
 public class TestActivity extends AppCompatActivity
 {
 }
