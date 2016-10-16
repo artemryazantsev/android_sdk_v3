@@ -2,7 +2,6 @@ package android.mobileconnect.gsma.com.library.view;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -17,22 +16,10 @@ public class InteractiveWebView extends WebView
     public InteractiveWebView(final Context context)
     {
         super(context);
-        initialise(context);
+        initialise();
     }
 
-    public InteractiveWebView(final Context context, final AttributeSet attrs)
-    {
-        super(context, attrs);
-        initialise(context);
-    }
-
-    public InteractiveWebView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
-        super(context, attrs, defStyleAttr);
-        initialise(context);
-    }
-
-    private void initialise(final Context context)
+    private void initialise()
     {
         if (!isInEditMode())
         {
@@ -50,7 +37,7 @@ public class InteractiveWebView extends WebView
             setFocusableInTouchMode(true);
             requestFocus(View.FOCUS_DOWN);
 
-            WebSettings settings = getSettings();
+            final WebSettings settings = getSettings();
 
             settings.setJavaScriptEnabled(true);
             settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
@@ -59,9 +46,6 @@ public class InteractiveWebView extends WebView
             settings.setDatabaseEnabled(true);
             settings.setSupportZoom(false);
             settings.setUseWideViewPort(false);
-
-            String databasePath = context.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
-            settings.setDatabasePath(databasePath);
         }
     }
 }
