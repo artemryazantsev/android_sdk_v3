@@ -86,7 +86,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                                  @NonNull final AuthenticationListener authenticationListener,
                                                  @NonNull final String url,
                                                  @NonNull final String state,
-                                                 @NonNull String nonce,
+                                                 @NonNull final String nonce,
                                                  @Nullable final MobileConnectRequestOptions
                                                          mobileConnectRequestOptions)
     {
