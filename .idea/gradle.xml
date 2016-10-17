@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/DemoApp" />
+            <option value="$PROJECT_DIR$/ExampleApps" />
             <option value="$PROJECT_DIR$/SDK" />
           </set>
         </option>

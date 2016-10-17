@@ -1,1 +1,1 @@
-include ':DemoApp', ':SDK'
+include ':DemoApp', ':SDK', ':ExampleApps'
