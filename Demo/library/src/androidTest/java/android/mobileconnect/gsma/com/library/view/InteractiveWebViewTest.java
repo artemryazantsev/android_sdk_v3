@@ -1,5 +1,6 @@
 package android.mobileconnect.gsma.com.library.view;
 
+import android.content.res.Resources;
 import android.mobileconnect.gsma.com.library.TestActivity;
 import android.support.test.annotation.UiThreadTest;
 import android.test.ActivityInstrumentationTestCase2;
@@ -50,6 +51,42 @@ public class InteractiveWebViewTest extends ActivityInstrumentationTestCase2<Tes
                 assertTrue(settings.getDatabaseEnabled());
                 assertFalse(settings.supportZoom());
                 assertFalse(settings.getUseWideViewPort());
+            }
+        });
+    }
+
+    @UiThreadTest
+    public void testConstructorWithAttributeSet()
+    {
+        getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // Given
+                InteractiveWebView interactiveWebView = new InteractiveWebView(getActivity(), null);
+                assertNotNull(interactiveWebView);
+            }
+        });
+    }
+
+    @UiThreadTest
+    public void testConstructorWithAttributeSetAndStyleAttr()
+    {
+        getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // Given
+                InteractiveWebView interactiveWebView = new InteractiveWebView(getActivity(),
+                                                                               null,
+                                                                               Resources.getSystem()
+                                                                                        .getIdentifier(
+                                                                                                "webViewStyle",
+                                                                                                "attr",
+                                                                                                "android"));
+                assertNotNull(interactiveWebView);
             }
         });
     }

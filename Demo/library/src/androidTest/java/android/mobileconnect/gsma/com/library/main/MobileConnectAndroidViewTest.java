@@ -3,8 +3,11 @@ package android.mobileconnect.gsma.com.library.main;
 import android.mobileconnect.gsma.com.library.TestActivity;
 import android.mobileconnect.gsma.com.library.compatibility.AndroidMobileConnectEncodeDecoder;
 import android.mobileconnect.gsma.com.library.interfaces.AuthenticationListener;
-import android.test.ActivityInstrumentationTestCase2;
-import android.util.Log;
+import android.mobileconnect.gsma.com.library.interfaces.DiscoveryListener;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.LargeTest;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
 import com.gsma.mobileconnect.r2.MobileConnect;
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
@@ -14,30 +17,42 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 
-import static android.content.ContentValues.TAG;
+@RunWith(AndroidJUnit4.class)
+@LargeTest
 
-public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCase2<TestActivity>
+public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestCase2<TestActivity>
 {
+    @Rule
+    public ActivityTestRule<TestActivity> activityRule = new ActivityTestRule<>(TestActivity.class);
+
     private MobileConnectAndroidView mobileConnectAndroidView;
 
     private IMobileConnectContract.IUserActionsListener mockPresenter;
 
     private IMobileConnectContract.IMobileConnectCallback mobileConnectCallback;
 
+    /*
     public MobileConnectAndroidViewTest()
     {
         super(TestActivity.class);
     }
+    */
 
+    @Before
     public void setUp() throws Exception
     {
-        super.setUp();
+        //super.setUp();
 
         mobileConnectCallback = new IMobileConnectContract.IMobileConnectCallback()
         {
@@ -70,29 +85,21 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         mobileConnectAndroidView.setPresenter(mockPresenter);
     }
 
+    @After
     public void tearDown() throws Exception
     {
-        getActivity().finish();
-        // Without this sleep then activity.finish does not complete before the next test starts and the register on
-        // the bus fails
-        try
-        {
-            Thread.sleep(2000);
-        }
-        catch (InterruptedException e)
-        {
-            Log.d(TAG, "Waking up to finish tear down");
-        }
-
-        super.tearDown();
+        activityRule.getActivity().finish();
+        //super.tearDown();
     }
 
+    @Test
     public void testConstructor()
     {
         Assert.assertNotNull("Check constructor", mobileConnectAndroidView);
         Assert.assertNotNull("Check presenter", mobileConnectAndroidView.getPresenter());
     }
 
+    @Test
     public void testAttemptDiscovery()
     {
         // Given
@@ -108,6 +115,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).performDiscovery(msisdn, mcc, mnc, options, mobileConnectCallback);
     }
 
+    @Test
     public void testAttemptDiscoveryAfterOperatorSelection() throws Exception
     {
         // Given
@@ -120,6 +128,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).performDiscoveryAfterOperatorSelection(mobileConnectCallback, redirectUri);
     }
 
+    @Test
     public void testStartAuthentication() throws Exception
     {
         // Given
@@ -135,6 +144,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).performAuthentication(msisdn, state, nonce, options, mobileConnectCallback);
     }
 
+    @Test
     public void testRequestToken() throws Exception
     {
         // Given
@@ -150,6 +160,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).performRequestToken(redirectUri, state, nonce, options, mobileConnectCallback);
     }
 
+    @Test
     public void testHandleUrlRedirect() throws Exception
     {
         // Given
@@ -166,6 +177,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
                .performHandleUrlRedirect(redirectUri, state, nonce, options, mobileConnectCallback);
     }
 
+    @Test
     public void testRequestIdentity() throws Exception
     {
         // Given
@@ -178,6 +190,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).performRequestIdentity(accessToken, mobileConnectCallback);
     }
 
+    @Test
     public void testRefreshToken() throws Exception
     {
         // Given
@@ -190,6 +203,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).performRefreshToken(refreshToken, mobileConnectCallback);
     }
 
+    @Test
     public void testRevokeToken() throws Exception
     {
         // Given
@@ -203,6 +217,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).performRevokeToken(accessToken, tokenTypeHint, mobileConnectCallback);
     }
 
+    @Test
     public void testRequestUserInfo() throws Exception
     {
         // Given
@@ -215,6 +230,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).performRequestUserInfo(accessToken, mobileConnectCallback);
     }
 
+    @Test
     public void testHandleUrlRedirectAfterAuthenticationInValidURL() throws Exception
     {
         // Given
@@ -235,6 +251,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockAuthenticationListener).authenticationFailed(Matchers.any(MobileConnectStatus.class));
     }
 
+    @Test
     public void testHandleUrlRedirectAfterAuthenticationValidURL() throws Exception
     {
         // Given
@@ -260,6 +277,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
                                          Matchers.any(IMobileConnectContract.IMobileConnectCallback.class));
     }
 
+    @Test
     public void testGetDiscoveryResponse()
     {
         // Given
@@ -270,6 +288,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockPresenter).getDiscoveryResponse();
     }
 
+    @Test
     public void testPerformAsyncTask() throws Exception
     {
         // Given
@@ -301,6 +320,7 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockMobileConnectCallback).onComplete(mockMobileConnectStatus);
     }
 
+    /*
     public void testAttemptAuthenticationWithWebView() throws Exception
     {
         getActivity().runOnUiThread(new Runnable()
@@ -308,7 +328,6 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
             @Override
             public void run()
             {
-
                 // Given
                 final AuthenticationListener mockAuthenticationListener = Mockito.mock(AuthenticationListener.class);
                 final String url = "http://authenticationurl";
@@ -326,28 +345,100 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
                                                                           mockMobileConnectRequestOptions);
 
                 // Then
-
+                Espresso.onView(ViewMatchers.withId(R.id.web_view))
+                        .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
             }
         });
     }
 
-    /*
-    public void testFragmentLayout() {
-        Assert.assertEquals("Check correct fragment layout", R.layout.fragment_video_pager, pagerFragment
-        .getFragmentLayout());
+    public void testAttemptDiscoveryWithWebView() throws Exception
+    {
+        getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // Given
+                final DiscoveryListener mockDiscoveryListener = Mockito.mock(DiscoveryListener.class);
+                final String operatorUrl = "http://operatorUrl";
+                final String redirectUrl = "http://authenticationurl";
+
+                final MobileConnectRequestOptions mockMobileConnectRequestOptions = Mockito.mock(
+                        MobileConnectRequestOptions.class);
+
+                // When
+                mobileConnectAndroidView.attemptDiscoveryWithWebView(getActivity(),
+                                                                     mockDiscoveryListener,
+                                                                     operatorUrl,
+                                                                     redirectUrl,
+                                                                     mockMobileConnectRequestOptions);
+
+                // Then
+                Espresso.onView(ViewMatchers.withId(R.id.web_view))
+                        .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            }
+        });
+    }
+    */
+
+    @Test
+    public void testAttemptAuthenticationWithWebView() throws Exception
+    {
+        activityRule.getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // Given
+                final AuthenticationListener mockAuthenticationListener = Mockito.mock(AuthenticationListener.class);
+                final String url = "http://authenticationurl";
+                final String state = "state";
+                final String nonce = "nonce";
+                final MobileConnectRequestOptions mockMobileConnectRequestOptions = Mockito.mock(
+                        MobileConnectRequestOptions.class);
+
+                // When
+                mobileConnectAndroidView.attemptAuthenticationWithWebView(InstrumentationRegistry.getTargetContext(),
+                                                                          mockAuthenticationListener,
+                                                                          url,
+                                                                          state,
+                                                                          nonce,
+                                                                          mockMobileConnectRequestOptions);
+
+                // Then
+                //Espresso.onView(ViewMatchers.withId(R.id.web_view))
+                //        .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            }
+        });
     }
 
-    public void testFragmentTag() {
-        Assert.assertEquals("Check correct fragment tag", VideoPagerFragment.class.getSimpleName(), pagerFragment
-        .getFragmentTAG());
+    @Test
+    public void testAttemptDiscoveryWithWebView() throws Exception
+    {
+        activityRule.getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                // Given
+                final DiscoveryListener mockDiscoveryListener = Mockito.mock(DiscoveryListener.class);
+                final String operatorUrl = "http://operatorUrl";
+                final String redirectUrl = "http://authenticationurl";
+
+                final MobileConnectRequestOptions mockMobileConnectRequestOptions = Mockito.mock(
+                        MobileConnectRequestOptions.class);
+
+                // When
+                mobileConnectAndroidView.attemptDiscoveryWithWebView(InstrumentationRegistry.getTargetContext(),
+                                                                     mockDiscoveryListener,
+                                                                     operatorUrl,
+                                                                     redirectUrl,
+                                                                     mockMobileConnectRequestOptions);
+
+                // Then
+                //Espresso.onView(ViewMatchers.withId(R.id.web_view))
+                //        .check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+            }
+        });
     }
-
-    public void testViewElements() {
-        Assert.assertNotNull("Check fragment exists", pagerFragment);
-
-        Espresso.onView(ViewMatchers.withId(R.id.videoPager)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-
-        Espresso.onView(ViewMatchers.withId(R.id.videoPagerTabs)).check(ViewAssertions.matches(ViewMatchers
-        .isDisplayed()));
-    }*/
 }
