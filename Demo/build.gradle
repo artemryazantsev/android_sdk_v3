@@ -4,9 +4,6 @@ buildscript {
     repositories {
         jcenter()
         mavenLocal()
-        maven {
-            url "/Users/usmaan.dad/.m2/repository/"
-        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.1'
