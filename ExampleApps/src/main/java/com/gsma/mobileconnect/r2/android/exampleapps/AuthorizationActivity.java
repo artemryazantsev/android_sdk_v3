@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -44,6 +45,8 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
 
     private TextInputLayout msisdnTextInputLayout;
 
+    private Toolbar toolbar;
+
     // Mobile Connect Objects
     private MobileConnectConfig mobileConnectConfig;
 
@@ -61,12 +64,15 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
         msisdnCheckBox = (CheckBox) findViewById(R.id.check_box_msisdn);
         msisdnTextInputEditText = (TextInputEditText) findViewById(R.id.text_input_edit_text_msisdn);
         msisdnTextInputLayout = (TextInputLayout) findViewById(R.id.text_input_layout_msisdn);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         final Intent intent = getIntent();
 
         if (intent != null)
         {
             scope = intent.getStringExtra("scope");
+            final String title = intent.getStringExtra("title");
+            toolbar.setTitle(title);
         }
 
         URI discoveryUri = null;

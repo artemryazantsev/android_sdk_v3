@@ -1,6 +1,5 @@
 package com.gsma.mobileconnect.r2.android.activity;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -45,7 +44,7 @@ public class ResultActivity extends AppCompatActivity
     private LinearLayout identityLayout;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
+    protected void onCreate(@Nullable final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
@@ -69,7 +68,7 @@ public class ResultActivity extends AppCompatActivity
 
         String clientName;
 
-        DiscoveryResponse discoveryResponse = BaseAuthFragment.mobileConnectAndroidView.getDiscoveryResponse();
+        final DiscoveryResponse discoveryResponse = BaseAuthFragment.mobileConnectAndroidView.getDiscoveryResponse();
 
         if (discoveryResponse != null)
         {
@@ -102,7 +101,7 @@ public class ResultActivity extends AppCompatActivity
         userInfoButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View view)
+            public void onClick(final View view)
             {
                 BaseAuthFragment.mobileConnectAndroidView.requestUserInfo(accessToken,
                                                                           new IMobileConnectContract
@@ -125,16 +124,15 @@ public class ResultActivity extends AppCompatActivity
         identityButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View view)
+            public void onClick(final View view)
             {
                 BaseAuthFragment.mobileConnectAndroidView.requestIdentity(accessToken,
                                                                           new IMobileConnectContract
                                                                                   .IMobileConnectCallback()
                                                                           {
                                                                               @Override
-                                                                              public void onComplete
-                                                                                      (MobileConnectStatus
-                                                                                               mobileConnectStatus)
+                                                                              public void onComplete(final
+                                                                                                     MobileConnectStatus mobileConnectStatus)
                                                                               {
                                                                                   identityButton.setVisibility(View.GONE);
                                                                                   displayIdentityResponse(
@@ -155,7 +153,8 @@ public class ResultActivity extends AppCompatActivity
                                                                                .IMobileConnectCallback()
                                                                        {
                                                                            @Override
-                                                                           public void onComplete(MobileConnectStatus
+                                                                           public void onComplete(final
+                                                                                                  MobileConnectStatus
                                                                                                           mobileConnectStatus)
                                                                            {
                                                                                displayIdentityResponse(
@@ -177,7 +176,8 @@ public class ResultActivity extends AppCompatActivity
                                                                               .IMobileConnectCallback()
                                                                       {
                                                                           @Override
-                                                                          public void onComplete(MobileConnectStatus
+                                                                          public void onComplete(final
+                                                                                                 MobileConnectStatus
                                                                                                          mobileConnectStatus)
                                                                           {
                                                                               if (mobileConnectStatus != null)
@@ -192,32 +192,20 @@ public class ResultActivity extends AppCompatActivity
                                                                       });
             }
         });
-
-        Intent intent = getIntent();
-
-        if (intent != null)
-        {
-            boolean anySwitchesOn = intent.getBooleanExtra("anySwitchesOn", false);
-
-            if (anySwitchesOn)
-            {
-
-            }
-        }
     }
 
     private void displayIdentityResponse(final MobileConnectStatus mobileConnectStatus, final boolean isUserInfo)
     {
         if (mobileConnectStatus.getIdentityResponse() != null)
         {
-            IdentityResponse identityResponse = mobileConnectStatus.getIdentityResponse();
+            final IdentityResponse identityResponse = mobileConnectStatus.getIdentityResponse();
 
             if (identityResponse.getResponseJson() != null)
             {
-                String responseJson = identityResponse.getResponseJson();
+                final String responseJson = identityResponse.getResponseJson();
                 try
                 {
-                    JSONObject jsonObject = new JSONObject(responseJson);
+                    final JSONObject jsonObject = new JSONObject(responseJson);
 
                     if (isUserInfo)
                     {
@@ -251,9 +239,8 @@ public class ResultActivity extends AppCompatActivity
 
                         if (isUserInfo)
                         {
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout
-                                                                                                     .getLayoutParams
-                                                                                                             ());
+                            final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout
+                                                                                                           .getLayoutParams());
                             params.leftMargin = 8;
 
                             valueTextView.setLayoutParams(params);
@@ -263,9 +250,8 @@ public class ResultActivity extends AppCompatActivity
                         }
                         else // else it's Identity
                         {
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(identityLayout
-                                                                                                     .getLayoutParams
-                                                                                                             ());
+                            final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(identityLayout
+                                                                                                           .getLayoutParams());
                             params.leftMargin = 8;
 
                             valueTextView.setLayoutParams(params);
@@ -288,11 +274,11 @@ public class ResultActivity extends AppCompatActivity
     {
         if (mobileConnectStatus != null && mobileConnectStatus.getRequestTokenResponse() != null)
         {
-            RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
+            final RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
 
             if (requestTokenResponse != null)
             {
-                RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
+                final RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
 
                 if (responseData != null)
                 {
@@ -310,11 +296,11 @@ public class ResultActivity extends AppCompatActivity
     {
         if (mobileConnectStatus != null && mobileConnectStatus.getRequestTokenResponse() != null)
         {
-            RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
+            final RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
 
             if (requestTokenResponse != null)
             {
-                RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
+                final RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
 
                 if (responseData != null)
                 {

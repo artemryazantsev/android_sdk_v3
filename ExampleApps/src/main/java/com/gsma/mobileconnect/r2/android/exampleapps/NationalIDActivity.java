@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -33,8 +34,9 @@ import java.util.UUID;
  * Created by usmaan.dad on 17/10/2016.
  */
 
-public class NationalIDActivity extends BaseActivity implements DiscoveryListener, AuthenticationListener,
-                                                                     IMobileConnectContract.IMobileConnectCallback
+public class NationalIDActivity extends BaseActivity implements DiscoveryListener,
+                                                                AuthenticationListener,
+                                                                IMobileConnectContract.IMobileConnectCallback
 {
     // UI Views
     private CheckBox msisdnCheckBox;
@@ -42,6 +44,8 @@ public class NationalIDActivity extends BaseActivity implements DiscoveryListene
     private TextInputEditText msisdnTextInputEditText;
 
     private TextInputLayout msisdnTextInputLayout;
+
+    private Toolbar toolbar;
 
     // Mobile Connect Objects
     private MobileConnectConfig mobileConnectConfig;
@@ -60,12 +64,15 @@ public class NationalIDActivity extends BaseActivity implements DiscoveryListene
         msisdnCheckBox = (CheckBox) findViewById(R.id.check_box_msisdn);
         msisdnTextInputEditText = (TextInputEditText) findViewById(R.id.text_input_edit_text_msisdn);
         msisdnTextInputLayout = (TextInputLayout) findViewById(R.id.text_input_layout_msisdn);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         final Intent intent = getIntent();
 
         if (intent != null)
         {
             scope = intent.getStringExtra("scope");
+            final String title = intent.getStringExtra("title");
+            toolbar.setTitle(title);
         }
 
         URI discoveryUri = null;
@@ -114,7 +121,7 @@ public class NationalIDActivity extends BaseActivity implements DiscoveryListene
 
                 final MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder()
                         .withDiscoveryOptions(
-                                discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
+                        discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
 
                 mobileConnectAndroidView.attemptDiscovery(msisdn, null, null, requestOptions, NationalIDActivity.this);
             }
@@ -188,7 +195,7 @@ public class NationalIDActivity extends BaseActivity implements DiscoveryListene
             {
                 AuthenticationOptions.Builder authenticationOptionsBuilder = new AuthenticationOptions.Builder()
                         .withContext(
-                                "demo").withBindingMessage("demo auth");
+                        "demo").withBindingMessage("demo auth");
 
                 final MobileConnectRequestOptions.Builder mobileConnectRequestOptionsBuilder = new
                         MobileConnectRequestOptions.Builder();
@@ -197,7 +204,7 @@ public class NationalIDActivity extends BaseActivity implements DiscoveryListene
 
                 final MobileConnectRequestOptions mobileConnectRequestOptions = mobileConnectRequestOptionsBuilder
                         .withAuthenticationOptions(
-                                authenticationOptionsBuilder.build()).build();
+                        authenticationOptionsBuilder.build()).build();
 
                 startAuthentication(mobileConnectStatus, mobileConnectRequestOptions, state, nonce);
                 break;
@@ -214,7 +221,8 @@ public class NationalIDActivity extends BaseActivity implements DiscoveryListene
             }
             case COMPLETE:
             {
-                BaseActivity.mobileConnectStatus = mobileConnectStatus;                displayResult();
+                BaseActivity.mobileConnectStatus = mobileConnectStatus;
+                displayResult();
                 break;
             }
         }

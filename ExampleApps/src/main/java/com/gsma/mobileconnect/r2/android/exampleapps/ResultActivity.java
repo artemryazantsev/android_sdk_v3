@@ -34,7 +34,7 @@ public class ResultActivity extends AppCompatActivity
     private LinearLayout identityLayout;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
+    protected void onCreate(@Nullable final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
@@ -55,7 +55,7 @@ public class ResultActivity extends AppCompatActivity
 
         String clientName;
 
-        DiscoveryResponse discoveryResponse = BaseActivity.mobileConnectAndroidView.getDiscoveryResponse();
+        final DiscoveryResponse discoveryResponse = BaseActivity.mobileConnectAndroidView.getDiscoveryResponse();
 
         if (discoveryResponse != null)
         {
@@ -88,14 +88,14 @@ public class ResultActivity extends AppCompatActivity
         identityButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View view)
+            public void onClick(final View view)
             {
                 BaseActivity.mobileConnectAndroidView.requestIdentity(accessToken,
                                                                       new IMobileConnectContract
                                                                               .IMobileConnectCallback()
                                                                       {
                                                                           @Override
-                                                                          public void onComplete(MobileConnectStatus
+                                                                          public void onComplete(final MobileConnectStatus
                                                                                                          mobileConnectStatus)
                                                                           {
                                                                               identityButton.setVisibility(View.GONE);
@@ -112,14 +112,14 @@ public class ResultActivity extends AppCompatActivity
     {
         if (mobileConnectStatus.getIdentityResponse() != null)
         {
-            IdentityResponse identityResponse = mobileConnectStatus.getIdentityResponse();
+            final IdentityResponse identityResponse = mobileConnectStatus.getIdentityResponse();
 
             if (identityResponse.getResponseJson() != null)
             {
-                String responseJson = identityResponse.getResponseJson();
+                final String responseJson = identityResponse.getResponseJson();
                 try
                 {
-                    JSONObject jsonObject = new JSONObject(responseJson);
+                    final JSONObject jsonObject = new JSONObject(responseJson);
 
                     if (isUserInfo)
                     {
@@ -153,7 +153,7 @@ public class ResultActivity extends AppCompatActivity
 
                         if (isUserInfo)
                         {
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout
+                            final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout
                                                                                                      .getLayoutParams
                                                                                                              ());
                             params.leftMargin = 8;
@@ -165,7 +165,7 @@ public class ResultActivity extends AppCompatActivity
                         }
                         else // else it's Identity
                         {
-                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(identityLayout
+                            final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(identityLayout
                                                                                                      .getLayoutParams
                                                                                                              ());
                             params.leftMargin = 8;
@@ -181,7 +181,6 @@ public class ResultActivity extends AppCompatActivity
                 {
                     e.printStackTrace();
                 }
-
             }
         }
     }
@@ -190,11 +189,11 @@ public class ResultActivity extends AppCompatActivity
     {
         if (mobileConnectStatus != null && mobileConnectStatus.getRequestTokenResponse() != null)
         {
-            RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
+            final RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
 
             if (requestTokenResponse != null)
             {
-                RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
+                final RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
 
                 if (responseData != null)
                 {
@@ -212,11 +211,11 @@ public class ResultActivity extends AppCompatActivity
     {
         if (mobileConnectStatus != null && mobileConnectStatus.getRequestTokenResponse() != null)
         {
-            RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
+            final RequestTokenResponse requestTokenResponse = mobileConnectStatus.getRequestTokenResponse();
 
             if (requestTokenResponse != null)
             {
-                RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
+                final RequestTokenResponseData responseData = requestTokenResponse.getResponseData();
 
                 if (responseData != null)
                 {

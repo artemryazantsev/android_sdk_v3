@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         Intent intent = null;
         StringBuilder scopeBuilder = new StringBuilder();
+        String title = null;
 
         switch (view.getId())
         {
@@ -68,12 +69,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             {
                 intent = new Intent(this, AuthenticationActivity.class);
                 scopeBuilder = scopeBuilder.append(Scopes.MOBILECONNECTAUTHENTICATION);
+                title = "Authentication";
                 break;
             }
             case R.id.text_view_authorization:
             {
                 intent = new Intent(this, AuthorizationActivity.class);
                 scopeBuilder = scopeBuilder.append(Scopes.MOBILECONNECTAUTHORIZATION);
+                title = "Authorization";
                 break;
             }
             case R.id.text_view_sign_up:
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(this, SignupActivity.class);
                 scopeBuilder = scopeBuilder.append(Scopes.MOBILECONNECTAUTHORIZATION);
                 scopeBuilder = scopeBuilder.append(" " + Scopes.MOBILECONNECTIDENTITYSIGNUP);
+                title = "Sign Up";
                 break;
             }
             case R.id.text_view_national_id:
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(this, NationalIDActivity.class);
                 scopeBuilder = scopeBuilder.append(Scopes.MOBILECONNECTAUTHORIZATION);
                 scopeBuilder = scopeBuilder.append(" " + Scopes.MOBILECONNECTIDENTITYNATIONALID);
+                title = "National ID";
                 break;
             }
             case R.id.text_view_phone_number:
@@ -95,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent = new Intent(this, PhoneNumberActivity.class);
                 scopeBuilder = scopeBuilder.append(Scopes.MOBILECONNECTAUTHORIZATION);
                 scopeBuilder = scopeBuilder.append(" " + Scopes.MOBILECONNECTIDENTITYPHONE);
+                title = "Phone Number";
                 break;
             }
         }
@@ -103,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Pass the scope to the MSISDN activity so that it may add it to it's AuthenticationOptions
         intent.putExtra("scope", scope);
+        intent.putExtra("title", title);
+
         startActivity(intent);
     }
 }
