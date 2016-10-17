@@ -301,6 +301,36 @@ public class MobileConnectAndroidViewTest extends ActivityInstrumentationTestCas
         Mockito.verify(mockMobileConnectCallback).onComplete(mockMobileConnectStatus);
     }
 
+    public void testAttemptAuthenticationWithWebView() throws Exception
+    {
+        getActivity().runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+
+                // Given
+                final AuthenticationListener mockAuthenticationListener = Mockito.mock(AuthenticationListener.class);
+                final String url = "http://authenticationurl";
+                final String state = "state";
+                final String nonce = "nonce";
+                final MobileConnectRequestOptions mockMobileConnectRequestOptions = Mockito.mock(
+                        MobileConnectRequestOptions.class);
+
+                // When
+                mobileConnectAndroidView.attemptAuthenticationWithWebView(getActivity(),
+                                                                          mockAuthenticationListener,
+                                                                          url,
+                                                                          state,
+                                                                          nonce,
+                                                                          mockMobileConnectRequestOptions);
+
+                // Then
+
+            }
+        });
+    }
+
     /*
     public void testFragmentLayout() {
         Assert.assertEquals("Check correct fragment layout", R.layout.fragment_video_pager, pagerFragment
