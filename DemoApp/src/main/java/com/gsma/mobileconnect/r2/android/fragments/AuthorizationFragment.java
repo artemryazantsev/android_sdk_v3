@@ -1,12 +1,12 @@
 package com.gsma.mobileconnect.r2.android.fragments;
 
-import android.mobileconnect.gsma.com.demo.R;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.gsma.mobileconnect.r2.android.demo.R;
 import com.gsma.mobileconnect.r2.android.interfaces.ITitle;
 import com.gsma.mobileconnect.r2.constants.Scopes;
 

@@ -125,5 +125,4 @@
                 android:text="Go"/>
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

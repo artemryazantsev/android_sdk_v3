@@ -1,15 +1,16 @@
 package com.gsma.mobileconnect.r2.android.activity;
 
-import android.mobileconnect.gsma.com.demo.R;
-import com.gsma.mobileconnect.r2.android.adapter.AuthFragmentsAdapter;
-import com.gsma.mobileconnect.r2.android.fragments.AuthenticationFragment;
-import com.gsma.mobileconnect.r2.android.fragments.AuthorizationFragment;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+
+import com.gsma.mobileconnect.r2.android.adapter.AuthFragmentsAdapter;
+import com.gsma.mobileconnect.r2.android.demo.R;
+import com.gsma.mobileconnect.r2.android.fragments.AuthenticationFragment;
+import com.gsma.mobileconnect.r2.android.fragments.AuthorizationFragment;
 
 import java.util.ArrayList;
 import java.util.List;

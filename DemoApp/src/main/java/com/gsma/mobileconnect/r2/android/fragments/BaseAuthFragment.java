@@ -1,13 +1,6 @@
 package com.gsma.mobileconnect.r2.android.fragments;
 
 import android.content.Intent;
-import android.mobileconnect.gsma.com.demo.R;
-import com.gsma.mobileconnect.r2.android.activity.ResultActivity;
-import com.gsma.mobileconnect.r2.android.compatibility.AndroidMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
-import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
-import com.gsma.mobileconnect.r2.android.main.IMobileConnectContract;
-import com.gsma.mobileconnect.r2.android.main.MobileConnectAndroidView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +21,13 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.android.activity.ResultActivity;
+import com.gsma.mobileconnect.r2.android.compatibility.AndroidMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.android.demo.R;
+import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
+import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
+import com.gsma.mobileconnect.r2.android.main.IMobileConnectContract;
+import com.gsma.mobileconnect.r2.android.main.MobileConnectAndroidView;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.constants.Scopes;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;

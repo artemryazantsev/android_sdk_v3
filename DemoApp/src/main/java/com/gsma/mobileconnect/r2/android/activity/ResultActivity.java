@@ -2,9 +2,6 @@ package com.gsma.mobileconnect.r2.android.activity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.mobileconnect.gsma.com.demo.R;
-import com.gsma.mobileconnect.r2.android.fragments.BaseAuthFragment;
-import com.gsma.mobileconnect.r2.android.main.IMobileConnectContract;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.android.demo.R;
+import com.gsma.mobileconnect.r2.android.fragments.BaseAuthFragment;
+import com.gsma.mobileconnect.r2.android.main.IMobileConnectContract;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
 import com.gsma.mobileconnect.r2.constants.Parameters;
