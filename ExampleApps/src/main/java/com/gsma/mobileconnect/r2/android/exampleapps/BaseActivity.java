@@ -12,6 +12,7 @@ import com.gsma.mobileconnect.r2.android.main.MobileConnectAndroidView;
 public class BaseActivity extends AppCompatActivity
 {
     public static MobileConnectAndroidView mobileConnectAndroidView;
+
     public static MobileConnectStatus mobileConnectStatus;
 
     @Override

@@ -95,7 +95,8 @@ public class ResultActivity extends AppCompatActivity
                                                                               .IMobileConnectCallback()
                                                                       {
                                                                           @Override
-                                                                          public void onComplete(final MobileConnectStatus
+                                                                          public void onComplete(final
+                                                                                                 MobileConnectStatus
                                                                                                          mobileConnectStatus)
                                                                           {
                                                                               identityButton.setVisibility(View.GONE);
@@ -154,8 +155,7 @@ public class ResultActivity extends AppCompatActivity
                         if (isUserInfo)
                         {
                             final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(userInfoLayout
-                                                                                                     .getLayoutParams
-                                                                                                             ());
+                                                                                                           .getLayoutParams());
                             params.leftMargin = 8;
 
                             valueTextView.setLayoutParams(params);
@@ -166,8 +166,7 @@ public class ResultActivity extends AppCompatActivity
                         else // else it's Identity
                         {
                             final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(identityLayout
-                                                                                                     .getLayoutParams
-                                                                                                             ());
+                                                                                                           .getLayoutParams());
                             params.leftMargin = 8;
 
                             valueTextView.setLayoutParams(params);

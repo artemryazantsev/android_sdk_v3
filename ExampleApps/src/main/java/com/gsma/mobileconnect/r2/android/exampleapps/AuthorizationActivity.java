@@ -35,8 +35,8 @@ import java.util.UUID;
  */
 
 public class AuthorizationActivity extends BaseActivity implements DiscoveryListener,
-                                                                        AuthenticationListener,
-                                                                        IMobileConnectContract.IMobileConnectCallback
+                                                                   AuthenticationListener,
+                                                                   IMobileConnectContract.IMobileConnectCallback
 {
     // UI Views
     private CheckBox msisdnCheckBox;
@@ -96,7 +96,7 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
                                                                .build();
 
         final MobileConnect mobileConnect = new MobileConnect.Builder(mobileConnectConfig,
-                                                                new AndroidMobileConnectEncodeDecoder()).build();
+                                                                      new AndroidMobileConnectEncodeDecoder()).build();
 
         final MobileConnectInterface mobileConnectInterface = mobileConnect.getMobileConnectInterface();
 
