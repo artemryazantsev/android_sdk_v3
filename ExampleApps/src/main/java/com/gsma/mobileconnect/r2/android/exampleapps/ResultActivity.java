@@ -1,6 +1,5 @@
-package com.gsma.mobileconnect.r2.android.activity;
+package com.gsma.mobileconnect.r2.android.exampleapps;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,15 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
-import com.gsma.mobileconnect.r2.android.demo.R;
-import com.gsma.mobileconnect.r2.android.fragments.BaseAuthFragment;
 import com.gsma.mobileconnect.r2.android.main.IMobileConnectContract;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
-import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.identity.IdentityResponse;
 
@@ -32,13 +27,7 @@ public class ResultActivity extends AppCompatActivity
 
     private TextView accessTokenTextView;
 
-    private Button userInfoButton;
-
     private Button identityButton;
-
-    private Button refreshButton;
-
-    private Button revokeButton;
 
     private LinearLayout userInfoLayout;
 
@@ -53,10 +42,7 @@ public class ResultActivity extends AppCompatActivity
         nameTextView = (TextView) findViewById(R.id.text_view_name);
         idTokenTextView = (TextView) findViewById(R.id.text_view_id_token);
         accessTokenTextView = (TextView) findViewById(R.id.text_view_access_token);
-        userInfoButton = (Button) findViewById(R.id.button_user_info);
         identityButton = (Button) findViewById(R.id.button_identity);
-        refreshButton = (Button) findViewById(R.id.button_refresh);
-        revokeButton = (Button) findViewById(R.id.button_revoke);
         userInfoLayout = (LinearLayout) findViewById(R.id.layout_user_info);
         identityLayout = (LinearLayout) findViewById(R.id.layout_identity);
 
@@ -64,12 +50,12 @@ public class ResultActivity extends AppCompatActivity
         userInfoLayout.setVisibility(View.GONE);
         identityLayout.setVisibility(View.GONE);
 
-        final String idToken = getIdToken(BaseAuthFragment.mobileConnectStatus);
-        final String accessToken = getAccessToken(BaseAuthFragment.mobileConnectStatus);
+        final String idToken = getIdToken(BaseActivity.mobileConnectStatus);
+        final String accessToken = getAccessToken(BaseActivity.mobileConnectStatus);
 
         String clientName;
 
-        DiscoveryResponse discoveryResponse = BaseAuthFragment.mobileConnectAndroidView.getDiscoveryResponse();
+        DiscoveryResponse discoveryResponse = BaseActivity.mobileConnectAndroidView.getDiscoveryResponse();
 
         if (discoveryResponse != null)
         {
@@ -99,80 +85,12 @@ public class ResultActivity extends AppCompatActivity
             accessTokenTextView.setText("Failed to receive access token. Please try again.");
         }
 
-        userInfoButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                BaseAuthFragment.mobileConnectAndroidView.requestUserInfo(accessToken,
-                                                                          new IMobileConnectContract
-                                                                                  .IMobileConnectCallback()
-                                                                          {
-                                                                              @Override
-                                                                              public void onComplete
-                                                                                      (MobileConnectStatus
-                                                                                               mobileConnectStatus)
-                                                                              {
-                                                                                  userInfoButton.setVisibility(View.GONE);
-                                                                                  displayIdentityResponse(
-                                                                                          mobileConnectStatus,
-                                                                                          true);
-                                                                              }
-                                                                          });
-            }
-        });
-
         identityButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                BaseAuthFragment.mobileConnectAndroidView.requestIdentity(accessToken,
-                                                                          new IMobileConnectContract
-                                                                                  .IMobileConnectCallback()
-                                                                          {
-                                                                              @Override
-                                                                              public void onComplete
-                                                                                      (MobileConnectStatus
-                                                                                               mobileConnectStatus)
-                                                                              {
-                                                                                  identityButton.setVisibility(View.GONE);
-                                                                                  displayIdentityResponse(
-                                                                                          mobileConnectStatus,
-                                                                                          false);
-                                                                              }
-                                                                          });
-            }
-        });
-
-        refreshButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                BaseAuthFragment.mobileConnectAndroidView.refreshToken(accessToken,
-                                                                       new IMobileConnectContract
-                                                                               .IMobileConnectCallback()
-                                                                       {
-                                                                           @Override
-                                                                           public void onComplete(MobileConnectStatus
-                                                                                                          mobileConnectStatus)
-                                                                           {
-                                                                               displayIdentityResponse(
-                                                                                       mobileConnectStatus,
-                                                                                       false);
-                                                                           }
-                                                                       });
-            }
-        });
-
-        revokeButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                BaseAuthFragment.mobileConnectAndroidView.revokeToken(accessToken,
-                                                                      Parameters.ACCESS_TOKEN_HINT,
+                BaseActivity.mobileConnectAndroidView.requestIdentity(accessToken,
                                                                       new IMobileConnectContract
                                                                               .IMobileConnectCallback()
                                                                       {
@@ -180,30 +98,14 @@ public class ResultActivity extends AppCompatActivity
                                                                           public void onComplete(MobileConnectStatus
                                                                                                          mobileConnectStatus)
                                                                           {
-                                                                              if (mobileConnectStatus != null)
-                                                                              {
-                                                                                  Toast.makeText(ResultActivity.this,
-                                                                                                 mobileConnectStatus
-                                                                                                         .getOutcome(),
-                                                                                                 Toast.LENGTH_SHORT)
-                                                                                       .show();
-                                                                              }
+                                                                              identityButton.setVisibility(View.GONE);
+                                                                              displayIdentityResponse(
+                                                                                      mobileConnectStatus,
+                                                                                      false);
                                                                           }
                                                                       });
             }
         });
-
-        Intent intent = getIntent();
-
-        if (intent != null)
-        {
-            boolean anySwitchesOn = intent.getBooleanExtra("anySwitchesOn", false);
-
-            if (anySwitchesOn)
-            {
-
-            }
-        }
     }
 
     private void displayIdentityResponse(final MobileConnectStatus mobileConnectStatus, final boolean isUserInfo)

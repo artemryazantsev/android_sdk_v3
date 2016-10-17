@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Example Apps</string>
+
+    <string name="client_id">31ef91db-9e65-4e1f-9037-54367d00d373</string>
+    <string name="client_secret">c7a2a795-1af3-48ac-aabe-ecaff243a4a1</string>
+    <string name="discovery_url">https://discovery.integration.sandbox.mobileconnect.io/v2/discovery</string>
+    <string name="redirect_url">http://localhost:8001/mobileconnect.html</string>
+</resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.gsma.mobileconnect.r2.android.exampleapps"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.ResultActivity"/>
+        <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.AuthenticationActivity"/>
+        <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.AuthorizationActivity"/>
+        <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.NationalIDActivity"/>
+        <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.PhoneNumberActivity"/>
+        <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.SignupActivity"/>
+
+    </application>
+
+</manifest>
