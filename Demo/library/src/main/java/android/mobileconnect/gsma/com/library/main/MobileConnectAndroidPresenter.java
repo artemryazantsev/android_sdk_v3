@@ -348,8 +348,8 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
             BusManager.unregister(this);
         }
         // Despite having two different instances of this class, the 'this' parameter is the same and it causes it to
-        // crash.
-        // TODO debug this further and find out why 'this' is the same instance.
+        // crash. This has apparently been reported on Otto's Github page as a bug and doesn't seem to have been
+        // resolved
         catch (IllegalArgumentException exception)
         {
             exception.printStackTrace();
