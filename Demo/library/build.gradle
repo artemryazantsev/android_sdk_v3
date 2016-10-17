@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+
+apply plugin: 'jacoco'
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
@@ -54,5 +57,42 @@ android {
         androidTestCompile 'org.mockito:mockito-core:1.10.19'
         androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
         androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    }
+}
+
+jacoco {
+    toolVersion "0.7.1.201405082137"
+}
+
+def coverageSourceDirs = [
+        'src/main/java',
+]
+
+task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["connectedDebugAndroidTest", "testDebugUnitTest"]) {
+
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    classDirectories = fileTree(
+            dir: './build/intermediates/classes/debug',
+            excludes: ['**/R*.class',
+                       '**/*$InjectAdapter.class',
+                       '**/*$ModuleAdapter.class',
+                       '**/*$ViewInjector*.class'
+            ])
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files(["$buildDir/jacoco/testDebug.exec", "$buildDir/jacoco/testDebugUnitTest.exec",
+                           "$buildDir/outputs/code-coverage/connected/coverage.ec"])
+    // Bit hacky but fixes https://code.google.com/p/android/issues/detail?id=69174.
+    // We iterate through the compiled .class tree and rename $$ to $.
+    doFirst {
+        new File("$buildDir/intermediates/classes/").eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
     }
 }
