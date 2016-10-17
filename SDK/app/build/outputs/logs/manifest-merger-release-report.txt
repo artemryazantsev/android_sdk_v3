@@ -1,0 +1,51 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:1:1-13:12
+	package
+		ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:2:5-49
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:1:11-69
+	android:versionCode
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+application
+ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:4:5-11:19
+MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
+MERGED from [com.android.support:support-v4:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-v4:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:23:5-20
+MERGED from [com.android.support:support-v4:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:25:5-20
+	android:label
+		ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:7:9-41
+	android:supportsRtl
+		ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:8:9-35
+	android:allowBackup
+		ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:5:9-36
+	android:icon
+		ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:6:9-43
+	android:theme
+		ADDED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml:9:9-40
+uses-sdk
+INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:appcompat-v7:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/24.1.1/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:21:5-43
+MERGED from [com.android.support:support-v4:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-v4:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-vector-drawable:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/24.1.1/AndroidManifest.xml:21:5-43
+MERGED from [com.android.support:support-v4:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/support-v4/24.1.1/AndroidManifest.xml:21:5-23:54
+	tools:overrideLibrary
+		ADDED from [com.android.support:appcompat-v7:24.1.1] /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/24.1.1/AndroidManifest.xml:23:9-75
+	android:targetSdkVersion
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/usmaan.dad/Documents/Development/Android/GSMA/R2/SDK/app/src/main/AndroidManifest.xml
