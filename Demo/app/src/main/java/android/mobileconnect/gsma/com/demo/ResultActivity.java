@@ -11,10 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponse;
 import com.gsma.mobileconnect.r2.authentication.RequestTokenResponseData;
+import com.gsma.mobileconnect.r2.constants.Parameters;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.identity.IdentityResponse;
 
@@ -35,6 +37,8 @@ public class ResultActivity extends AppCompatActivity
 
     private Button refreshButton;
 
+    private Button revokeButton;
+
     private LinearLayout actionButtonsLayout;
 
     private LinearLayout userInfoLayout;
@@ -53,6 +57,7 @@ public class ResultActivity extends AppCompatActivity
         userInfoButton = (Button) findViewById(R.id.button_user_info);
         identityButton = (Button) findViewById(R.id.button_identity);
         refreshButton = (Button) findViewById(R.id.button_refresh);
+        revokeButton = (Button) findViewById(R.id.button_revoke);
         actionButtonsLayout = (LinearLayout) findViewById(R.id.layout_action_buttons);
         userInfoLayout = (LinearLayout) findViewById(R.id.layout_user_info);
         identityLayout = (LinearLayout) findViewById(R.id.layout_identity);
@@ -148,20 +153,45 @@ public class ResultActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 BaseAuthFragment.mobileConnectAndroidView.refreshToken(accessToken,
-                                                                          new IMobileConnectContract
-                                                                                  .IMobileConnectCallback()
+                                                                       new IMobileConnectContract
+                                                                               .IMobileConnectCallback()
+                                                                       {
+                                                                           @Override
+                                                                           public void onComplete(MobileConnectStatus
+                                                                                                          mobileConnectStatus)
+                                                                           {
+                                                                               displayIdentityResponse(
+                                                                                       mobileConnectStatus,
+                                                                                       false);
+                                                                           }
+                                                                       });
+            }
+        });
+
+        revokeButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                BaseAuthFragment.mobileConnectAndroidView.revokeToken(accessToken,
+                                                                      Parameters.ACCESS_TOKEN_HINT,
+                                                                      new IMobileConnectContract
+                                                                              .IMobileConnectCallback()
+                                                                      {
+                                                                          @Override
+                                                                          public void onComplete(MobileConnectStatus
+                                                                                                         mobileConnectStatus)
                                                                           {
-                                                                              @Override
-                                                                              public void onComplete
-                                                                                      (MobileConnectStatus
-                                                                                               mobileConnectStatus)
+                                                                              if (mobileConnectStatus != null)
                                                                               {
-                                                                                  refreshButton.setVisibility(View.GONE);
-                                                                                  displayIdentityResponse(
-                                                                                          mobileConnectStatus,
-                                                                                          false);
+                                                                                  Toast.makeText(ResultActivity.this,
+                                                                                                 mobileConnectStatus
+                                                                                                         .getOutcome(),
+                                                                                                 Toast.LENGTH_SHORT)
+                                                                                       .show();
                                                                               }
-                                                                          });
+                                                                          }
+                                                                      });
             }
         });
 
