@@ -335,7 +335,8 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                                                      new IMobileConnectContract.IMobileConnectCallback()
                                                      {
                                                          @Override
-                                                         public void onComplete(MobileConnectStatus mobileConnectStatus)
+                                                         public void onComplete(final MobileConnectStatus
+                                                                                        mobileConnectStatus)
                                                          {
                                                              handleRedirect(mobileConnectStatus);
                                                          }

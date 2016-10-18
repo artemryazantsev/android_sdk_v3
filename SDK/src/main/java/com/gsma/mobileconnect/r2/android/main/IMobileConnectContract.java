@@ -1,11 +1,11 @@
 package com.gsma.mobileconnect.r2.android.main;
 
-import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
 import java.net.URI;
@@ -56,7 +56,7 @@ public interface IMobileConnectContract
                                  String state,
                                  String nonce,
                                  MobileConnectRequestOptions options,
-                                 @NonNull IMobileConnectCallback mobileConnectCallback);
+                                 @NonNull IMobileConnectCallback mobileConnectCallback) throws IllegalArgumentException;
 
         @SuppressWarnings("unused")
         void requestToken(URI redirectedUrl,
