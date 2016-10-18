@@ -3,13 +3,6 @@ package com.gsma.mobileconnect.r2.android.main;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.mobileconnect.gsma.com.library.R;
-import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
-import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
-import com.gsma.mobileconnect.r2.android.interfaces.WebViewCallBack;
-import com.gsma.mobileconnect.r2.android.view.DiscoveryAuthenticationDialog;
-import com.gsma.mobileconnect.r2.android.view.InteractiveWebView;
-import com.gsma.mobileconnect.r2.android.webviewclient.AuthenticationWebViewClient;
-import com.gsma.mobileconnect.r2.android.webviewclient.DiscoveryWebViewClient;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -26,6 +19,13 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
+import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
+import com.gsma.mobileconnect.r2.android.interfaces.WebViewCallBack;
+import com.gsma.mobileconnect.r2.android.view.DiscoveryAuthenticationDialog;
+import com.gsma.mobileconnect.r2.android.view.InteractiveWebView;
+import com.gsma.mobileconnect.r2.android.webviewclient.AuthenticationWebViewClient;
+import com.gsma.mobileconnect.r2.android.webviewclient.DiscoveryWebViewClient;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
 import java.net.URI;
@@ -296,7 +296,14 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
             @Override
             public void onComplete(MobileConnectStatus mobileConnectStatus)
             {
-                authenticationListener.authenticationSuccess(mobileConnectStatus);
+                if (mobileConnectStatus.getErrorCode() == null)
+                {
+                    authenticationListener.authenticationSuccess(mobileConnectStatus);
+                }
+                else
+                {
+                    authenticationListener.authenticationFailed(mobileConnectStatus);
+                }
             }
         });
     }
