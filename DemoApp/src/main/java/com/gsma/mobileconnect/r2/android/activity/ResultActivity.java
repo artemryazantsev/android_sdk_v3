@@ -108,9 +108,8 @@ public class ResultActivity extends AppCompatActivity
                                                                                   .IMobileConnectCallback()
                                                                           {
                                                                               @Override
-                                                                              public void onComplete
-                                                                                      (MobileConnectStatus
-                                                                                               mobileConnectStatus)
+                                                                              public void onComplete(final 
+                                                                                                     MobileConnectStatus mobileConnectStatus)
                                                                               {
                                                                                   userInfoButton.setVisibility(View.GONE);
                                                                                   displayIdentityResponse(
@@ -261,7 +260,7 @@ public class ResultActivity extends AppCompatActivity
                         }
                     }
                 }
-                catch (JSONException e)
+                catch (final JSONException e)
                 {
                     e.printStackTrace();
                 }
