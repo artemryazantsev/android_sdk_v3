@@ -29,8 +29,6 @@ import org.mockito.Mockito;
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
@@ -151,7 +149,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
         Mockito.verify(mockPresenter).performAuthentication(msisdn, state, nonce, options, mobileConnectCallback);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testStartAuthenticationWithMobileAsPrompt() throws Exception
     {
         // Given
@@ -167,17 +165,8 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
 
         mobileConnectAndroidView.setPresenter(presenter);
 
-        try
-        {
-            // When
-            mobileConnectAndroidView.startAuthentication(msisdn, state, nonce, options, mobileConnectCallback);
-            fail("IllegalArgumentException not thrown");
-        }
-        catch (final Exception exception)
-        {
-            // Then
-            assertNotNull(exception.getMessage());
-        }
+        // When
+        mobileConnectAndroidView.startAuthentication(msisdn, state, nonce, options, mobileConnectCallback);
     }
 
     @Test
