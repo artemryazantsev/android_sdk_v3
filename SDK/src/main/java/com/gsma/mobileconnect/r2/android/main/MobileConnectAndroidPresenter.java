@@ -33,6 +33,8 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
 
     private DiscoveryResponse discoveryResponse;
 
+    private static final String MOBILE_PROMPT_VALUE = "mobile";
+
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
@@ -154,7 +156,7 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
             {
                 final String prompt = authenticationOptions.getPrompt();
 
-                if (prompt != null && prompt.equals("mobile"))
+                if (prompt != null && prompt.equalsIgnoreCase(MOBILE_PROMPT_VALUE))
                 {
                     throw new IllegalArgumentException(
                             "The value 'mobile' for prompt is not allowed when performing Authentication");
