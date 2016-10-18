@@ -56,7 +56,7 @@ public interface IMobileConnectContract
                                  String state,
                                  String nonce,
                                  MobileConnectRequestOptions options,
-                                 @NonNull IMobileConnectCallback mobileConnectCallback) throws IllegalArgumentException;
+                                 @NonNull IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
         void requestToken(URI redirectedUrl,
@@ -104,7 +104,8 @@ public interface IMobileConnectContract
                                    final String state,
                                    final String nonce,
                                    final MobileConnectRequestOptions options,
-                                   @NonNull final IMobileConnectCallback mobileConnectCallback);
+                                   @NonNull final IMobileConnectCallback mobileConnectCallback) throws
+                                                                                                IllegalArgumentException;
 
         void performRequestToken(final URI redirectedUrl,
                                  final String expectedState,

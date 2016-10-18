@@ -26,7 +26,6 @@ import com.gsma.mobileconnect.r2.android.view.DiscoveryAuthenticationDialog;
 import com.gsma.mobileconnect.r2.android.view.InteractiveWebView;
 import com.gsma.mobileconnect.r2.android.webviewclient.AuthenticationWebViewClient;
 import com.gsma.mobileconnect.r2.android.webviewclient.DiscoveryWebViewClient;
-import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
 import java.net.URI;
@@ -420,25 +419,8 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                     final String state,
                                     final String nonce,
                                     final MobileConnectRequestOptions options,
-                                    @NonNull final IMobileConnectCallback mobileConnectCallback) throws
-                                                                                                 IllegalArgumentException
+                                    @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        if (options != null)
-        {
-            final AuthenticationOptions authenticationOptions = options.getAuthenticationOptions();
-
-            if (authenticationOptions != null)
-            {
-                final String prompt = authenticationOptions.getPrompt();
-
-                if (prompt != null && prompt.contains("mobile"))
-                {
-                    throw new IllegalArgumentException(
-                            "The value 'mobile' for prompt is not allowed when performing Authentication");
-                }
-            }
-        }
-
         this.presenter.performAuthentication(encryptedMSISDN, state, nonce, options, mobileConnectCallback);
     }
 

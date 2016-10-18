@@ -1,9 +1,5 @@
 package com.gsma.mobileconnect.r2.android.main;
 
-import com.gsma.mobileconnect.r2.android.TestActivity;
-import com.gsma.mobileconnect.r2.android.compatibility.AndroidMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
-import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -14,6 +10,11 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.android.TestActivity;
+import com.gsma.mobileconnect.r2.android.compatibility.AndroidMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
+import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
+import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 
 import junit.framework.Assert;
 
@@ -28,6 +29,10 @@ import org.mockito.Mockito;
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.fail;
+import static org.mockito.Mockito.when;
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 
@@ -41,6 +46,8 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     private IMobileConnectContract.IUserActionsListener mockPresenter;
 
     private IMobileConnectContract.IMobileConnectCallback mobileConnectCallback;
+
+    private MobileConnectInterface mobileConnectInterface;
 
     /*
     public MobileConnectAndroidViewTest()
@@ -77,7 +84,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
         MobileConnect mobileConnect = new MobileConnect.Builder(mobileConnectConfig,
                                                                 new AndroidMobileConnectEncodeDecoder()).build();
 
-        MobileConnectInterface mobileConnectInterface = mobileConnect.getMobileConnectInterface();
+        mobileConnectInterface = mobileConnect.getMobileConnectInterface();
 
         mobileConnectAndroidView = new MobileConnectAndroidView(mobileConnectInterface);
 
@@ -142,6 +149,35 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
 
         // Then
         Mockito.verify(mockPresenter).performAuthentication(msisdn, state, nonce, options, mobileConnectCallback);
+    }
+
+    @Test
+    public void testStartAuthenticationWithMobileAsPrompt() throws Exception
+    {
+        // Given
+        final String msisdn = "msisdn";
+        final String state = "state";
+        final String nonce = "nonce";
+        final AuthenticationOptions authenticationOptions = new AuthenticationOptions.Builder().withPrompt("mobile")
+                                                                                               .build();
+        final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder().withAuthenticationOptions(
+                authenticationOptions).build();
+
+        MobileConnectAndroidPresenter presenter = new MobileConnectAndroidPresenter(mobileConnectInterface);
+
+        mobileConnectAndroidView.setPresenter(presenter);
+
+        try
+        {
+            // When
+            mobileConnectAndroidView.startAuthentication(msisdn, state, nonce, options, mobileConnectCallback);
+            fail("IllegalArgumentException not thrown");
+        }
+        catch (final Exception exception)
+        {
+            // Then
+            assertNotNull(exception.getMessage());
+        }
     }
 
     @Test
@@ -300,7 +336,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
         final IMobileConnectContract.IMobileConnectCallback mockMobileConnectCallback = Mockito.mock(
                 IMobileConnectContract.IMobileConnectCallback.class);
 
-        Mockito.when(mockMobileConnectOperation.operation()).thenReturn(mockMobileConnectStatus);
+        when(mockMobileConnectOperation.operation()).thenReturn(mockMobileConnectStatus);
 
         // When
         //When

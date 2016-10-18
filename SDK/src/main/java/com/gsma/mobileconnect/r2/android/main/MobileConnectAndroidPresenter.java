@@ -1,6 +1,5 @@
 package com.gsma.mobileconnect.r2.android.main;
 
-import com.gsma.mobileconnect.r2.android.bus.BusManager;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,6 +8,8 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.android.bus.BusManager;
+import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.squareup.otto.Subscribe;
 
@@ -142,8 +143,24 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
                                       final String state,
                                       final String nonce,
                                       final MobileConnectRequestOptions options,
-                                      @NonNull final IMobileConnectCallback mobileConnectCallback)
+                                      @NonNull final IMobileConnectCallback mobileConnectCallback) throws IllegalArgumentException
     {
+        if (options != null)
+        {
+            final AuthenticationOptions authenticationOptions = options.getAuthenticationOptions();
+
+            if (authenticationOptions != null)
+            {
+                final String prompt = authenticationOptions.getPrompt();
+
+                if (prompt != null && prompt.contains("mobile"))
+                {
+                    throw new IllegalArgumentException(
+                            "The value 'mobile' for prompt is not allowed when performing Authentication");
+                }
+            }
+        }
+
         IMobileConnectOperation mobileConnectOperation = new IMobileConnectOperation()
         {
             @Override
