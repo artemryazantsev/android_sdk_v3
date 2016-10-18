@@ -143,7 +143,8 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
                                       final String state,
                                       final String nonce,
                                       final MobileConnectRequestOptions options,
-                                      @NonNull final IMobileConnectCallback mobileConnectCallback) throws IllegalArgumentException
+                                      @NonNull final IMobileConnectCallback mobileConnectCallback) throws
+                                                                                                   IllegalArgumentException
     {
         if (options != null)
         {
@@ -153,7 +154,7 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
             {
                 final String prompt = authenticationOptions.getPrompt();
 
-                if (prompt != null && prompt.contains("mobile"))
+                if (prompt != null && prompt.equals("mobile"))
                 {
                     throw new IllegalArgumentException(
                             "The value 'mobile' for prompt is not allowed when performing Authentication");
