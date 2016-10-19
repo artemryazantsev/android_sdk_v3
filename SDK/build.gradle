@@ -99,7 +99,7 @@ sonarRunner {
     sonarProperties {
         // can be also set on command line like -Dsonar.analysis.mode=incremental
         property "sonar.host.url", "http://gsma-ci-master.bjss.co.uk:9000"
-        property "sonar.analysis.mode", "incremental"
+        property "sonar.analysis.mode", "issues"
         property 'sonar.sourceEncoding', 'UTF-8'
         property 'sonar.language', 'java'
     }
