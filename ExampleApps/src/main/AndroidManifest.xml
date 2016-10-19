@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.BaseActivity"/>
         <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.ResultActivity"/>
         <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.AuthenticationActivity"/>
         <activity android:name="com.gsma.mobileconnect.r2.android.exampleapps.AuthorizationActivity"/>
