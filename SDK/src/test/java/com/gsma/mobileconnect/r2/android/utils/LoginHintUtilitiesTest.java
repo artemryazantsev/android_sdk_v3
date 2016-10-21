@@ -14,7 +14,7 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
-public class UtilitiesTest
+public class LoginHintUtilitiesTest
 {
     @Test
     public void isSupportedMSISDNShouldReturnTrueIfMSISDNIncluded()
@@ -24,7 +24,7 @@ public class UtilitiesTest
             add(LoginHintPrefixes.MSISDN.getName());
         }}).build();
 
-        final boolean supportedForMsisdn = Utilities.isSupportedForMsisdn(providerMetadata);
+        final boolean supportedForMsisdn = LoginHintUtilities.isSupportedForMsisdn(providerMetadata);
 
         assertTrue(supportedForMsisdn);
     }
@@ -37,7 +37,7 @@ public class UtilitiesTest
             add(LoginHintPrefixes.PCR.getName());
         }}).build();
 
-        final boolean supportedForMsisdn = Utilities.isSupportedForMsisdn(providerMetadata);
+        final boolean supportedForMsisdn = LoginHintUtilities.isSupportedForMsisdn(providerMetadata);
 
         assertFalse(supportedForMsisdn);
     }
@@ -50,7 +50,7 @@ public class UtilitiesTest
             add(LoginHintPrefixes.ENCRYPTED_MSISDN.getName());
         }}).build();
 
-        final boolean supportedForEncryptedMsisdn = Utilities.isSupportedForEncryptedMsisdn(providerMetadata);
+        final boolean supportedForEncryptedMsisdn = LoginHintUtilities.isSupportedForEncryptedMsisdn(providerMetadata);
 
         assertTrue(supportedForEncryptedMsisdn);
     }
@@ -63,7 +63,7 @@ public class UtilitiesTest
             add(LoginHintPrefixes.PCR.getName());
         }}).build();
 
-        final boolean supportedForEncryptedMsisdn = Utilities.isSupportedForEncryptedMsisdn(providerMetadata);
+        final boolean supportedForEncryptedMsisdn = LoginHintUtilities.isSupportedForEncryptedMsisdn(providerMetadata);
 
         assertFalse(supportedForEncryptedMsisdn);
     }
@@ -76,7 +76,7 @@ public class UtilitiesTest
             add(LoginHintPrefixes.PCR.getName());
         }}).build();
 
-        final boolean supportedForPcr = Utilities.isSupportedForPcr(providerMetadata);
+        final boolean supportedForPcr = LoginHintUtilities.isSupportedForPcr(providerMetadata);
 
         assertTrue(supportedForPcr);
     }
@@ -89,7 +89,7 @@ public class UtilitiesTest
             add(LoginHintPrefixes.MSISDN.getName());
         }}).build();
 
-        final boolean supportedForPcr = Utilities.isSupportedForPcr(providerMetadata);
+        final boolean supportedForPcr = LoginHintUtilities.isSupportedForPcr(providerMetadata);
 
         assertFalse(supportedForPcr);
     }
@@ -97,7 +97,7 @@ public class UtilitiesTest
     @Test
     public void isSupportedMSISDNShouldReturnTrueIfMissingMetadata()
     {
-        final boolean supportedForMsisdn = Utilities.isSupportedForMsisdn(null);
+        final boolean supportedForMsisdn = LoginHintUtilities.isSupportedForMsisdn(null);
 
         assertTrue(supportedForMsisdn);
     }
@@ -105,7 +105,7 @@ public class UtilitiesTest
     @Test
     public void isSupportedEncryptedMSISDNShouldReturnTrueIfMissingMetadata()
     {
-        final boolean supportedForEncryptedMsisdn = Utilities.isSupportedForEncryptedMsisdn(null);
+        final boolean supportedForEncryptedMsisdn = LoginHintUtilities.isSupportedForEncryptedMsisdn(null);
 
         assertTrue(supportedForEncryptedMsisdn);
     }
@@ -113,7 +113,7 @@ public class UtilitiesTest
     @Test
     public void isSupportedPCRShouldReturnTrueIfMissingMetadata()
     {
-        final boolean supportedForPcr = Utilities.isSupportedForPcr(null);
+        final boolean supportedForPcr = LoginHintUtilities.isSupportedForPcr(null);
 
         assertTrue(supportedForPcr);
     }
@@ -130,7 +130,7 @@ public class UtilitiesTest
                                                                                 .withLoginHintMethodsSupported(null)
                                                                                 .build();
 
-        final boolean supportedForPcr = Utilities.isSupportedForPcr(providerMetadata);
+        final boolean supportedForPcr = LoginHintUtilities.isSupportedForPcr(providerMetadata);
 
         assertTrue(supportedForPcr);
     }
@@ -138,7 +138,7 @@ public class UtilitiesTest
     @Test
     public void isSupportedForShouldReturnFalseIfUnrecognisedPrefixAndMissingMetadata()
     {
-        final boolean supportedFor = Utilities.isSupportedFor(null, "testprefix");
+        final boolean supportedFor = LoginHintUtilities.isSupportedFor(null, "testprefix");
 
         assertFalse(supportedFor);
     }
@@ -151,7 +151,7 @@ public class UtilitiesTest
             add(LoginHintPrefixes.MSISDN.getName());
         }}).build();
 
-        final boolean supportedForMsisdn = Utilities.isSupportedFor(providerMetadata, "msiSDN");
+        final boolean supportedForMsisdn = LoginHintUtilities.isSupportedFor(providerMetadata, "msiSDN");
 
         assertTrue(supportedForMsisdn);
     }
@@ -159,7 +159,7 @@ public class UtilitiesTest
     @Test
     public void generateForMSISDNShouldGenerateCorrectFormat()
     {
-        final String msisdnLoginHint = Utilities.generateForMsisdn("+447700900250");
+        final String msisdnLoginHint = LoginHintUtilities.generateForMsisdn("+447700900250");
 
         assertEquals(msisdnLoginHint, "MSISDN:447700900250");
     }
@@ -167,7 +167,7 @@ public class UtilitiesTest
     @Test
     public void generateForEncryptedMSISDNShouldGenerateCorrectFormat()
     {
-        final String encryptedMsisdnLoginHint = Utilities.generateForEncryptedMsisdn("zmalqpwoeirutyfhdjskaslxzmxncbv");
+        final String encryptedMsisdnLoginHint = LoginHintUtilities.generateForEncryptedMsisdn("zmalqpwoeirutyfhdjskaslxzmxncbv");
 
         assertEquals(encryptedMsisdnLoginHint, "ENCR_MSISDN:zmalqpwoeirutyfhdjskaslxzmxncbv");
     }
@@ -175,7 +175,7 @@ public class UtilitiesTest
     @Test
     public void generateForPCRShouldGenerateCorrectFormat()
     {
-        final String pcrLoginHint = Utilities.generateForPcr("zmalqpwoeirutyfhdjskaslxzmxncbv");
+        final String pcrLoginHint = LoginHintUtilities.generateForPcr("zmalqpwoeirutyfhdjskaslxzmxncbv");
 
         assertEquals(pcrLoginHint, "PCR:zmalqpwoeirutyfhdjskaslxzmxncbv");
     }
@@ -183,24 +183,24 @@ public class UtilitiesTest
     @Test
     public void generateForShouldReturnNullWhenValueNull()
     {
-        assertNull(Utilities.generateFor(LoginHintPrefixes.PCR.getName(), null));
+        assertNull(LoginHintUtilities.generateFor(LoginHintPrefixes.PCR.getName(), null));
     }
 
     @Test
     public void generateForShouldReturnNullWhenValueEmpty()
     {
-        assertNull(Utilities.generateFor(LoginHintPrefixes.PCR.getName(), ""));
+        assertNull(LoginHintUtilities.generateFor(LoginHintPrefixes.PCR.getName(), ""));
     }
 
     @Test
     public void generateForShouldReturnNullWhenPrefixNull()
     {
-        assertNull(Utilities.generateFor(null, "testValue"));
+        assertNull(LoginHintUtilities.generateFor(null, "testValue"));
     }
 
     @Test
     public void generateForShouldReturnNullWhenPrefixEmpty()
     {
-        assertNull(Utilities.generateFor("", "testValue"));
+        assertNull(LoginHintUtilities.generateFor("", "testValue"));
     }
 }

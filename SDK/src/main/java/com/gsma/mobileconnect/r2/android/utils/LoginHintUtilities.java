@@ -4,11 +4,13 @@ import com.gsma.mobileconnect.r2.authentication.LoginHint;
 import com.gsma.mobileconnect.r2.discovery.ProviderMetadata;
 
 /**
+ * Utility methods for working with login hints for the auth login hint parameter
+ *
  * @since 2.0
  */
-public class Utilities
+public class LoginHintUtilities
 {
-    private Utilities()
+    private LoginHintUtilities()
     {
         /*
         Empty Private Constructor since all methods are static
