@@ -2,7 +2,6 @@ package com.gsma.mobileconnect.r2.android.main;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.mobileconnect.gsma.com.library.R;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -22,6 +21,7 @@ import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
 import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
 import com.gsma.mobileconnect.r2.android.interfaces.WebViewCallBack;
+import com.gsma.mobileconnect.r2.android.sdk.R;
 import com.gsma.mobileconnect.r2.android.view.DiscoveryAuthenticationDialog;
 import com.gsma.mobileconnect.r2.android.view.InteractiveWebView;
 import com.gsma.mobileconnect.r2.android.webviewclient.AuthenticationWebViewClient;
@@ -117,7 +117,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
             @Override
             public void onCancel(DialogInterface dialogInterface)
             {
-                Log.e("Discovery Dialog", "cancelled");
+                Log.d("Discovery Dialog", "cancelled");
                 closeWebViewAndNotify(discoveryListener, webView);
             }
         });
@@ -214,7 +214,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
             @Override
             public void onCancel(DialogInterface dialogInterface)
             {
-                Log.e("Authentication Dialog", "cancelled");
+                Log.d("Authentication Dialog", "cancelled");
                 closeWebViewAndNotify(authenticationListener, webView);
             }
         });

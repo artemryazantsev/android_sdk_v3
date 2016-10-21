@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+
+apply plugin: 'jacoco'
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
@@ -12,8 +15,6 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -40,7 +41,7 @@ android {
 
     dependencies {
         compile fileTree(dir: 'libs', include: ['*.jar'])
-        compile 'com.android.support:appcompat-v7:24.1.1'
+        compile 'com.android.support:appcompat-v7:24.2.1'
         compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
         compile 'com.squareup:otto:1.3.8'
 
@@ -54,5 +55,63 @@ android {
         androidTestCompile 'org.mockito:mockito-core:1.10.19'
         androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
         androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    }
+}
+
+def coverageSourceDirs = [
+        'src/main/java',
+]
+
+task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["connectedDebugAndroidTest", "testDebugUnitTest"]) {
+
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    classDirectories = fileTree(
+            dir: './build/intermediates/classes/debug',
+            excludes: ['**/R*.class',
+                       '**/*$InjectAdapter.class',
+                       '**/*$ModuleAdapter.class',
+                       '**/*$ViewInjector*.class'
+            ])
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files(["$buildDir/jacoco/testDebug.exec", "$buildDir/jacoco/testDebugUnitTest.exec",
+                           "$buildDir/outputs/code-coverage/connected/coverage.ec"])
+    // Bit hacky but fixes https://code.google.com/p/android/issues/detail?id=69174.
+    // We iterate through the compiled .class tree and rename $$ to $.
+    doFirst {
+        new File("$buildDir/intermediates/classes/").eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
+    }
+}
+
+apply plugin: "sonar-runner"
+
+sonarRunner {
+    sonarProperties {
+        property "sonar.host.url", "http://gsma-ci-master.bjss.co.uk:9000"
+        property "sonar.profile", "Android Lint"
+        property "sonar.projectName", "MobileConnectAndroidSDK"
+        property "sonar.projectKey", "com.example.myApp"
+        property "sonar.projectVersion", "1.0.0-SNAPSHOT"
+        property "sonar.language", "java"
+        property "sonar.sources", "src"
+        property "sonar.binaries", "build"
+        property "sonar.android.lint.report", "build/outputs/lint-results.xml"
+    }
+}
+
+subprojects {
+    sonarRunner {
+        sonarProperties {
+            property "sonar.sourceEncoding", "UTF-8"
+            property "sonar.sources", "src/main"
+        }
     }
 }

@@ -21,7 +21,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
 {
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity
         final AuthenticationFragment authenticationFragment = AuthenticationFragment.newInstance();
         final AuthorizationFragment authorizationFragment = AuthorizationFragment.newInstance();
 
-        List<Fragment> authFragments = new ArrayList<>();
+        final List<Fragment> authFragments = new ArrayList<>();
         authFragments.add(authenticationFragment);
         authFragments.add(authorizationFragment);
 

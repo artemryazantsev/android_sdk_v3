@@ -32,15 +32,6 @@ public class InteractiveWebView extends WebView
         initialise();
     }
 
-    public InteractiveWebView(final Context context,
-                              final AttributeSet attrs,
-                              final int defStyleAttr,
-                              final int defStyleRes)
-    {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initialise();
-    }
-
     private void initialise()
     {
         if (!isInEditMode())
