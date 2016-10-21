@@ -9,17 +9,17 @@ public enum BusManager
 
     private final Bus bus = new Bus(ThreadEnforcer.ANY);
 
-    public static void post(Object event)
+    public static void post(final Object event)
     {
         INSTANCE.bus.post(event);
     }
 
-    public static void register(Object target)
+    public static void register(final Object target)
     {
         INSTANCE.bus.register(target);
     }
 
-    public static void unregister(Object target)
+    public static void unregister(final Object target)
     {
         INSTANCE.bus.unregister(target);
     }

@@ -44,6 +44,8 @@ import static com.gsma.mobileconnect.r2.android.main.IMobileConnectContract.IMob
  */
 public class MobileConnectAndroidView implements IMobileConnectContract.IView
 {
+    private static final String TAG = MobileConnectAndroidView.class.getSimpleName();
+
     private IMobileConnectContract.IUserActionsListener presenter;
 
     /**
@@ -534,6 +536,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     @Override
     public void requestUserInfo(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG, String.format("Request User Info - accessToken=%s", accessToken));
         this.presenter.performRequestUserInfo(accessToken, mobileConnectCallback);
     }
 }

@@ -15,7 +15,7 @@ public interface AuthenticationListener
      *
      * @param mobileConnectStatus A populated {@link MobileConnectStatus} containing the errors.
      */
-    void authenticationFailed(MobileConnectStatus mobileConnectStatus);
+    void authenticationFailed(final MobileConnectStatus mobileConnectStatus);
 
     void authenticationSuccess(final MobileConnectStatus mobileConnectStatus);
 

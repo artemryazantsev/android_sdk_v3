@@ -31,55 +31,55 @@ public interface IMobileConnectContract
         @SuppressWarnings("unused")
         void cleanUp();
 
-        void handleRedirectAfterAuthentication(String url,
-                                               String state,
-                                               String nonce,
-                                               AuthenticationListener authenticationListener,
-                                               MobileConnectRequestOptions mobileConnectRequestOptions);
+        void handleRedirectAfterAuthentication(final String url,
+                                               final String state,
+                                               final String nonce,
+                                               final AuthenticationListener authenticationListener,
+                                               final MobileConnectRequestOptions mobileConnectRequestOptions);
 
-        void performAsyncTask(@NonNull IMobileConnectOperation mobileConnectOperation,
-                              @NonNull IMobileConnectCallback mobileConnectCallback);
-
-        @SuppressWarnings("unused")
-        void attemptDiscovery(String msisdn,
-                              String mcc,
-                              String mnc,
-                              MobileConnectRequestOptions options,
-                              @NonNull IMobileConnectCallback mobileConnectCallback);
+        void performAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
+                              @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
-        void attemptDiscoveryAfterOperatorSelection(@NonNull IMobileConnectCallback mobileConnectCallback,
-                                                    @Nullable URI redirectUri);
+        void attemptDiscovery(final String msisdn,
+                              final String mcc,
+                              final String mnc,
+                              final MobileConnectRequestOptions options,
+                              @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
-        void startAuthentication(String encryptedMSISDN,
-                                 String state,
-                                 String nonce,
-                                 MobileConnectRequestOptions options,
-                                 @NonNull IMobileConnectCallback mobileConnectCallback);
+        void attemptDiscoveryAfterOperatorSelection(@NonNull final IMobileConnectCallback mobileConnectCallback,
+                                                    @Nullable final URI redirectUri);
 
         @SuppressWarnings("unused")
-        void requestToken(URI redirectedUrl,
-                          String expectedState,
-                          String expectedNonce,
-                          MobileConnectRequestOptions mobileConnectRequestOptions,
-                          @NonNull IMobileConnectCallback mobileConnectCallback);
+        void startAuthentication(final String encryptedMSISDN,
+                                 final String state,
+                                 final String nonce,
+                                 final MobileConnectRequestOptions options,
+                                 @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
-        void handleUrlRedirect(URI redirectedUrl,
-                               String expectedState,
-                               String expectedNonce,
-                               MobileConnectRequestOptions mobileConnectRequestOptions,
-                               @NonNull IMobileConnectCallback mobileConnectCallback);
+        void requestToken(final URI redirectedUrl,
+                          final String expectedState,
+                          final String expectedNonce,
+                          final MobileConnectRequestOptions mobileConnectRequestOptions,
+                          @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
-        void requestIdentity(String accessToken, @NonNull IMobileConnectCallback mobileConnectCallback);
+        void handleUrlRedirect(final URI redirectedUrl,
+                               final String expectedState,
+                               final String expectedNonce,
+                               final MobileConnectRequestOptions mobileConnectRequestOptions,
+                               @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
-        void refreshToken(String refreshToken, @NonNull IMobileConnectCallback mobileConnectCallback);
+        void requestIdentity(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
-        void revokeToken(String token, String tokenTypeHint, @NonNull IMobileConnectCallback mobileConnectCallback);
+        void refreshToken(final String refreshToken, @NonNull final IMobileConnectCallback mobileConnectCallback);
+
+        @SuppressWarnings("unused")
+        void revokeToken(final String token, String tokenTypeHint, @NonNull IMobileConnectCallback mobileConnectCallback);
 
         @SuppressWarnings("unused")
         void requestUserInfo(String accessToken, IMobileConnectCallback mobileConnectCallback);
