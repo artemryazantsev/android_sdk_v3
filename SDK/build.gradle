@@ -112,7 +112,7 @@ apply plugin: "sonar-runner"
 sonarRunner {
     sonarProperties {
         property "sonar.host.url", "http://gsma-ci-master.bjss.co.uk:9000"
-        property "sonar.profile", "java"
+        property "sonar.profile", "Android Lint"
         property "sonar.projectName", "mobile-connect-android-sdk"
         property "sonar.projectKey", "com.gsma.mobileconect.android"
         property "sonar.projectVersion", "3.0.2"
