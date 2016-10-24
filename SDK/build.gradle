@@ -120,7 +120,7 @@ sonarRunner {
         property "sonar.sources", "src"
         property "sonar.binaries", "build"
         property "sonar.android.lint.report", "build/outputs/lint-results-debug.xml"
-        property "sonar.jacoco.reportPath", "build/jacocoHtml/index.html"
+        property "sonar.jacoco.reportPath", "build/jacocoHtml"
     }
 }
 
