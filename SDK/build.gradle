@@ -112,7 +112,7 @@ apply plugin: "sonar-runner"
 sonarRunner {
     sonarProperties {
         property "sonar.host.url", "http://gsma-ci-master.bjss.co.uk:9000"
-        property "sonar.profile", "Android Lint"
+        property "sonar.profile", "Java"
         property "sonar.projectName", "mobile-connect-android-sdk"
         property "sonar.projectKey", "com.gsma.mobileconect.android"
         property "sonar.projectVersion", "3.0.2"
@@ -120,7 +120,7 @@ sonarRunner {
         property "sonar.sources", "src"
         property "sonar.binaries", "build"
         property "sonar.android.lint.report", "build/outputs/lint-results-debug.xml"
-        property "sonar.jacoco.reportPath", "build/jacocoHtml"
+        property "sonar.jacoco.reportPath", "build/jacocoHtml/index.html"
     }
 }
 
