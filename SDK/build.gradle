@@ -16,6 +16,9 @@ android {
     buildTypes {
         release {
         }
+        debug {
+            testCoverageEnabled = true
+        }
     }
 
     lintOptions {
@@ -62,7 +65,7 @@ def coverageSourceDirs = [
         'src/main/java',
 ]
 
-task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["connectedDebugAndroidTest", "testDebugUnitTest"]) {
+task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["testDebugUnitTest", "createDebugCoverageReport"]) {
 
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
@@ -79,7 +82,7 @@ task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["connectedDebugAnd
             ])
     sourceDirectories = files(coverageSourceDirs)
     executionData = files(["$buildDir/jacoco/testDebug.exec", "$buildDir/jacoco/testDebugUnitTest.exec",
-                           "$buildDir/outputs/code-coverage/connected/coverage.ec"])
+                           "$buildDir/outputs/code-coverage/connected/Nexus_5X_API_23(AVD) - 6.0-coverage.ec"])
     // Bit hacky but fixes https://code.google.com/p/android/issues/detail?id=69174.
     // We iterate through the compiled .class tree and rename $$ to $.
     doFirst {
@@ -97,7 +100,7 @@ sonarRunner {
     sonarProperties {
         property "sonar.host.url", "http://gsma-ci-master.bjss.co.uk:9000"
         property "sonar.profile", "Android Lint"
-        property "sonar.projectName", "MobileConnectAndroidSDK"
+        property "sonar.projectName", "mobile-connect-android-sdk"
         property "sonar.projectKey", "com.gsma.mobileconect.android"
         property "sonar.projectVersion", "3.0.2"
         property "sonar.language", "java"
