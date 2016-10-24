@@ -1,7 +1,5 @@
 apply plugin: 'com.android.library'
 
-apply plugin: 'jacoco'
-
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.1"
@@ -65,13 +63,22 @@ def coverageSourceDirs = [
         'src/main/java',
 ]
 
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
 task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["testDebugUnitTest", "createDebugCoverageReport"]) {
 
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
     reports {
-        xml.enabled = true
+        xml.enabled false
+        csv.enabled false
         html.enabled = true
+        html.destination "${buildDir}/jacocoHtml"
     }
     classDirectories = fileTree(
             dir: './build/intermediates/classes/debug',
@@ -81,8 +88,14 @@ task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["testDebugUnitTest
                        '**/*$ViewInjector*.class'
             ])
     sourceDirectories = files(coverageSourceDirs)
-    executionData = files(["$buildDir/jacoco/testDebug.exec", "$buildDir/jacoco/testDebugUnitTest.exec",
+    additionalSourceDirs = files(coverageSourceDirs)
+    executionData = files(["$buildDir/jacoco/testDebugUnitTest.exec",
                            "$buildDir/outputs/code-coverage/connected/Nexus_5X_API_23(AVD) - 6.0-coverage.ec"])
+
+    onlyIf = {
+        true
+    }
+
     // Bit hacky but fixes https://code.google.com/p/android/issues/detail?id=69174.
     // We iterate through the compiled .class tree and rename $$ to $.
     doFirst {
