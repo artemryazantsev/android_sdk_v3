@@ -284,7 +284,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         {
             uri = new URI(url);
         }
-        catch (URISyntaxException exception)
+        catch (final URISyntaxException exception)
         {
             Log.e(TAG, String.format("Failed to parse URI=%s", url), exception);
             final MobileConnectStatus mobileConnectStatus = MobileConnectStatus.error(exception.getMessage(),
