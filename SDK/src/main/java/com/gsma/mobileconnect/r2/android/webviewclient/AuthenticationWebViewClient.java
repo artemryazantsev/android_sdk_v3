@@ -35,14 +35,14 @@ public class AuthenticationWebViewClient extends MobileConnectWebViewClient
     @Override
     protected boolean qualifyUrl(final String url)
     {
-        Log.i(TAG, String.format("Qualifying Authentication Url", url));
+        Log.i(TAG, String.format("Qualifying Authentication Url=%s", url));
         return url.contains("code");
     }
 
     @Override
     protected void handleError(final MobileConnectStatus status)
     {
-        Log.i(TAG, String.format("Authentication Failed"));
+        Log.i(TAG, "Authentication Failed");
         this.listener.authenticationFailed(status);
     }
 

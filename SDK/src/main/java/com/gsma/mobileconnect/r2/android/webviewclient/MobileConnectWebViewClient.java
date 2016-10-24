@@ -49,7 +49,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
                                 final String description,
                                 final String failingUrl)
     {
-        Log.i(TAG, String.format("onReceivedError description = %s, failingUrl = %s", description, failingUrl));
+        Log.i(TAG, String.format("onReceivedError description=%s, failingUrl=%s", description, failingUrl));
         this.dialog.cancel();
         this.handleError(getErrorStatus(failingUrl));
     }
@@ -85,7 +85,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
     @Override
     public boolean shouldOverrideUrlLoading(final WebView view, final String url)
     {
-        Log.i(TAG, "Loading URL = " + url);
+        Log.i(TAG, String.format("Loading URL=%s", url));
         this.progressBar.setVisibility(View.VISIBLE);
 
         if (!url.startsWith(this.redirectUrl))
@@ -116,7 +116,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
         if (qualifyUrl(url))
         {
             handleResult(url);
-            Log.i(TAG, "closing Dialog");
+            Log.i(TAG, "Closing dialog");
             this.dialog.cancel();
         }
 
@@ -127,7 +127,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
     public void onPageFinished(final WebView view, final String url)
     {
         super.onPageFinished(view, url);
-        Log.i(TAG, String.format("onPageFinished = ", url));
+        Log.i(TAG, String.format("onPageFinished=%s", url));
         this.progressBar.setVisibility(View.GONE);
     }
 
@@ -139,7 +139,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
      */
     void handleResult(final String url)
     {
-        Log.i(TAG, String.format("Successful Callback = ", url));
+        Log.i(TAG, String.format("Successful Callback=%s", url));
         getWebViewCallback().onSuccess(url);
     }
 

@@ -30,7 +30,7 @@ public class DiscoveryWebViewClient extends MobileConnectWebViewClient
     @Override
     protected boolean qualifyUrl(final String url)
     {
-        Log.i(TAG, String.format("Qualifying Discovery Url", url));
+        Log.i(TAG, String.format("Qualifying Discovery Url=%s", url));
         return url.contains("mcc_mnc=");
     }
 
