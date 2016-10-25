@@ -375,7 +375,7 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
         // resolved
         catch (final IllegalArgumentException exception)
         {
-            Log.e(TAG, "Failed to register OTTO", exception);
+            Log.e(TAG, "Failed to unregister OTTO", exception);
         }
     }
 }

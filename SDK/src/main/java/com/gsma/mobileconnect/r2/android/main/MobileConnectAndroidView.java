@@ -389,7 +389,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                  final MobileConnectRequestOptions options,
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        Log.i(TAG, String.format("Attempt Discovery for msisdn=%s, mcc=%s, mnc=%s", msisdn, mcc, mnc));
+        Log.i(TAG, String.format("Attempt Discovery for msisdn=%s, mcc=%s, mnc=%s", LogUtils.mask(msisdn), mcc, mnc));
         this.presenter.performDiscovery(msisdn, mcc, mnc, options, mobileConnectCallback);
     }
 
@@ -464,7 +464,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
               String.format("Request Token for redirectUrl=%s, expectedState=%s, expectedNonce=%s",
                             redirectedUrl,
                             expectedState,
-                            expectedNonce));
+                            LogUtils.mask(expectedNonce)));
 
         this.presenter.performRequestToken(redirectedUrl,
                                            expectedState,
@@ -499,7 +499,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
               String.format("Handle URL Redirect for redirectUrl=%s, expectedState=%s, expectedNonce=%s",
                             redirectedUrl,
                             expectedState,
-                            expectedNonce));
+                            LogUtils.mask(expectedNonce)));
 
         this.presenter.performHandleUrlRedirect(redirectedUrl,
                                                 expectedState,
@@ -518,7 +518,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     @Override
     public void requestIdentity(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        Log.i(TAG, String.format("Request Identity for accessToken=%s", accessToken));
+        Log.i(TAG, String.format("Request Identity for accessToken=%s", LogUtils.mask(accessToken)));
         this.presenter.performRequestIdentity(accessToken, mobileConnectCallback);
     }
 
@@ -532,7 +532,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     @Override
     public void refreshToken(final String refreshToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        Log.i(TAG, String.format("Refresh Token for refreshToken=%s", refreshToken));
+        Log.i(TAG, String.format("Refresh Token for refreshToken=%s", LogUtils.mask(refreshToken)));
         this.presenter.performRefreshToken(refreshToken, mobileConnectCallback);
     }
 
@@ -549,7 +549,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                             final String tokenTypeHint,
                             @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        Log.i(TAG, String.format("Revoke Token for token=%s, tokenTypeHint=%s", token, tokenTypeHint));
+        Log.i(TAG, String.format("Revoke Token for token=%s, tokenTypeHint=%s", LogUtils.mask(token), tokenTypeHint));
         this.presenter.performRevokeToken(token, tokenTypeHint, mobileConnectCallback);
     }
 
@@ -563,7 +563,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     @Override
     public void requestUserInfo(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
-        Log.i(TAG, String.format("Request User Info for accessToken=%s", accessToken));
+        Log.i(TAG, String.format("Request User Info for accessToken=%s", LogUtils.mask(accessToken)));
         this.presenter.performRequestUserInfo(accessToken, mobileConnectCallback);
     }
 }
