@@ -27,6 +27,7 @@ import com.gsma.mobileconnect.r2.android.view.InteractiveWebView;
 import com.gsma.mobileconnect.r2.android.webviewclient.AuthenticationWebViewClient;
 import com.gsma.mobileconnect.r2.android.webviewclient.DiscoveryWebViewClient;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.utils.LogUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,12 +39,13 @@ import static com.gsma.mobileconnect.r2.android.main.IMobileConnectContract.IMob
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
  * {@link AsyncTask}s and sends the result via a {@link IMobileConnectCallback}
- * <p/>
  *
  * @since 2.0
  */
 public class MobileConnectAndroidView implements IMobileConnectContract.IView
 {
+    private static final String TAG = MobileConnectAndroidView.class.getSimpleName();
+
     private IMobileConnectContract.IUserActionsListener presenter;
 
     /**
@@ -60,7 +62,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         return presenter;
     }
 
-    public void setPresenter(IMobileConnectContract.IUserActionsListener presenter)
+    public void setPresenter(@NonNull final IMobileConnectContract.IUserActionsListener presenter)
     {
         this.presenter = presenter;
     }
@@ -79,6 +81,8 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                             final String redirectUrl,
                                             final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
+        Log.i(TAG,
+              String.format("Attempting Discovery With WebView with url=%s redirectUrl=%s", operatorUrl, redirectUrl));
         initiateWebView(activityContext, discoveryListener, operatorUrl, redirectUrl, mobileConnectRequestOptions);
     }
 
@@ -90,6 +94,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                                  @Nullable final MobileConnectRequestOptions
                                                          mobileConnectRequestOptions)
     {
+        Log.i(TAG, String.format("Attempting Authentication With WebView url=%s", url));
         initiateWebView(activityContext, authenticationListener, url, state, nonce, mobileConnectRequestOptions);
     }
 
@@ -104,8 +109,8 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                  @NonNull final String redirectUrl,
                                  final MobileConnectRequestOptions mobileConnectRequestOptions)
     {
-        RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
-                                                                      .inflate(R.layout.layout_web_view, null);
+        final RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
+                                                                            .inflate(R.layout.layout_web_view, null);
 
         final InteractiveWebView webView = (InteractiveWebView) webViewLayout.findViewById(R.id.web_view);
         final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
@@ -115,9 +120,9 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
             @Override
-            public void onCancel(DialogInterface dialogInterface)
+            public void onCancel(final DialogInterface dialogInterface)
             {
-                Log.d("Discovery Dialog", "cancelled");
+                Log.i(TAG, "Closing Dialog");
                 closeWebViewAndNotify(discoveryListener, webView);
             }
         });
@@ -131,6 +136,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
             @Override
             public void onError(final MobileConnectStatus mobileConnectStatus)
             {
+                Log.i(TAG, "Discovery Failed");
                 discoveryListener.discoveryFailed(mobileConnectStatus);
                 dialog.cancel();
             }
@@ -151,6 +157,8 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                                                                              MobileConnectStatus
                                                                                                      mobileConnectStatus)
                                                                                      {
+                                                                                         Log.i(TAG,
+                                                                                               "Discovery Complete");
                                                                                          discoveryListener
                                                                                                  .onDiscoveryResponse(
                                                                                                  mobileConnectStatus);
@@ -174,7 +182,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         }
         catch (final WindowManager.BadTokenException exception)
         {
-            Log.e("Discovery Dialog", exception.getMessage());
+            Log.e(TAG, "Failed to show dialog", exception);
         }
     }
 
@@ -186,10 +194,10 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         {
             uri = new URI(url);
         }
-        catch (URISyntaxException e)
+        catch (final URISyntaxException exception)
         {
             uri = null;
-            Log.e("Invalid Redirect URI", e.getMessage());
+            Log.e(TAG, String.format("Failed to parse url=%s", url), exception);
         }
         return uri;
     }
@@ -201,8 +209,8 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                  @NonNull final String nonce,
                                  final MobileConnectRequestOptions mobileRequestOptions)
     {
-        RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
-                                                                      .inflate(R.layout.layout_web_view, null);
+        final RelativeLayout webViewLayout = (RelativeLayout) LayoutInflater.from(activityContext)
+                                                                            .inflate(R.layout.layout_web_view, null);
 
         final InteractiveWebView webView = (InteractiveWebView) webViewLayout.findViewById(R.id.web_view);
         final ProgressBar progressBar = (ProgressBar) webViewLayout.findViewById(R.id.progressBar);
@@ -212,9 +220,9 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener()
         {
             @Override
-            public void onCancel(DialogInterface dialogInterface)
+            public void onCancel(final DialogInterface dialogInterface)
             {
-                Log.d("Authentication Dialog", "cancelled");
+                Log.i(TAG, "Authentication Dialog Closing");
                 closeWebViewAndNotify(authenticationListener, webView);
             }
         });
@@ -226,33 +234,28 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         Uri uri = Uri.parse(authenticationUrl);
         String redirectUrl = uri.getQueryParameter("redirect_uri");
 
+        final WebViewCallBack webViewCallBack = new WebViewCallBack()
+        {
+            @Override
+            public void onError(final MobileConnectStatus mobileConnectStatus)
+            {
+                Log.i(TAG, "Authentication Successful");
+                authenticationListener.authenticationFailed(mobileConnectStatus);
+            }
+
+            @Override
+            public void onSuccess(final String url)
+            {
+                Log.i(TAG, "Authentication Failure");
+                handleRedirectAfterAuthentication(url, state, nonce, authenticationListener, mobileRequestOptions);
+            }
+        };
+
         final AuthenticationWebViewClient webViewClient = new AuthenticationWebViewClient(dialog,
                                                                                           progressBar,
                                                                                           authenticationListener,
                                                                                           redirectUrl,
-                                                                                          new WebViewCallBack()
-                                                                                          {
-                                                                                              @Override
-                                                                                              public void onError(
-                                                                                                      MobileConnectStatus mobileConnectStatus)
-                                                                                              {
-                                                                                                  authenticationListener
-                                                                                                          .authenticationFailed(
-                                                                                                                  mobileConnectStatus);
-                                                                                              }
-
-                                                                                              @Override
-                                                                                              public void onSuccess(
-                                                                                                      String url)
-                                                                                              {
-                                                                                                  handleRedirectAfterAuthentication(
-                                                                                                          url,
-                                                                                                          state,
-                                                                                                          nonce,
-                                                                                                          authenticationListener,
-                                                                                                          mobileRequestOptions);
-                                                                                              }
-                                                                                          });
+                                                                                          webViewCallBack);
 
         webView.setWebViewClient(webViewClient);
 
@@ -264,7 +267,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         }
         catch (final WindowManager.BadTokenException exception)
         {
-            Log.e("Discovery Dialog", exception.getMessage());
+            Log.i(TAG, String.format("Failed to show Dialog", exception));
         }
     }
 
@@ -281,12 +284,12 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         {
             uri = new URI(url);
         }
-        catch (URISyntaxException e)
+        catch (final URISyntaxException exception)
         {
-            e.printStackTrace();
-            final MobileConnectStatus mobileConnectStatus = MobileConnectStatus.error(e.getMessage(),
+            Log.e(TAG, String.format("Failed to parse URI=%s", url), exception);
+            final MobileConnectStatus mobileConnectStatus = MobileConnectStatus.error(exception.getMessage(),
                                                                                       "Redirect failed",
-                                                                                      e);
+                                                                                      exception);
             authenticationListener.authenticationFailed(mobileConnectStatus);
             return;
         }
@@ -298,10 +301,12 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
             {
                 if (mobileConnectStatus.getErrorCode() == null)
                 {
+                    Log.i(TAG, "Authentication Successful");
                     authenticationListener.authenticationSuccess(mobileConnectStatus);
                 }
                 else
                 {
+                    Log.i(TAG, "Authentication Failure");
                     authenticationListener.authenticationFailed(mobileConnectStatus);
                 }
             }
@@ -317,6 +322,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
      */
     private void closeWebViewAndNotify(final DiscoveryListener listener, final InteractiveWebView webView)
     {
+        Log.i(TAG, "Closing WebView & Notifying");
         webView.stopLoading();
         webView.loadData("", "text/html", null);
         listener.onDiscoveryDialogClose();
@@ -331,6 +337,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
      */
     private void closeWebViewAndNotify(final AuthenticationListener listener, final WebView webView)
     {
+        Log.i(TAG, "Closing WebView & Notifying");
         webView.stopLoading();
         webView.loadData("", "text/html", null);
         listener.onAuthenticationDialogClose();
@@ -358,6 +365,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     public void performAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG, "Performing Async Task");
         new MobileConnectAsyncTask(mobileConnectOperation, mobileConnectCallback).execute();
     }
 
@@ -381,6 +389,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                  final MobileConnectRequestOptions options,
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG, String.format("Attempt Discovery for msisdn=%s, mcc=%s, mnc=%s", LogUtils.mask(msisdn), mcc, mnc));
         this.presenter.performDiscovery(msisdn, mcc, mnc, options, mobileConnectCallback);
     }
 
@@ -398,6 +407,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     public void attemptDiscoveryAfterOperatorSelection(@NonNull final IMobileConnectCallback mobileConnectCallback,
                                                        @Nullable final URI redirectUri)
     {
+        Log.i(TAG, String.format("Attempt Discovery After Operator Selection for redirectUri=%s", redirectUri));
         this.presenter.performDiscoveryAfterOperatorSelection(mobileConnectCallback, redirectUri);
     }
 
@@ -421,6 +431,12 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                     final MobileConnectRequestOptions options,
                                     @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG,
+              String.format("Start Authentication for encryptedMSISDN=%s, state=%s, nonce=%s",
+                            LogUtils.mask(encryptedMSISDN),
+                            state,
+                            LogUtils.mask(nonce)));
+
         this.presenter.performAuthentication(encryptedMSISDN, state, nonce, options, mobileConnectCallback);
     }
 
@@ -444,6 +460,12 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                              final MobileConnectRequestOptions mobileConnectRequestOptions,
                              @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG,
+              String.format("Request Token for redirectUrl=%s, expectedState=%s, expectedNonce=%s",
+                            redirectedUrl,
+                            expectedState,
+                            LogUtils.mask(expectedNonce)));
+
         this.presenter.performRequestToken(redirectedUrl,
                                            expectedState,
                                            expectedNonce,
@@ -473,6 +495,12 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                   final MobileConnectRequestOptions mobileConnectRequestOptions,
                                   @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG,
+              String.format("Handle URL Redirect for redirectUrl=%s, expectedState=%s, expectedNonce=%s",
+                            redirectedUrl,
+                            expectedState,
+                            LogUtils.mask(expectedNonce)));
+
         this.presenter.performHandleUrlRedirect(redirectedUrl,
                                                 expectedState,
                                                 expectedNonce,
@@ -490,6 +518,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     @Override
     public void requestIdentity(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG, String.format("Request Identity for accessToken=%s", LogUtils.mask(accessToken)));
         this.presenter.performRequestIdentity(accessToken, mobileConnectCallback);
     }
 
@@ -497,13 +526,13 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
      * Refresh token using using the refresh token provided in the RequestToken response
      *
      * @param refreshToken Refresh token returned from RequestToken request
-     * @return MobileConnectStatus Object with required information for continuing the mobile
-     * connect process
+     *                     connect process
      */
     @SuppressWarnings("unused")
     @Override
     public void refreshToken(final String refreshToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG, String.format("Refresh Token for refreshToken=%s", LogUtils.mask(refreshToken)));
         this.presenter.performRefreshToken(refreshToken, mobileConnectCallback);
     }
 
@@ -512,8 +541,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
      *
      * @param token         Access/Refresh token returned from RequestToken request
      * @param tokenTypeHint Hint to indicate the type of token being passed in
-     * @return MobileConnectStatus Object with required information for continuing the mobile
-     * connect process
+     *                      connect process
      */
     @SuppressWarnings("unused")
     @Override
@@ -521,6 +549,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                             final String tokenTypeHint,
                             @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG, String.format("Revoke Token for token=%s, tokenTypeHint=%s", LogUtils.mask(token), tokenTypeHint));
         this.presenter.performRevokeToken(token, tokenTypeHint, mobileConnectCallback);
     }
 
@@ -534,6 +563,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     @Override
     public void requestUserInfo(final String accessToken, @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
+        Log.i(TAG, String.format("Request User Info for accessToken=%s", LogUtils.mask(accessToken)));
         this.presenter.performRequestUserInfo(accessToken, mobileConnectCallback);
     }
 }

@@ -1,8 +1,6 @@
 package com.gsma.mobileconnect.r2.android.webviewclient;
 
 import android.annotation.TargetApi;
-import com.gsma.mobileconnect.r2.android.interfaces.WebViewCallBack;
-import com.gsma.mobileconnect.r2.android.view.DiscoveryAuthenticationDialog;
 import android.net.UrlQuerySanitizer;
 import android.util.Log;
 import android.view.View;
@@ -13,14 +11,17 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.android.interfaces.WebViewCallBack;
+import com.gsma.mobileconnect.r2.android.view.DiscoveryAuthenticationDialog;
 
 /**
- * A Base {@WebViewClient} which intercepts callbacks from the MobileConnect API
+ * A Base {@link WebViewClient} which intercepts callbacks from the MobileConnect API
  * <p/>
  * It specifically looks for special query parameters in the returned URL from the API and informs the subclass via
  * the abstract methods.
  * <p/>
- * Created by Usmaan.Dad on 6/22/2016.
+ *
+ * @since 1.0
  */
 abstract class MobileConnectWebViewClient extends WebViewClient
 {
@@ -29,6 +30,8 @@ abstract class MobileConnectWebViewClient extends WebViewClient
     protected DiscoveryAuthenticationDialog dialog;
 
     private String redirectUrl;
+
+    private static final String TAG = MobileConnectWebViewClient.class.getSimpleName();
 
     MobileConnectWebViewClient(final DiscoveryAuthenticationDialog dialog,
                                final ProgressBar progressBar,
@@ -46,7 +49,8 @@ abstract class MobileConnectWebViewClient extends WebViewClient
                                 final String description,
                                 final String failingUrl)
     {
-        dialog.cancel();
+        Log.i(TAG, String.format("onReceivedError description=%s, failingUrl=%s", description, failingUrl));
+        this.dialog.cancel();
         this.handleError(getErrorStatus(failingUrl));
     }
 
@@ -55,7 +59,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
     public void onReceivedError(final WebView view, final WebResourceRequest request, final WebResourceError error)
     {
         dialog.cancel();
-        this.handleError(getErrorStatus(request.getUrl().toString()));
+        handleError(getErrorStatus(request.getUrl().toString()));
     }
 
     private MobileConnectStatus getErrorStatus(final String url)
@@ -81,7 +85,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
     @Override
     public boolean shouldOverrideUrlLoading(final WebView view, final String url)
     {
-        Log.d(MobileConnectWebViewClient.class.getSimpleName(), "onPageStarted disco url=" + url);
+        Log.i(TAG, String.format("Loading URL=%s", url));
         this.progressBar.setVisibility(View.VISIBLE);
 
         if (!url.startsWith(this.redirectUrl))
@@ -100,7 +104,7 @@ abstract class MobileConnectWebViewClient extends WebViewClient
         if (url.contains("error"))
         {
             handleError(getErrorStatus(url));
-            dialog.cancel();
+            this.dialog.cancel();
         }
 
         /*
@@ -112,7 +116,8 @@ abstract class MobileConnectWebViewClient extends WebViewClient
         if (qualifyUrl(url))
         {
             handleResult(url);
-            dialog.cancel();
+            Log.i(TAG, "Closing dialog");
+            this.dialog.cancel();
         }
 
         return true;
@@ -122,7 +127,8 @@ abstract class MobileConnectWebViewClient extends WebViewClient
     public void onPageFinished(final WebView view, final String url)
     {
         super.onPageFinished(view, url);
-        progressBar.setVisibility(View.GONE);
+        Log.i(TAG, String.format("onPageFinished=%s", url));
+        this.progressBar.setVisibility(View.GONE);
     }
 
     /**
@@ -131,8 +137,9 @@ abstract class MobileConnectWebViewClient extends WebViewClient
      *
      * @param url The URL containing the desired query parameter
      */
-    protected void handleResult(final String url)
+    void handleResult(final String url)
     {
+        Log.i(TAG, String.format("Successful Callback=%s", url));
         getWebViewCallback().onSuccess(url);
     }
 

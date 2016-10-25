@@ -40,14 +40,14 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
     protected void onPostExecute(final MobileConnectStatus mobileConnectStatus)
     {
         super.onPostExecute(mobileConnectStatus);
-        if (mobileConnectCallback != null)
+        if (this.mobileConnectCallback != null)
         {
             if (mobileConnectStatus.getDiscoveryResponse() != null &&
                 !mobileConnectStatus.getDiscoveryResponse().hasExpired())
             {
                 BusManager.post(mobileConnectStatus.getDiscoveryResponse());
             }
-            mobileConnectCallback.onComplete(mobileConnectStatus);
+            this.mobileConnectCallback.onComplete(mobileConnectStatus);
         }
     }
 }

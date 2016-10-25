@@ -3,6 +3,7 @@ package com.gsma.mobileconnect.r2.android.main;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
@@ -34,6 +35,8 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
     private DiscoveryResponse discoveryResponse;
 
     private static final String MOBILE_PROMPT_VALUE = "mobile";
+
+    private static final String TAG = MobileConnectAndroidPresenter.class.getSimpleName();
 
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
@@ -354,9 +357,9 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
         {
             BusManager.register(this);
         }
-        catch (IllegalArgumentException exception)
+        catch (final IllegalArgumentException exception)
         {
-            exception.printStackTrace();
+            Log.e(TAG, "Failed to register OTTO", exception);
         }
     }
 
@@ -370,9 +373,9 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
         // Despite having two different instances of this class, the 'this' parameter is the same and it causes it to
         // crash. This has apparently been reported on Otto's Github page as a bug and doesn't seem to have been
         // resolved
-        catch (IllegalArgumentException exception)
+        catch (final IllegalArgumentException exception)
         {
-            exception.printStackTrace();
+            Log.e(TAG, "Failed to unregister OTTO", exception);
         }
     }
 }
