@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Demo</string>
+
+    <!-- Mobile Connect Credentials -->
+    <string name="client_id"></string>
+    <string name="client_secret"></string>
+    <string name="discovery_url"></string>
+    <string name="redirect_url"></string>
+</resources>

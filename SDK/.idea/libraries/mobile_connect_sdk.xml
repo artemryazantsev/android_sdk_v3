@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mobile-connect-sdk">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/library/libs/mobile-connect-sdk.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
