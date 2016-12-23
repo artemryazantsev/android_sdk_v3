@@ -19,6 +19,6 @@ public class AndroidMobileConnectEncodeDecoder implements IMobileConnectEncodeDe
     @Override
     public byte[] decodeFromBase64(final String value)
     {
-        return Base64.decode(value, Base64.URL_SAFE);
+        return Base64.decode(value.replaceAll("=",""), Base64.URL_SAFE);
     }
 }
