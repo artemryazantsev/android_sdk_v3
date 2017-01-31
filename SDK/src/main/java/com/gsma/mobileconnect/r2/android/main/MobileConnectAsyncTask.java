@@ -19,7 +19,6 @@ import static com.gsma.mobileconnect.r2.android.main.IMobileConnectContract.IMob
 public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectStatus>
 {
     private IMobileConnectOperation mobileConnectOperation;
-
     private IMobileConnectCallback mobileConnectCallback;
 
     public MobileConnectAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
@@ -30,11 +29,16 @@ public class MobileConnectAsyncTask extends AsyncTask<Void, Void, MobileConnectS
         this.mobileConnectCallback = IMobileConnectCallback;
     }
 
+
+
     @Override
     protected MobileConnectStatus doInBackground(@Nullable final Void... voids)
     {
         return mobileConnectOperation.operation();
     }
+
+
+
 
     @Override
     protected void onPostExecute(final MobileConnectStatus mobileConnectStatus)

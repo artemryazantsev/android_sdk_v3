@@ -7,6 +7,7 @@ import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 
 import java.net.URI;
 
@@ -40,12 +41,23 @@ public interface IMobileConnectContract
         void performAsyncTask(@NonNull final IMobileConnectOperation mobileConnectOperation,
                               @NonNull final IMobileConnectCallback mobileConnectCallback);
 
+        void performAsyncTask(@NonNull final IMobileConnectManually mobileConnectManually,
+                              @NonNull final IMobileConnectCallbackManually mobileConnectCallbackManually);
+
+
         @SuppressWarnings("unused")
         void attemptDiscovery(final String msisdn,
                               final String mcc,
                               final String mnc,
                               final MobileConnectRequestOptions options,
                               @NonNull final IMobileConnectCallback mobileConnectCallback);
+
+        void generateDiscoveryManually(final String secretKey,
+                                       final String clientKey,
+                                       final String subscriberId,
+                                       final String name,
+                                       final OperatorUrls operatorUrls,
+                                       @NonNull final IMobileConnectCallbackManually mobileConnectCallbackManually);
 
         @SuppressWarnings("unused")
         void attemptDiscoveryAfterOperatorSelection(@NonNull final IMobileConnectCallback mobileConnectCallback,
@@ -90,6 +102,15 @@ public interface IMobileConnectContract
         void setView(IView view);
 
         DiscoveryResponse getDiscoveryResponse();
+        void setDiscoveryResponse(final DiscoveryResponse discoveryResponse);
+
+        void manualDiscovery(@Nullable final String secretKey,
+                             @Nullable final String clientKey,
+                             @Nullable final String subsriberId,
+                             @Nullable final String name,
+                             @Nullable final OperatorUrls operatorUrls,
+                             @NonNull final IMobileConnectCallbackManually mobileConnectCallbackManually
+                             );
 
         void performDiscovery(@Nullable final String msisdn,
                               @Nullable final String mcc,
@@ -141,7 +162,15 @@ public interface IMobileConnectContract
      */
     interface IMobileConnectCallback
     {
-        void onComplete(final MobileConnectStatus mobileConnectStatus);
+        void  onComplete(final MobileConnectStatus mobileConnectStatus);
+    }
+
+    /**
+     * On completion of an API to {@link com.gsma.mobileconnect.r2.android.main.MobileConnectAndroidView}
+     */
+    interface IMobileConnectCallbackManually
+    {
+        void onComplete(final DiscoveryResponse discoveryResponse);
     }
 
     /**
@@ -150,5 +179,13 @@ public interface IMobileConnectContract
     interface IMobileConnectOperation
     {
         MobileConnectStatus operation();
+    }
+
+    /**
+     * The method which shall be ran within an {@link android.os.AsyncTask}
+     */
+    interface IMobileConnectManually
+    {
+        DiscoveryResponse manually();
     }
 }

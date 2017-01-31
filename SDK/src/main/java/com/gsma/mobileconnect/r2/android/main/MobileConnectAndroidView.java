@@ -18,6 +18,7 @@ import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.MobileConnectWebInterface;
 import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
 import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
 import com.gsma.mobileconnect.r2.android.interfaces.WebViewCallBack;
@@ -27,6 +28,7 @@ import com.gsma.mobileconnect.r2.android.view.InteractiveWebView;
 import com.gsma.mobileconnect.r2.android.webviewclient.AuthenticationWebViewClient;
 import com.gsma.mobileconnect.r2.android.webviewclient.DiscoveryWebViewClient;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
+import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
 
 import java.net.URI;
@@ -34,7 +36,9 @@ import java.net.URISyntaxException;
 import java.util.UUID;
 
 import static com.gsma.mobileconnect.r2.android.main.IMobileConnectContract.IMobileConnectCallback;
+import static com.gsma.mobileconnect.r2.android.main.IMobileConnectContract.IMobileConnectCallbackManually;
 import static com.gsma.mobileconnect.r2.android.main.IMobileConnectContract.IMobileConnectOperation;
+import static com.gsma.mobileconnect.r2.android.main.IMobileConnectContract.IMobileConnectManually;
 
 /**
  * This class interfaces with the underlying Java SDK. It wraps calls to the Java SDK in
@@ -54,6 +58,12 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     public MobileConnectAndroidView(@NonNull final MobileConnectInterface mobileConnectInterface)
     {
         this.presenter = new MobileConnectAndroidPresenter(mobileConnectInterface);
+        this.presenter.setView(this);
+    }
+
+    public MobileConnectAndroidView(@NonNull final MobileConnectWebInterface mobileConnectWebInterface)
+    {
+        this.presenter = new MobileConnectAndroidPresenter(mobileConnectWebInterface);
         this.presenter.setView(this);
     }
 
@@ -239,14 +249,14 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
             @Override
             public void onError(final MobileConnectStatus mobileConnectStatus)
             {
-                Log.i(TAG, "Authentication Successful");
+                Log.i(TAG, "Authentication Failure");
                 authenticationListener.authenticationFailed(mobileConnectStatus);
             }
 
             @Override
             public void onSuccess(final String url)
             {
-                Log.i(TAG, "Authentication Failure");
+                Log.i(TAG, "Authentication Successful");
                 handleRedirectAfterAuthentication(url, state, nonce, authenticationListener, mobileRequestOptions);
             }
         };
@@ -369,6 +379,14 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         new MobileConnectAsyncTask(mobileConnectOperation, mobileConnectCallback).execute();
     }
 
+    @Override
+    public void performAsyncTask(@NonNull final IMobileConnectManually mobileConnectManually,
+                                 @NonNull final IMobileConnectCallbackManually mobileConnectCallbackManually)
+    {
+        Log.i(TAG, "Performing Async Task");
+        new MobileConnectWebAsyncTask(mobileConnectManually, mobileConnectCallbackManually).execute();
+    }
+
     /**
      * Asynchronously attempt discovery using the supplied parameters. If msisdn, mcc and mnc are null the result
      * will be operator selection, otherwise valid parameters will result in a StartAuthorization
@@ -391,6 +409,29 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     {
         Log.i(TAG, String.format("Attempt Discovery for msisdn=%s, mcc=%s, mnc=%s", LogUtils.mask(msisdn), mcc, mnc));
         this.presenter.performDiscovery(msisdn, mcc, mnc, options, mobileConnectCallback);
+    }
+
+    /**
+     * Asynchronously manually attempt discovery using the supplied parameters
+     * @param secretKey - consumer secret
+     * @param clientKey - consumer key
+     * @param subscriberId - subsriber id
+     * @param name - client name
+     * @param operatorUrls Operator URLS
+     * @param mobileConnectCallbackManually The callback in which a {@link MobileConnectStatus} shall be provided after
+     *                              completion
+     */
+    @Override
+    public void generateDiscoveryManually(final String secretKey,
+                                          final String clientKey,
+                                          final String subscriberId,
+                                          final String name,
+                                          final OperatorUrls operatorUrls,
+                                          @NonNull final IMobileConnectCallbackManually mobileConnectCallbackManually)
+    {
+        Log.i(TAG, String.format("Manually generate discovery for secretKey=%s, clientKey=%s, subscriberId=%s, name=%s",
+                secretKey, clientKey, subscriberId, name));
+        this.presenter.manualDiscovery(secretKey, clientKey, subscriberId, name, operatorUrls, mobileConnectCallbackManually);
     }
 
     /**
