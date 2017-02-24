@@ -1,1 +1,1 @@
-include ':DemoApp', ':SDK', ':ExampleApps'
+include ':DemoAppWithoutDiscovery', ':SDK', ':ExampleApps', ':DemoApp'
