@@ -1,22 +1,9 @@
 <resources>
     <string name="app_name">Demo</string>
-    <string name="edit_message">Enter a message</string>
-    <string name="button_send">Send</string>
 
-    <string name="sdk_choose_title">Version of SDK</string>
-    <string name="sdk_r_1">R 1</string>
-    <string name="sdk_r_2">R 2</string>
-    <string name="encrypted_Msisdn">With Encrypted MSIDN?</string>
-    <string name="request_parameters">Request parameters</string>
-    <string name="client_id_field">Client id</string>
-    <string name="client_secret_field">Client secret</string>
-    <string name="client_subscriberId_field">Client subscriberId</string>
-    <string name="client_name_field">Client name</string>
-    <string name="Button_start">Send</string>
-    <string name="encrypted_msisdn_title">Enter your msisdn key:</string>
-    <string name="encrypted_msisdn_hint">Msisdn key:</string>
-    <string name="response_token_id">Token id:</string>
-    <string name="response_message">Message:</string>
-    <string name="response_access_token">Access token:</string>
-    <string name="successful_request_message">Successful Authorization</string>
+    <!-- Mobile Connect Credentials -->
+    <string name="client_id">1</string>
+    <string name="client_secret">1</string>
+    <string name="discovery_url">1</string>
+    <string name="redirect_url">1</string>
 </resources>
