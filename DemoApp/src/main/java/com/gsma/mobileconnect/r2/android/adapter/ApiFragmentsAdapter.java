@@ -8,11 +8,11 @@ import com.gsma.mobileconnect.r2.android.interfaces.ITitle;
 
 import java.util.List;
 
-public class AuthFragmentsAdapter extends FragmentStatePagerAdapter
+public class ApiFragmentsAdapter extends FragmentStatePagerAdapter
 {
     List<Fragment> fragments;
 
-    public AuthFragmentsAdapter(final List<Fragment> fragments, final FragmentManager fm)
+    public ApiFragmentsAdapter(final List<Fragment> fragments, final FragmentManager fm)
     {
         super(fm);
         this.fragments = fragments;

@@ -1,0 +1,142 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.gsma.mobileconnect.r2.android.fragments.ManualDiscoveryFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RadioGroup
+                android:id="@+id/radioGroupSDK"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="end">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/sdk_choose_title"
+                    android:textColor="@android:color/background_dark" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonSDK1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="20dp"
+                    android:checked="true"
+                    android:gravity="end"
+                    android:layoutDirection="rtl"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="10dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/sdk_r_1"
+                    android:textSize="14sp"
+                    android:theme="@style/MyRadioButton" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonSDK2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="20dp"
+                    android:gravity="end"
+                    android:layoutDirection="rtl"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/sdk_r_2"
+                    android:textSize="14sp"
+                    android:theme="@style/MyRadioButton" />
+            </RadioGroup>
+
+            <CheckBox
+                android:id="@+id/encrypted_msisdn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layoutDirection="rtl"
+                android:paddingEnd="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="8dp"
+                android:text="@string/encrypted_Msisdn" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/request_parameters"
+                    android:textColor="#000"
+                    android:textSize="24sp" />
+
+                <EditText
+                    android:id="@+id/client_id_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:ems="10"
+                    android:hint="@string/client_id_field"
+                    android:inputType="text"
+                    android:text="@string/client_id" />
+
+                <EditText
+                    android:id="@+id/client_secret_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:ems="10"
+                    android:hint="@string/client_secret_field"
+                    android:inputType="text"
+                    android:text="@string/client_secret" />
+
+                <EditText
+                    android:id="@+id/client_subscriberId_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:ems="10"
+                    android:hint="@string/client_subscriberId_field"
+                    android:inputType="text"
+                    android:text="@string/client_subId" />
+
+                <EditText
+                    android:id="@+id/client_name_field"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:ems="10"
+                    android:hint="@string/client_name_field"
+                    android:text="@string/client_name"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/send_params"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/Button_start" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
