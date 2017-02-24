@@ -59,13 +59,6 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
         this.mobileConnectWebInterface = mobileConnectWebInterface;
     }
 
-    public MobileConnectAndroidPresenter(@NonNull final MobileConnectWebInterface mobileConnectWebInterface,
-                                         @NonNull final MobileConnectInterface mobileConnectInterface)
-    {
-        this.mobileConnectWebInterface = mobileConnectWebInterface;
-        this.mobileConnectInterface = mobileConnectInterface;
-    }
-
 
 
 
