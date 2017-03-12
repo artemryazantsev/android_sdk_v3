@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,6 +30,22 @@
                     android:textColor="@android:color/background_dark" />
 
                 <RadioButton
+                    android:id="@+id/radioButtonSDK2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:height="20dp"
+                    android:gravity="end"
+                    android:layoutDirection="rtl"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/sdk_r_2"
+                    android:textSize="14sp"
+                    android:theme="@style/MyRadioButton" />
+
+                <RadioButton
                     android:id="@+id/radioButtonSDK1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -42,22 +59,6 @@
                     android:paddingStart="10dp"
                     android:paddingTop="8dp"
                     android:text="@string/sdk_r_1"
-                    android:textSize="14sp"
-                    android:theme="@style/MyRadioButton" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonSDK2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:height="20dp"
-                    android:gravity="end"
-                    android:layoutDirection="rtl"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="8dp"
-                    android:text="@string/sdk_r_2"
                     android:textSize="14sp"
                     android:theme="@style/MyRadioButton" />
             </RadioGroup>
@@ -139,4 +140,13 @@
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/config_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="15dp"
+        app:backgroundTint="@android:color/holo_green_light"
+        app:srcCompat="@drawable/ic_settings_black_24dp"
+        tools:ignore="VectorDrawableCompat" />
 </FrameLayout>

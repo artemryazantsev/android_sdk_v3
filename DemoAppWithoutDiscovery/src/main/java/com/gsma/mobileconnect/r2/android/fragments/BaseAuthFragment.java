@@ -3,6 +3,7 @@ package com.gsma.mobileconnect.r2.android.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -91,7 +92,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
 
     public void MakeManualDiscovery(String client_id, String client_secret,
                                     String client_subId, String providermetadata,
-                                    String client_name, String msisdn) {
+                                    String client_name, String msisdn, Bundle urlConfigs) {
         final DiscoveryOptions.Builder discoveryOptionsBuilder = new DiscoveryOptions.Builder();
 
         discoveryOptionsBuilder.withRedirectUrl(mobileConnectConfig.getRedirectUrl());
@@ -102,10 +103,10 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                     .build();
         }else{
             operator_url  = new OperatorUrls.Builder()
-                    .withAuthorizationUrl(getResources().getString(R.string.Authorization_url))
-                    .withRequestTokenUrl(getResources().getString(R.string.RequestToken_url))
-                    .withUserInfoUrl(getResources().getString(R.string.UserInfo_url))
-                    .withRevokeTokenUrl(getResources().getString(R.string.RevokeToken_url))
+                    .withAuthorizationUrl(urlConfigs.getString("authorization_url"))
+                    .withRequestTokenUrl(urlConfigs.getString("requestToken_url"))
+                    .withUserInfoUrl(urlConfigs.getString("userInfo_url"))
+                    .withRevokeTokenUrl(urlConfigs.getString("revokeToken_url"))
                     .build();
         }
 

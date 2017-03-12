@@ -21,9 +21,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Bundle urlConfigs = new Bundle();
+        urlConfigs.putAll(getIntent().getExtras());
+
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         final ManualDiscoveryFragment manualDiscoveryFragment = ManualDiscoveryFragment.newInstance();
+        manualDiscoveryFragment.setArguments(urlConfigs);
         final List<Fragment> apiFragments = new ArrayList<>();
         apiFragments.add(manualDiscoveryFragment);
         final ApiFragmentsAdapter apiFragmentsAdapter = new ApiFragmentsAdapter(apiFragments,

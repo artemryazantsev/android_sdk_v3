@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.widget.RadioButton;
 import com.gsma.mobileconnect.r2.MobileConnectConfig;
 import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
+import com.gsma.mobileconnect.r2.android.activity.EndpointsConfigure;
+import com.gsma.mobileconnect.r2.android.activity.MainActivity;
 import com.gsma.mobileconnect.r2.android.activity.ResultsActivity;
 import com.gsma.mobileconnect.r2.android.demo.R;
 import com.gsma.mobileconnect.r2.android.interfaces.ITitle;
@@ -38,6 +41,7 @@ public class ManualDiscoveryFragment extends BaseAuthFragment implements ITitle 
     private RadioButton r1_SDK;
     private RadioButton r2_SDK;
     private Button send_main_activity_button;
+    private FloatingActionButton configs_button;
 
     public static ManualDiscoveryFragment newInstance() {
         return new ManualDiscoveryFragment();
@@ -59,6 +63,7 @@ public class ManualDiscoveryFragment extends BaseAuthFragment implements ITitle 
         r2_SDK = (RadioButton) view.findViewById((R.id.radioButtonSDK2));
         encrypted_msisdn = (CheckBox) view.findViewById((R.id.encrypted_msisdn));
         send_main_activity_button = (Button) view.findViewById((R.id.send_params));
+        configs_button = (FloatingActionButton) view.findViewById((R.id.config_button));
         client_id_field = (EditText) view.findViewById((R.id.client_id_field));
         client_secret_field = (EditText) view.findViewById((R.id.client_secret_field));
         client_subscriberId_field = (EditText) view.findViewById((R.id.client_subscriberId_field));
@@ -85,21 +90,30 @@ public class ManualDiscoveryFragment extends BaseAuthFragment implements ITitle 
             }
         });
 
+        configs_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), EndpointsConfigure.class);
+                startActivity(intent);
+            }
+        });
+
         ConnectMobileAndroid();
         return view;
     }
 
     public void sendRequest() {
 
+        Bundle urlConfigs = getArguments();
         String client_id_value = client_id_field.getText().toString();
         String client_secret_value = client_secret_field.getText().toString();
         String client_subId_value =  encrypted_msisdn.isChecked() ? client_subscriberId_field.getText().toString() : null;
-        String providermetadata_value = r2_SDK.isChecked() ? getResources().getString(R.string.providermetadata) : null;
+        String providermetadata_value = r2_SDK.isChecked() ? urlConfigs.getString("provider_metadata") : null;
         String client_name_value = r2_SDK.isChecked() ? client_name_field.getText().toString() : "";
         String msisdn_value = getResources().getString(R.string.msisdn);
 
         MakeManualDiscovery(client_id_value, client_secret_value, client_subId_value,
-                providermetadata_value, client_name_value, msisdn_value);
+                providermetadata_value, client_name_value, msisdn_value, urlConfigs);
     }
 
     @Override
