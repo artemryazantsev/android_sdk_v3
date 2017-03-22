@@ -108,6 +108,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                                                                .withDiscoveryUrl(discoveryUri)
                                                                .withRedirectUrl(redirectUri)
                                                                .withCacheResponsesWithSessionId(false)
+                                                                .withXRedirect(getString(R.string.xRedirect))
                                                                .build();
 
         MobileConnect mobileConnect = new MobileConnect.Builder(mobileConnectConfig,

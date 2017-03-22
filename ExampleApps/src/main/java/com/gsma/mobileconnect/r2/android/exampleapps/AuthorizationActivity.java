@@ -35,9 +35,8 @@ import java.util.UUID;
  */
 
 public class AuthorizationActivity extends BaseActivity implements DiscoveryListener,
-                                                                   AuthenticationListener,
-                                                                   IMobileConnectContract.IMobileConnectCallback
-{
+        AuthenticationListener,
+        IMobileConnectContract.IMobileConnectCallback {
     // UI Views
     private CheckBox msisdnCheckBox;
 
@@ -55,8 +54,7 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
     private String scope;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
-    {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_with_without_msisdn);
 
@@ -68,8 +66,7 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
 
         final Intent intent = getIntent();
 
-        if (intent != null)
-        {
+        if (intent != null) {
             scope = intent.getStringExtra("scope");
             final String title = intent.getStringExtra("title");
             toolbar.setTitle(title);
@@ -78,41 +75,36 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
         URI discoveryUri = null;
         URI redirectUri = null;
 
-        try
-        {
+        try {
             discoveryUri = new URI(getString(R.string.discovery_url));
             redirectUri = new URI(getString(R.string.redirect_url));
-        }
-        catch (URISyntaxException e)
-        {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
 
         mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_id))
-                                                               .withClientSecret(getString(R.string.client_secret))
-                                                               .withDiscoveryUrl(discoveryUri)
-                                                               .withRedirectUrl(redirectUri)
-                                                               .withCacheResponsesWithSessionId(false)
-                                                               .build();
+                .withClientSecret(getString(R.string.client_secret))
+                .withDiscoveryUrl(discoveryUri)
+                .withRedirectUrl(redirectUri)
+                .withXRedirect(getString(R.string.xRedirect))
+                .withCacheResponsesWithSessionId(false)
+                .build();
 
         final MobileConnect mobileConnect = new MobileConnect.Builder(mobileConnectConfig,
-                                                                      new AndroidMobileConnectEncodeDecoder()).build();
+                new AndroidMobileConnectEncodeDecoder()).build();
 
         final MobileConnectInterface mobileConnectInterface = mobileConnect.getMobileConnectInterface();
 
         mobileConnectAndroidView = new MobileConnectAndroidView(mobileConnectInterface);
 
-        getTokenButton.setOnClickListener(new View.OnClickListener()
-        {
+        getTokenButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
 
                 String msisdn = null;
                 final DiscoveryOptions.Builder discoveryOptionsBuilder = new DiscoveryOptions.Builder();
 
-                if (msisdnCheckBox.isChecked())
-                {
+                if (msisdnCheckBox.isChecked()) {
                     msisdn = msisdnTextInputEditText.getText().toString();
                     discoveryOptionsBuilder.withMsisdn(msisdn);
                 }
@@ -121,27 +113,22 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
 
                 final MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder()
                         .withDiscoveryOptions(
-                        discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
+                                discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
 
                 mobileConnectAndroidView.attemptDiscovery(msisdn,
-                                                          null,
-                                                          null,
-                                                          requestOptions,
-                                                          AuthorizationActivity.this);
+                        null,
+                        null,
+                        requestOptions,
+                        AuthorizationActivity.this);
             }
         });
 
-        msisdnCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+        msisdnCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked)
-            {
-                if (checked)
-                {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                if (checked) {
                     msisdnTextInputLayout.setVisibility(View.VISIBLE);
-                }
-                else
-                {
+                } else {
                     msisdnTextInputLayout.setVisibility(View.GONE);
                 }
             }
@@ -149,15 +136,13 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
         mobileConnectAndroidView.initialise();
     }
 
     @Override
-    public void onStop()
-    {
+    public void onStop() {
         mobileConnectAndroidView.cleanUp();
         super.onStop();
     }
@@ -170,36 +155,31 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
      *
      * @param mobileConnectStatus The status to be interrogated.
      */
-    protected void handleRedirect(final MobileConnectStatus mobileConnectStatus)
-    {
+    protected void handleRedirect(final MobileConnectStatus mobileConnectStatus) {
         final String state =
                 mobileConnectStatus.getState() == null ? UUID.randomUUID().toString() : mobileConnectStatus.getState();
         final String nonce =
                 mobileConnectStatus.getNonce() == null ? UUID.randomUUID().toString() : mobileConnectStatus.getNonce();
 
-        switch (mobileConnectStatus.getResponseType())
-        {
-            case ERROR:
-            {
+        switch (mobileConnectStatus.getResponseType()) {
+            case ERROR: {
                 Toast.makeText(this,
-                               String.format("Error - %s", mobileConnectStatus.getErrorMessage()),
-                               Toast.LENGTH_LONG).show();
+                        String.format("Error - %s", mobileConnectStatus.getErrorMessage()),
+                        Toast.LENGTH_LONG).show();
                 break;
             }
-            case OPERATOR_SELECTION:
-            {
+            case OPERATOR_SELECTION: {
                 mobileConnectAndroidView.attemptDiscoveryWithWebView(this,
-                                                                     this,
-                                                                     mobileConnectStatus.getUrl(),
-                                                                     mobileConnectConfig.getRedirectUrl().toString(),
-                                                                     null);
+                        this,
+                        mobileConnectStatus.getUrl(),
+                        mobileConnectConfig.getRedirectUrl().toString(),
+                        null);
                 break;
             }
-            case START_AUTHENTICATION:
-            {
+            case START_AUTHENTICATION: {
                 AuthenticationOptions.Builder authenticationOptionsBuilder = new AuthenticationOptions.Builder()
                         .withContext(
-                        "demo").withBindingMessage("demo auth");
+                                "demo").withBindingMessage("demo auth");
 
                 final MobileConnectRequestOptions.Builder mobileConnectRequestOptionsBuilder = new
                         MobileConnectRequestOptions.Builder();
@@ -208,23 +188,21 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
 
                 final MobileConnectRequestOptions mobileConnectRequestOptions = mobileConnectRequestOptionsBuilder
                         .withAuthenticationOptions(
-                        authenticationOptionsBuilder.build()).build();
+                                authenticationOptionsBuilder.build()).build();
 
                 startAuthentication(mobileConnectStatus, mobileConnectRequestOptions, state, nonce);
                 break;
             }
-            case AUTHENTICATION:
-            {
+            case AUTHENTICATION: {
                 mobileConnectAndroidView.attemptAuthenticationWithWebView(this,
-                                                                          this,
-                                                                          mobileConnectStatus.getUrl(),
-                                                                          state,
-                                                                          nonce,
-                                                                          null);
+                        this,
+                        mobileConnectStatus.getUrl(),
+                        state,
+                        nonce,
+                        null);
                 break;
             }
-            case COMPLETE:
-            {
+            case COMPLETE: {
                 BaseActivity.mobileConnectStatus = mobileConnectStatus;
                 displayResult();
                 break;
@@ -248,29 +226,25 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
     private void startAuthentication(@NonNull final MobileConnectStatus mobileConnectStatus,
                                      @Nullable final MobileConnectRequestOptions mobileConnectRequestOptions,
                                      @NonNull final String state,
-                                     @NonNull final String nonce)
-    {
+                                     @NonNull final String nonce) {
         mobileConnectAndroidView.startAuthentication(mobileConnectStatus.getDiscoveryResponse()
-                                                                        .getResponseData()
-                                                                        .getSubscriberId(),
-                                                     state,
-                                                     nonce,
-                                                     mobileConnectRequestOptions,
-                                                     new IMobileConnectContract.IMobileConnectCallback()
-                                                     {
-                                                         @Override
-                                                         public void onComplete(MobileConnectStatus mobileConnectStatus)
-                                                         {
-                                                             handleRedirect(mobileConnectStatus);
-                                                         }
-                                                     });
+                        .getResponseData()
+                        .getSubscriberId(),
+                state,
+                nonce,
+                mobileConnectRequestOptions,
+                new IMobileConnectContract.IMobileConnectCallback() {
+                    @Override
+                    public void onComplete(MobileConnectStatus mobileConnectStatus) {
+                        handleRedirect(mobileConnectStatus);
+                    }
+                });
     }
 
     /**
      * Launch the {@link ResultActivity} to display the result
      */
-    protected void displayResult()
-    {
+    protected void displayResult() {
         final Intent intent = new Intent(this, ResultActivity.class);
         startActivity(intent);
     }
@@ -282,8 +256,7 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
      * @param mobileConnectStatus The result of the discovery.
      */
     @Override
-    public void onDiscoveryResponse(final MobileConnectStatus mobileConnectStatus)
-    {
+    public void onDiscoveryResponse(final MobileConnectStatus mobileConnectStatus) {
         handleRedirect(mobileConnectStatus);
     }
 
@@ -291,8 +264,7 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
      * The Authorization performed via the WebView failed.
      */
     @Override
-    public void discoveryFailed(final MobileConnectStatus mobileConnectStatus)
-    {
+    public void discoveryFailed(final MobileConnectStatus mobileConnectStatus) {
         Toast.makeText(this, "Discovery Failed", Toast.LENGTH_SHORT).show();
     }
 
@@ -301,8 +273,7 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
      * process was successful or not.
      */
     @Override
-    public void onDiscoveryDialogClose()
-    {
+    public void onDiscoveryDialogClose() {
         Toast.makeText(this, "Dialog Closed", Toast.LENGTH_SHORT).show();
     }
 
@@ -312,8 +283,7 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
      * @param mobileConnectStatus The status returned
      */
     @Override
-    public void onComplete(final MobileConnectStatus mobileConnectStatus)
-    {
+    public void onComplete(final MobileConnectStatus mobileConnectStatus) {
         handleRedirect(mobileConnectStatus);
     }
 
@@ -323,12 +293,10 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
      * @param mobileConnectStatus A populated {@link MobileConnectStatus} containing the errors.
      */
     @Override
-    public void authenticationFailed(final MobileConnectStatus mobileConnectStatus)
-    {
+    public void authenticationFailed(final MobileConnectStatus mobileConnectStatus) {
         String error = null;
 
-        if (mobileConnectStatus != null)
-        {
+        if (mobileConnectStatus != null) {
             error = mobileConnectStatus.getErrorMessage();
         }
 
@@ -341,14 +309,12 @@ public class AuthorizationActivity extends BaseActivity implements DiscoveryList
      * @param mobileConnectStatus The status returned from Authorization
      */
     @Override
-    public void authenticationSuccess(final MobileConnectStatus mobileConnectStatus)
-    {
+    public void authenticationSuccess(final MobileConnectStatus mobileConnectStatus) {
         handleRedirect(mobileConnectStatus);
     }
 
     @Override
-    public void onAuthenticationDialogClose()
-    {
+    public void onAuthenticationDialogClose() {
         Toast.makeText(this, "Dialog closed", Toast.LENGTH_SHORT).show();
     }
 }
