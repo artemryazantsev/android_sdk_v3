@@ -67,6 +67,13 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         this.presenter.setView(this);
     }
 
+    public MobileConnectAndroidView(@NonNull final MobileConnectWebInterface mobileConnectWebInterface,
+                                    @NonNull final MobileConnectInterface mobileConnectInterface )
+    {
+        this.presenter = new MobileConnectAndroidPresenter(mobileConnectWebInterface, mobileConnectInterface);
+        this.presenter.setView(this);
+    }
+
     public IMobileConnectContract.IUserActionsListener getPresenter()
     {
         return presenter;
