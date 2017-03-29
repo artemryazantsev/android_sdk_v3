@@ -97,8 +97,8 @@ abstract class MobileConnectWebViewClient extends WebViewClient
         // loading the
         // url regardless, so we have to ensure the callback url is not being loaded. We load a blank page for this
         // reason.
-        // view.stopLoading();
-        // view.loadData("", "text/html", null);
+         view.stopLoading();
+         view.loadData("", "text/html", null);
 
         // Check for response errors in the URL
         if (url.contains("error"))
@@ -120,8 +120,8 @@ abstract class MobileConnectWebViewClient extends WebViewClient
             this.dialog.cancel();
         }
 
-        this.dialog.show();
-        view.loadUrl(url);
+//        this.dialog.show();
+//        view.loadUrl(url);
 
         return true;
     }

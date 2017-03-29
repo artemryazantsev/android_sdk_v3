@@ -57,8 +57,6 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     @Before
     public void setUp() throws Exception
     {
-        //super.setUp();
-
         mobileConnectCallback = new IMobileConnectContract.IMobileConnectCallback()
         {
             @Override
@@ -69,14 +67,15 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
         };
 
 
-        MobileConnectConfig mobileConnectConfig = new MobileConnectConfig.Builder().withClientId("clientId")
-                                                                                   .withClientSecret("clientSecret")
+        MobileConnectConfig mobileConnectConfig = new MobileConnectConfig.Builder().withClientId("df023f39-e32b-47ee-96c6-a77d926a951e")
+                                                                                   .withClientSecret("b0a92cb9-d836-4503-9921-11d9e006e37b")
                                                                                    .withDiscoveryUrl(new URI(
-                                                                                           "http://discoveryUri"))
+                                                                                           "https://integration.mobileconnect.io/gsma/v2/discovery"))
                                                                                    .withRedirectUrl(new URI(
-                                                                                           "http://redirectUri"))
+                                                                                           "http://www.google.com/"))
                                                                                    .withCacheResponsesWithSessionId(
                                                                                            false)
+                .withXRedirect("APP")
                                                                                    .build();
 
         MobileConnect mobileConnect = new MobileConnect.Builder(mobileConnectConfig,
@@ -94,7 +93,6 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     public void tearDown() throws Exception
     {
         activityRule.getActivity().finish();
-        //super.tearDown();
     }
 
     @Test
