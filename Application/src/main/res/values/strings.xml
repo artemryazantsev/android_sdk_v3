@@ -1,0 +1,129 @@
+<resources>
+
+    <!--Application-->
+    <string name="app_name">Mobile Connect</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_help">Help</string>
+    <string name="action_about">About</string>
+    <string name="demo_app">Demo app</string>
+    <string name="example_apps">Example apps</string>
+    <string name="without_discovery_app">Without discovery app</string>
+    <string name="nav_header_info">Select application\'s type</string>
+
+
+    <!--Dialogs-->
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="error_format">Error - %s</string>
+    <string name="dialog_closed">Dialog closed</string>
+
+
+
+    <!--Main activity-->
+    <string name="edit_message">Enter a message</string>
+    <string name="button_send">Send</string>
+    <string name="sdk_choose_title">Provider metadata:</string>
+    <string name="sdk_r_1">Without</string>
+    <string name="sdk_r_2">With</string>
+    <string name="with_msisdn">With MSISDN</string>
+    <string name="with_x_source_ip">With X-Source Ip</string>
+    <string name="ip_address">Ip-address</string>
+    <string name="address">address</string>
+    <string name="encrypted_Msisdn">With Encrypted MSIDN?</string>
+    <string name="request_parameters">Request parameters</string>
+    <string name="request_options">Request options</string>
+    <string name="client_id_field">Client id</string>
+    <string name="client_secret_field">Client secret</string>
+    <string name="client_subscriberId_field">Client subscriberId</string>
+    <string name="client_name_field">Client name</string>
+    <string name="Button_start">Send</string>
+    <string name="encrypted_msisdn_title">Enter your msisdn key:</string>
+    <string name="encrypted_msisdn_hint">Msisdn key:</string>
+    <string name="authentication">Authentication</string>
+    <string name="authorization">Authorization</string>
+
+    <!--SDK-->
+    <string name="context">context</string>
+    <string name="binding">binding</string>
+
+    <string name="authorization_url">authorization_url</string>
+    <string name="requestToken_url">requestToken_url</string>
+    <string name="userInfo_url">userInfo_url</string>
+    <string name="revokeToken_url">revokeToken_url</string>
+
+    <string name="demo">demo</string>
+    <string name="demo_auth">demo auth</string>
+
+    <string name="not_sting_mess">Value isn\'t a String.</string>
+
+    <!--Results activity-->
+    <string name="results_activity_title">"Results"</string>
+    <string name="response_token_id">Token id:</string>
+    <string name="response_message">Message:</string>
+    <string name="response_access_token">Access token:</string>
+    <string name="successful_request_message">Successful Authorization</string>
+    <string name="refrash_token">Refresh token</string>
+    <string name="revoke_token">Revoke token</string>
+    <string name="failed_receive_token">Failed to receive access token. Please try again.</string>
+    <string name="unable_to_get_client_name">Unable to get client name</string>
+
+    <!--Endpoints configure activity-->
+    <string name="title_activity_endpoints_configure">Endpoints Configurations</string>
+    <string name="provider_metadata_field">Provider metadata url</string>
+    <string name="authorization_url_field">Authorization url</string>
+    <string name="requestToken_url_field">RequestToken url</string>
+    <string name="userInfo_url_field">UserInfo url</string>
+    <string name="revokeToken_url_field">RevokeToken url</string>
+    <string name="save_button">Save</string>
+
+    <!--Navigation drawer-->
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <!--Empty string-->
+    <string name="empty_string"></string>
+
+
+    <string name="discovery_url_title">Discovery url</string>
+    <string name="redirect_url_title">Redirect url</string>
+    <string name="x_redirect_title">X-Redirect</string>
+
+    <!--Scopes-->
+    <string name="scope_address"> address</string>
+    <string name="scope_email"> email</string>
+    <string name="scope_phone"> phone</string>
+    <string name="scope_profile"> profile</string>
+    <string name="format_scope"> %s</string>
+    <!--Numeric-->
+    <string name="number_one">1</string>
+
+
+    <!--About Activity-->
+    <string name="about_information">This example application demonstrates how to integrate Mobile Connect services into your Android apps using the Mobile Connect SDK for Android.</string>
+    <string name="help_link"><u>Help</u></string>
+
+    <!--Help Activity-->
+    <string name="help_tutorial">Press and hold the following buttons to understand how to work with help in this application.</string>
+    <string name="help_tutorial_after">You can press and hold any UI element\'s.</string>
+    <string name="help_dialog">Help dialog</string>
+    <string name="help_dialog_content">Those button opens this help dialog</string>
+    <string name="help_toast">Help toast</string>
+    <string name="help_toast_content">Those button open\'s this help message</string>
+
+    <!--Help-->
+
+    <string name="help_x_source_ip">Ip address of your device</string>
+    <string name="help_msisdn">Phone number</string>
+    <string name="help__encrypted_msisdn">Adds \'client subscriber id\' to your request</string>
+    <string name="help_authentication">The SDK allows you to call a method that accepts a reference to a configuration file as a parameter. With your developer credentials specified in the configuration file, you have everything you need to make a successful call to the Mobile Connect Discovery endpoint, and the methods <b>attemptDiscovery()</b>, <b>startAuthentication()</b>, and <b>handleUrlRedirect</b> do just that, building and making the call, and then handling the response. The SDK also takes care of caching the response for re-use in a subsequent call – subject to the configured timeout. Once the end user has entered their <i>MSISDN</i> or specified their operator, and a successful Discovery response is received, the SDK builds the call to the <u>Authentication endpoint</u>. A successful authentication returns an <b>id_token</b> containing the user’s PCR, which is unpacked and available for verification against your user register.</string>
+    <string name="help_authorization">The SDK allows you to call the Identity Gateway with the scope parameter set to \“<u>mc_authz</u>\”, which signifies an authorisation request for a single transaction (the <u>id_token</u> and <u>access token</u> returned from the Gateway have a timeout set to zero, so expire after a single use). You should check that the Identity Gateway supports version 1.2 of the Mobile Connect Profile (available in the Provider Metadata) before attempting a call, but note that the SDK sets the version to “mc_v1.2” automatically.</string>
+
+    <string name="providermetadata_title">Providermetadata</string>
+    <string name="help_provider_metadata">A successful call to the Mobile Connect Discovery endpoint returns the end user’s Mobile Network Operator (MNO) and describes the Mobile Connect services that MNO supports, via a URI to the MNO’s Provider Metadata. The metadata describes the Identity Gateway endpoints (Mobile Connect services) your application or service can use and how those endpoints are configured – for example, the response types an endpoint can return, the subject identifier types supported, or the Identity Services encryption algorithms in use.Although Provider Metadata is the primary source of information detailing the Identity Gateway configuration, it does not change often, so a cached version can be used without risk of expired data causing errors. The Mobile Connect SDK handles both the querying of the Provider Metadata and the caching.\n  1. If the Provider Metadata URI returns no data, the cached metadata is used.\n  2. Where the cached data is out of date (defaulting to 15-minute intervals) a subsequent query of the URI is attempted, and in the event of a second failed response, expired cached data is used.\n  3. Should neither the cached data nor the Provider Metadata URI return data (such as an error upon first user login) default values are used.\n Regardless of the source, the SDK parses the Provider Metadata into a discrete list of properties. See the OpenID Provider Metadata definition for a list of the metadata available, although you should note that Mobile Connect\'s implementation may not be exhaustive.</string>
+
+
+</resources>
