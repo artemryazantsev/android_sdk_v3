@@ -55,32 +55,25 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     */
 
     @Before
-    public void setUp() throws Exception
-    {
-        //super.setUp();
-
-        mobileConnectCallback = new IMobileConnectContract.IMobileConnectCallback()
-        {
+    public void setUp() throws Exception {
+        mobileConnectCallback = new IMobileConnectContract.IMobileConnectCallback() {
             @Override
-            public void onComplete(MobileConnectStatus mobileConnectStatus)
-            {
+            public void onComplete(MobileConnectStatus mobileConnectStatus) {
 
             }
         };
 
 
         MobileConnectConfig mobileConnectConfig = new MobileConnectConfig.Builder().withClientId("clientId")
-                                                                                   .withClientSecret("clientSecret")
-                                                                                   .withDiscoveryUrl(new URI(
-                                                                                           "http://discoveryUri"))
-                                                                                   .withRedirectUrl(new URI(
-                                                                                           "http://redirectUri"))
-                                                                                   .withCacheResponsesWithSessionId(
-                                                                                           false)
-                                                                                   .build();
+                .withClientSecret("clientSecret")
+                .withDiscoveryUrl(new URI("http://discoveryUri"))
+                .withRedirectUrl(new URI("http://redirectUri"))
+                .withCacheResponsesWithSessionId(false)
+                .withXRedirect("APP")
+                .build();
 
         MobileConnect mobileConnect = new MobileConnect.Builder(mobileConnectConfig,
-                                                                new AndroidMobileConnectEncodeDecoder()).build();
+                new AndroidMobileConnectEncodeDecoder()).build();
 
         mobileConnectInterface = mobileConnect.getMobileConnectInterface();
 
@@ -91,22 +84,18 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws Exception {
         activityRule.getActivity().finish();
-        //super.tearDown();
     }
 
     @Test
-    public void testConstructor()
-    {
+    public void testConstructor() {
         Assert.assertNotNull("Check constructor", mobileConnectAndroidView);
         Assert.assertNotNull("Check presenter", mobileConnectAndroidView.getPresenter());
     }
 
     @Test
-    public void testAttemptDiscovery()
-    {
+    public void testAttemptDiscovery() {
         // Given
         final String msisdn = "msisdn";
         final String mcc = "mcc";
@@ -121,8 +110,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testAttemptDiscoveryAfterOperatorSelection() throws Exception
-    {
+    public void testAttemptDiscoveryAfterOperatorSelection() throws Exception {
         // Given
         URI redirectUri = new URI("http://redirect.html");
 
@@ -134,8 +122,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testStartAuthentication() throws Exception
-    {
+    public void testStartAuthentication() throws Exception {
         // Given
         final String msisdn = "msisdn";
         final String state = "state";
@@ -150,14 +137,13 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testStartAuthenticationWithMobileAsPrompt() throws Exception
-    {
+    public void testStartAuthenticationWithMobileAsPrompt() throws Exception {
         // Given
         final String msisdn = "msisdn";
         final String state = "state";
         final String nonce = "nonce";
         final AuthenticationOptions authenticationOptions = new AuthenticationOptions.Builder().withPrompt("mobile")
-                                                                                               .build();
+                .build();
         final MobileConnectRequestOptions options = new MobileConnectRequestOptions.Builder().withAuthenticationOptions(
                 authenticationOptions).build();
 
@@ -170,8 +156,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testRequestToken() throws Exception
-    {
+    public void testRequestToken() throws Exception {
         // Given
         URI redirectUri = new URI("http://redirect.html");
         final String state = "state";
@@ -186,8 +171,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testHandleUrlRedirect() throws Exception
-    {
+    public void testHandleUrlRedirect() throws Exception {
         // Given
         URI redirectUri = new URI("http://redirect.html");
         final String state = "state";
@@ -199,12 +183,11 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
 
         // Then
         Mockito.verify(mockPresenter)
-               .performHandleUrlRedirect(redirectUri, state, nonce, options, mobileConnectCallback);
+                .performHandleUrlRedirect(redirectUri, state, nonce, options, mobileConnectCallback);
     }
 
     @Test
-    public void testRequestIdentity() throws Exception
-    {
+    public void testRequestIdentity() throws Exception {
         // Given
         final String accessToken = "accessToken";
 
@@ -216,8 +199,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testRefreshToken() throws Exception
-    {
+    public void testRefreshToken() throws Exception {
         // Given
         final String refreshToken = "refreshToken";
 
@@ -229,8 +211,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testRevokeToken() throws Exception
-    {
+    public void testRevokeToken() throws Exception {
         // Given
         final String accessToken = "accessToken";
         final String tokenTypeHint = "tokenTypeHint";
@@ -243,8 +224,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testRequestUserInfo() throws Exception
-    {
+    public void testRequestUserInfo() throws Exception {
         // Given
         final String accessToken = "accessToken";
 
@@ -256,8 +236,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testHandleUrlRedirectAfterAuthenticationInValidURL() throws Exception
-    {
+    public void testHandleUrlRedirectAfterAuthenticationInValidURL() throws Exception {
         // Given
         final String incorrectUrl = "$£%^$%^";
         final String state = "state";
@@ -267,18 +246,17 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
 
         // When
         mobileConnectAndroidView.handleRedirectAfterAuthentication(incorrectUrl,
-                                                                   state,
-                                                                   nonce,
-                                                                   mockAuthenticationListener,
-                                                                   mobileConnectRequestOptions);
+                state,
+                nonce,
+                mockAuthenticationListener,
+                mobileConnectRequestOptions);
 
         // Then
         Mockito.verify(mockAuthenticationListener).authenticationFailed(Matchers.any(MobileConnectStatus.class));
     }
 
     @Test
-    public void testHandleUrlRedirectAfterAuthenticationValidURL() throws Exception
-    {
+    public void testHandleUrlRedirectAfterAuthenticationValidURL() throws Exception {
         // Given
         URI redirectUri = new URI("http://redirect.html");
         final String state = "state";
@@ -288,23 +266,22 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
 
         // When
         mobileConnectAndroidView.handleRedirectAfterAuthentication(redirectUri.toString(),
-                                                                   state,
-                                                                   nonce,
-                                                                   mockAuthenticationListener,
-                                                                   mobileConnectRequestOptions);
+                state,
+                nonce,
+                mockAuthenticationListener,
+                mobileConnectRequestOptions);
 
         // Then
         Mockito.verify(mockPresenter)
-               .performHandleUrlRedirect(Matchers.eq(redirectUri),
-                                         Matchers.eq(state),
-                                         Matchers.eq(nonce),
-                                         Matchers.eq(mobileConnectRequestOptions),
-                                         Matchers.any(IMobileConnectContract.IMobileConnectCallback.class));
+                .performHandleUrlRedirect(Matchers.eq(redirectUri),
+                        Matchers.eq(state),
+                        Matchers.eq(nonce),
+                        Matchers.eq(mobileConnectRequestOptions),
+                        Matchers.any(IMobileConnectContract.IMobileConnectCallback.class));
     }
 
     @Test
-    public void testGetDiscoveryResponse()
-    {
+    public void testGetDiscoveryResponse() {
         // Given
         // When
         mobileConnectAndroidView.getDiscoveryResponse();
@@ -314,8 +291,7 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testPerformAsyncTask() throws Exception
-    {
+    public void testPerformAsyncTask() throws Exception {
         // Given
         final CountDownLatch countDownLatch = new CountDownLatch(1);
 
@@ -329,11 +305,9 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
 
         // When
         //When
-        new Thread(new Runnable()
-        {
+        new Thread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 mobileConnectAndroidView.performAsyncTask(mockMobileConnectOperation, mockMobileConnectCallback);
                 countDownLatch.countDown();
             }
@@ -407,13 +381,10 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     */
 
     @Test
-    public void testAttemptAuthenticationWithWebView() throws Exception
-    {
-        activityRule.getActivity().runOnUiThread(new Runnable()
-        {
+    public void testAttemptAuthenticationWithWebView() throws Exception {
+        activityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 // Given
                 final AuthenticationListener mockAuthenticationListener = Mockito.mock(AuthenticationListener.class);
                 final String url = "http://authenticationurl";
@@ -424,11 +395,11 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
 
                 // When
                 mobileConnectAndroidView.attemptAuthenticationWithWebView(InstrumentationRegistry.getTargetContext(),
-                                                                          mockAuthenticationListener,
-                                                                          url,
-                                                                          state,
-                                                                          nonce,
-                                                                          mockMobileConnectRequestOptions);
+                        mockAuthenticationListener,
+                        url,
+                        state,
+                        nonce,
+                        mockMobileConnectRequestOptions);
 
                 // Then
                 //Espresso.onView(ViewMatchers.withId(R.id.web_view))
@@ -438,13 +409,10 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
     }
 
     @Test
-    public void testAttemptDiscoveryWithWebView() throws Exception
-    {
-        activityRule.getActivity().runOnUiThread(new Runnable()
-        {
+    public void testAttemptDiscoveryWithWebView() throws Exception {
+        activityRule.getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 // Given
                 final DiscoveryListener mockDiscoveryListener = Mockito.mock(DiscoveryListener.class);
                 final String operatorUrl = "http://operatorUrl";
@@ -455,10 +423,10 @@ public class MobileConnectAndroidViewTest //extends ActivityInstrumentationTestC
 
                 // When
                 mobileConnectAndroidView.attemptDiscoveryWithWebView(InstrumentationRegistry.getTargetContext(),
-                                                                     mockDiscoveryListener,
-                                                                     operatorUrl,
-                                                                     redirectUrl,
-                                                                     mockMobileConnectRequestOptions);
+                        mockDiscoveryListener,
+                        operatorUrl,
+                        redirectUrl,
+                        mockMobileConnectRequestOptions);
 
                 // Then
                 //Espresso.onView(ViewMatchers.withId(R.id.web_view))

@@ -63,4 +63,3 @@
 -dontwarn org.bouncycastle.jce.ECNamedCurveTable
 -dontwarn javax.xml.bind.DatatypeConverter
 -dontwarn org.apache.http.entity.StringEntity
-

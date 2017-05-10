@@ -52,6 +52,8 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
 
     private IMobileConnectContract.IUserActionsListener presenter;
 
+    private static boolean isRegistered;
+
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
@@ -286,6 +288,14 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
         {
             Log.i(TAG, String.format("Failed to show Dialog", exception));
         }
+    }
+
+    public static void setIsRegistered(boolean isRegistered) {
+        MobileConnectAndroidView.isRegistered = isRegistered;
+    }
+
+    public boolean isRegistered(){
+        return isRegistered;
     }
 
     @Override
