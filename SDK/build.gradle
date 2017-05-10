@@ -7,10 +7,14 @@ android {
         targetSdkVersion 24
         versionCode 3
         versionName "3.0.3"
+        resConfigs "en", "hdpi"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             testCoverageEnabled = true
@@ -43,7 +47,12 @@ android {
         compile 'com.android.support:appcompat-v7:24.2.1'
         compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
         compile 'com.squareup:otto:1.3.8'
+        compile (
+                [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.6.7'],
+                [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.6.7'],
+                [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.7']
 
+        )
 
         testCompile 'junit:junit:4.12'
         testCompile 'org.mockito:mockito-core:2.2.0'
@@ -67,6 +76,9 @@ jacoco {
     toolVersion = "0.7.6.201602180812"
     reportsDir = file("$buildDir/customJacocoReportDir")
 }
+
+
+
 task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["testDebugUnitTest", "createDebugCoverageReport"]) {
 
     group = "Reporting"
@@ -102,4 +114,6 @@ task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["testDebugUnitTest
             }
         }
     }
+}
+dependencies {
 }

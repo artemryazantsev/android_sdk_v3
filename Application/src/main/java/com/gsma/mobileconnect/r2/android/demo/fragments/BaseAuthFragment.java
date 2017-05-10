@@ -129,9 +129,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
 
         switch (mobileConnectStatus.getResponseType()) {
             case ERROR: {
-                Toast.makeText(getActivity(),
-                        String.format(getString(R.string.error_format), mobileConnectStatus.getErrorMessage()),
-                        Toast.LENGTH_LONG).show();
+                showAlertMessage(getString(R.string.error), String.format(getString(R.string.error_format), mobileConnectStatus.getErrorMessage()));
                 break;
             }
             case OPERATOR_SELECTION: {

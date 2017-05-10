@@ -145,7 +145,6 @@
                         android:text="User Info" />
 
                     <TextView
-                        android:id="@+id/txbUserInfo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp" />
@@ -172,7 +171,6 @@
                         android:text="Identity" />
 
                     <TextView
-                        android:id="@+id/txbIdentity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp" />

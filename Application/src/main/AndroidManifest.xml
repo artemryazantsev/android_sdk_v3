@@ -9,21 +9,22 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:extractNativeLibs="false">
+
         <activity android:name=".activity.MainActivity" android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.ResultsActivity"
             android:label="@string/results_activity_title"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode = "singleTask">
-
         </activity>
 
         <activity
@@ -31,7 +32,6 @@
             android:label="@string/action_about"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask">
-
         </activity>
 
         <activity
@@ -39,7 +39,7 @@
             android:label="@string/action_help"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask">
-
         </activity>
+
     </application>
 </manifest>

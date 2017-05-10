@@ -21,24 +21,20 @@
             android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
-            >
-
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <TextView
-                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/request_parameters"
                 android:textColor="@color/md_black_1000"
                 android:textSize="24sp"
-                android:layout_gravity="center"
-                />
+                android:layout_gravity="center" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
+
                 <EditText
                     android:id="@+id/client_id_field"
                     android:layout_width="fill_parent"
@@ -46,14 +42,15 @@
                     android:layout_marginTop="@dimen/margin_top"
                     android:ems="10"
                     android:hint="@string/client_id_field"
-                    android:inputType="text"
-                    />
+                    android:inputType="text" />
+
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
+
                 <EditText
                     android:id="@+id/client_secret_field"
                     android:layout_width="fill_parent"
@@ -61,13 +58,15 @@
                     android:layout_marginTop="@dimen/margin_top"
                     android:ems="10"
                     android:hint="@string/client_secret_field"
-                    android:inputType="text"
-                    />
+                    android:inputType="text" />
+
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
+
                 <EditText
                     android:id="@+id/client_subscriberId_field"
                     android:layout_width="fill_parent"
@@ -75,14 +74,14 @@
                     android:layout_marginTop="12dp"
                     android:ems="10"
                     android:hint="@string/client_subscriberId_field"
-                    android:inputType="text"
-                    />
+                    android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
-                >
+                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
+
                 <EditText
                     android:id="@+id/client_name_field"
                     android:layout_width="fill_parent"
@@ -90,8 +89,11 @@
                     android:layout_marginTop="@dimen/margin_top"
                     android:ems="10"
                     android:visibility="invisible" />
+
             </android.support.design.widget.TextInputLayout>
+
         </LinearLayout>
+
     </ScrollView>
 
 
