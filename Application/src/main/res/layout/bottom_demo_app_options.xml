@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet_demo_app_options"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:background="@android:color/darker_gray"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    android:backgroundTint="@color/md_white_1000">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/content_endpoints_configure"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.gsma.mobileconnect.r2.android.activity.EndpointsConfigure"
+        >
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:orientation="vertical"
+                    android:showDividers="middle">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/request_options"
+                        android:textColor="#000"
+                        android:textSize="24sp"
+                        android:layout_gravity="center"
+                        />
+
+                    <Switch
+                        android:paddingTop="@dimen/margin_10dp"
+                        android:textSize="8pt"
+                        android:id="@+id/switch_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address"
+                        android:layout_marginTop="12dp"/>
+
+                    <Switch
+                        android:paddingTop="10dp"
+                        android:textSize="8pt"
+                        android:id="@+id/switch_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Email"/>
+
+                    <Switch
+                        android:paddingTop="@dimen/margin_10dp"
+                        android:textSize="8pt"
+                        android:id="@+id/switch_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone"/>
+
+                    <Switch
+                        android:paddingTop="@dimen/margin_10dp"
+                        android:textSize="8pt"
+                        android:id="@+id/switch_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Profile"/>
+
+                    <Switch
+                        android:paddingTop="@dimen/margin_10dp"
+                        android:textSize="8pt"
+                        android:id="@+id/switch_nationality"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nationality ID (Identity)"/>
+
+                    <Switch
+                        android:paddingTop="@dimen/margin_10dp"
+                        android:textSize="8pt"
+                        android:id="@+id/switch_phone_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone Number (Identity)"/>
+
+                    <Switch
+                        android:paddingTop="10dp"
+                        android:textSize="8pt"
+                        android:id="@+id/switch_sign_up"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Sign Up (Identity)"/>
+
+                </LinearLayout>
+        </ScrollView>
+
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

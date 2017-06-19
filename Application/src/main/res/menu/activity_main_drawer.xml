@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_demo_app" android:icon="@drawable/ic_touch_app"
+            android:title="@string/demo_app" />
+        <item android:id="@+id/nav_without_discovery_app" android:icon="@drawable/ic_touch_app"
+            android:title="@string/without_discovery_app"
+            />
+    </group>
+
+    <group android:title="More">
+        <item android:id="@+id/nav_help" android:icon="@drawable/ic_help_outline"
+            android:title="@string/action_help" />
+        <item android:id="@+id/nav_about" android:icon="@drawable/ic_about_outline"
+            android:title="@string/action_about" />
+    </group>
+
+</menu>

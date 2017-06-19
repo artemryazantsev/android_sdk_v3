@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item android:id="@+id/action_help"
+        android:orderInCategory="100"
+        android:title="@string/action_help"
+        />
+
+    <item android:id="@+id/action_about"
+        android:orderInCategory="100"
+        android:title="@string/action_about"/>
+
+    <item
+        android:id="@+id/menu_switch"
+        android:title=""
+        android:checkable="true"
+        android:checked="false"
+        android:icon="@drawable/ic_swap_vert_black_big"
+        app:showAsAction="always"/>
+</menu>

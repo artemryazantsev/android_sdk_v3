@@ -1,0 +1,145 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?colorPrimary"
+    tools:context="com.gsma.mobileconnect.r2.android.demo.activity.MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            >
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp">
+
+
+
+                        <RadioGroup
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="end">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="10dp"
+                                android:text="@string/sdk_choose_title"
+                                android:textColor="@android:color/background_dark" />
+
+                            <RadioButton
+                                android:id="@+id/radioButtonSDK2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:height="20dp"
+                                android:gravity="left"
+                                android:layoutDirection="rtl"
+                                android:paddingEnd="10dp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="10dp"
+                                android:paddingStart="10dp"
+                                android:paddingTop="8dp"
+                                android:text="@string/sdk_r_2"
+                                android:textSize="14sp"
+                                android:theme="@style/MyRadioButton" />
+
+                            <RadioButton
+                                android:id="@+id/radioButtonSDK1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:height="20dp"
+                                android:checked="true"
+                                android:gravity="left"
+                                android:layoutDirection="rtl"
+                                android:paddingEnd="10dp"
+                                android:paddingLeft="10dp"
+                                android:paddingRight="16dp"
+                                android:paddingStart="10dp"
+                                android:paddingTop="8dp"
+                                android:text="@string/sdk_r_1"
+                                android:textSize="14sp"
+                                android:theme="@style/MyRadioButton" />
+                        </RadioGroup>
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp">
+
+                    <CheckBox
+                        android:id="@+id/encrypted_msisdn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/md_white_1000"
+                        android:gravity="left"
+                        android:layoutDirection="rtl"
+                        android:padding="10dp"
+                        android:text="@string/encrypted_Msisdn" />
+
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp">
+                    <Button
+                        android:id="@+id/btnRequestParameters"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="6pt"
+                        android:text="@string/request_parameters"
+                        android:background="@color/md_white_1000"/>
+                </android.support.v7.widget.CardView>
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp">
+
+                    <Button
+                        android:id="@+id/btnEndpoints"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="6pt"
+                        android:text="@string/title_activity_endpoints_configure"
+                        android:background="@color/md_white_1000"/>
+                </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/btnMCWithoutDiscovery"
+                android:background="@drawable/mc_button"
+                android:layout_width="128dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/bottom_request_params" />
+    <include layout="@layout/bottom_endpoints"/>
+
+</android.support.design.widget.CoordinatorLayout>
