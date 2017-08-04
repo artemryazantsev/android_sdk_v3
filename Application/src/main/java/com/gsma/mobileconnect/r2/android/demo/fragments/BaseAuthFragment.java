@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
 import com.gsma.mobileconnect.r2.MobileConnect;
@@ -16,6 +17,7 @@ import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.MobileConnectWebInterface;
 import com.gsma.mobileconnect.r2.android.compatibility.AndroidMobileConnectEncodeDecoder;
+import com.gsma.mobileconnect.r2.android.demo.BuildConfig;
 import com.gsma.mobileconnect.r2.android.demo.R;
 import com.gsma.mobileconnect.r2.android.demo.activity.ResultsActivity;
 import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
@@ -25,9 +27,12 @@ import com.gsma.mobileconnect.r2.android.main.MobileConnectAndroidView;
 import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
+import com.gsma.mobileconnect.r2.utils.StringUtils;
+import com.gsma.mobileconnect.r2.utils.VersionUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class BaseAuthFragment extends Fragment implements DiscoveryListener,
@@ -53,6 +58,17 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
         setupMobileConnect(true);
     }
 
+    protected void connectMobileIndian() {
+        mobileConnectConfig = new MobileConnectConfig.Builder()
+                .withClientId(getString(R.string.indian_client_id))
+                .withClientSecret(getString(R.string.indian_client_secret))
+                .withDiscoveryUrl(setupUri(getString(R.string.indian_discovery_url)))
+                .withRedirectUrl(setupUri(getString(R.string.indian_redirect_url)))
+                .withCacheResponsesWithSessionId(false)
+                .build();
+        setupMobileConnect(false);
+    }
+
     public void connectMobileDemo () {
         mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_id))
                 .withClientSecret(getString(R.string.client_secret))
@@ -65,7 +81,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
         setupMobileConnect(false);
     }
 
-    private URI setupUri(String str) {
+    protected URI setupUri(String str) {
         URI uri = null;
         try {
             uri = new URI(str);
@@ -77,7 +93,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
     }
 
 
-    private void setupMobileConnect (boolean isWithoutDiscovery) {
+    protected void setupMobileConnect (boolean isWithoutDiscovery) {
         MobileConnect mobileConnect = new MobileConnect.Builder(mobileConnectConfig,
                 new AndroidMobileConnectEncodeDecoder()).build();
         MobileConnectWebInterface mobileConnectWebInterface = null;
@@ -141,10 +157,14 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                 break;
             }
             case START_AUTHENTICATION: {
-                AuthenticationOptions.Builder authenticationOptionsBuilder = new AuthenticationOptions.Builder()
-                        .withContext(
-                                getString(R.string.demo)).withBindingMessage(getString(R.string.demo_auth));
-
+                AuthenticationOptions.Builder authenticationOptionsBuilder;
+                if (!StringUtils.isNullOrEmpty(mobileConnectStatus.getDiscoveryResponse().getClientName())) {
+                    authenticationOptionsBuilder = new AuthenticationOptions.Builder()
+                            .withContext(
+                                    getString(R.string.demo)).withBindingMessage(getString(R.string.demo_auth));
+                } else {
+                    authenticationOptionsBuilder = new AuthenticationOptions.Builder();
+                }
                 final MobileConnectRequestOptions.Builder mobileConnectRequestOptionsBuilder = new
                         MobileConnectRequestOptions.Builder();
 
@@ -198,24 +218,38 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
     }
 
 
-    public void makeDiscoveryDemo (String msisdn, String xSourceIp) {
+    public void makeDiscoveryDemo (String msisdn) {
         final DiscoveryOptions.Builder discoveryOptionsBuilder = new DiscoveryOptions.Builder();
 
-        if (msisdn!=null && msisdn != getString(R.string.empty_string)) {
+        if (!StringUtils.isNullOrEmpty(msisdn)) {
             discoveryOptionsBuilder.withMsisdn(msisdn);
         }
 
-        if (xSourceIp != null && xSourceIp != getString(R.string.empty_string)) {
-            discoveryOptionsBuilder.withClientIp(xSourceIp);
-        }
-
         discoveryOptionsBuilder.withRedirectUrl(mobileConnectConfig.getRedirectUrl());
+
 
         final MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder()
                 .withDiscoveryOptions(
                         discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
 
+
         mobileConnectAndroidView.attemptDiscovery(msisdn, null, null, requestOptions, BaseAuthFragment.this);
+    }
+
+    public void makeDiscoveryDemo (final String mcc, final String mnc) {
+        final DiscoveryOptions.Builder discoveryOptionsBuilder = new DiscoveryOptions.Builder();
+
+        if (!StringUtils.isNullOrEmpty(mcc) && !StringUtils.isNullOrEmpty(mnc)) {
+            discoveryOptionsBuilder.withIdentifiedMcc(mcc);
+            discoveryOptionsBuilder.withIdentifiedMnc(mnc);
+        }
+
+        //discoveryOptionsBuilder.withRedirectUrl(mobileConnectConfig.getRedirectUrl());
+
+        final MobileConnectRequestOptions requestOptions = new MobileConnectRequestOptions.Builder()
+                .withDiscoveryOptions(discoveryOptionsBuilder.build()).build();
+
+        mobileConnectAndroidView.attemptDiscovery(null, mcc, mnc, requestOptions, BaseAuthFragment.this);
     }
 
     /**
@@ -235,6 +269,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                                      @Nullable final MobileConnectRequestOptions mobileConnectRequestOptions,
                                      @NonNull final String state,
                                      @NonNull final String nonce) {
+        mobileConnectAndroidView.getPresenter().setDiscoveryResponse(mobileConnectStatus.getDiscoveryResponse());
         mobileConnectAndroidView.startAuthentication(mobileConnectStatus.getDiscoveryResponse()
                         .getResponseData()
                         .getSubscriberId(),
@@ -254,6 +289,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
      * Launch the {@link ResultsActivity} to display the result
      */
     protected void displayResult() {
+
         final Intent intent = new Intent(getActivity(), ResultsActivity.class);
         startActivity(intent);
     }
@@ -341,5 +377,4 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                 });
         alertDialog.show();
     }
-
 }

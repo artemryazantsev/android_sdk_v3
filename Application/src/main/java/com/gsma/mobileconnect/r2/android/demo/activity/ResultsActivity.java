@@ -83,14 +83,13 @@ public class ResultsActivity extends BaseActivity {
             tvAccessToken.setText(getString(R.string.failed_receive_token));
         }
 
+
         BaseAuthFragment.mobileConnectAndroidView.requestUserInfo(accessToken,
                 new IMobileConnectContract
-                        .IMobileConnectCallback()
-                {
+                        .IMobileConnectCallback() {
                     @Override
                     public void onComplete(final
-                                           MobileConnectStatus mobileConnectStatus)
-                    {
+                                           MobileConnectStatus mobileConnectStatus) {
                         displayIdentityResponse(
                                 mobileConnectStatus,
                                 true);
@@ -99,18 +98,15 @@ public class ResultsActivity extends BaseActivity {
 
         BaseAuthFragment.mobileConnectAndroidView.requestIdentity(accessToken,
                 new IMobileConnectContract
-                        .IMobileConnectCallback()
-                {
+                        .IMobileConnectCallback() {
                     @Override
                     public void onComplete(final
-                                           MobileConnectStatus mobileConnectStatus)
-                    {
+                                           MobileConnectStatus mobileConnectStatus) {
                         displayIdentityResponse(
                                 mobileConnectStatus,
                                 false);
                     }
                 });
-
 
 
         if (BaseAuthFragment.mobileConnectStatus.getRequestTokenResponse() != null) {

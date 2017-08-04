@@ -19,6 +19,7 @@ import android.widget.Switch;
 import com.gsma.mobileconnect.r2.android.demo.R;
 import com.gsma.mobileconnect.r2.android.demo.activity.MainActivity;
 import com.gsma.mobileconnect.r2.android.demo.interfaces.OnBackPressedListener;
+import com.gsma.mobileconnect.r2.constants.Headers;
 import com.gsma.mobileconnect.r2.constants.Scopes;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 
@@ -60,9 +61,6 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
 
     private String authType;
 
-    private TextInputEditText etIp;
-    private TextInputLayout ipLayout;
-    private CheckBox cbXSourceIp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -126,18 +124,6 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
             }
         });
 
-        cbXSourceIp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (cbXSourceIp.isChecked()) {
-                    ipLayout.setVisibility(View.VISIBLE);
-                    etIp.setText(IpUtils.getIPAddress(true));
-                } else {
-                    ipLayout.setVisibility(View.GONE);
-                    etIp.setText(null);
-                }
-            }
-        });
 
         btnMobileConnect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,11 +174,6 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
         etDiscoveryUrl.setText(getResources().getString(R.string.discovery_url));
         etRedirectUrl.setText(getResources().getString(R.string.redirect_url));
         etXRedirect.setText(getResources().getString(R.string.x_redirect));
-
-        cbXSourceIp = (CheckBox)view.findViewById(R.id.cbIp);
-        etIp = (TextInputEditText) view.findViewById(R.id.etIpDemo);
-        ipLayout = (TextInputLayout) view.findViewById(R.id.layoutIpDemo);
-
     }
 
     private void sendRequest () {
@@ -202,10 +183,6 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
 
         if (cbMsisdn.isChecked()) {
             msisdn = etMsisdn.getText().toString();
-        }
-
-        if (cbXSourceIp.isChecked()) {
-            xSourceIp = etIp.getText().toString();
         }
 
         final StringBuilder scopesStringBuilder = new StringBuilder(authType);
@@ -220,7 +197,7 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
 
         scopes = scopesStringBuilder;
 
-        makeDiscoveryDemo(msisdn, xSourceIp);
+        makeDiscoveryDemo(msisdn);
     }
 
 
@@ -301,14 +278,6 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
     }
 
     private void setupHelpListeners () {
-
-        cbXSourceIp.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                ((MainActivity)getActivity()).makeToast(getString(R.string.help_x_source_ip), true);
-                return true;
-            }
-        });
 
         cbMsisdn.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

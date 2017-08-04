@@ -55,6 +55,7 @@
 -keep interface com.gsma.** { *; }
 -keepattributes Annotation
 -keepclasseswithmembers class com.fasterxml.jackson.** { *; }
+
 -dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
 -dontwarn org.apache.commons.codec.binary.Base64
 -dontwarn org.slf4j.impl.StaticLoggerBinder
@@ -63,4 +64,10 @@
 -dontwarn org.bouncycastle.jce.ECNamedCurveTable
 -dontwarn javax.xml.bind.DatatypeConverter
 -dontwarn org.apache.http.entity.StringEntity
+-dontwarn org.codehaus.util.**
+-dontwarn org.codehaus.plexus.**
+-dontwarn org.apache.http.**
+-dontwarn org.apache.commons.logging.**
+-dontwarn org.apache.maven.**
+
 

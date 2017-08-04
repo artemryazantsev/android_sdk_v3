@@ -22,6 +22,7 @@ import com.gsma.mobileconnect.r2.MobileConnectWebInterface;
 import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
 import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
 import com.gsma.mobileconnect.r2.android.interfaces.WebViewCallBack;
+import com.gsma.mobileconnect.r2.android.sdk.BuildConfig;
 import com.gsma.mobileconnect.r2.android.sdk.R;
 import com.gsma.mobileconnect.r2.android.view.DiscoveryAuthenticationDialog;
 import com.gsma.mobileconnect.r2.android.view.InteractiveWebView;
@@ -30,6 +31,7 @@ import com.gsma.mobileconnect.r2.android.webviewclient.DiscoveryWebViewClient;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryResponse;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 import com.gsma.mobileconnect.r2.utils.LogUtils;
+import com.gsma.mobileconnect.r2.utils.VersionUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -425,6 +427,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         Log.i(TAG, String.format("Attempt Discovery for msisdn=%s, mcc=%s, mnc=%s", LogUtils.mask(msisdn), mcc, mnc));
+        VersionUtils.setCurrentSdkVersion(VersionUtils.prepareVersionFormat("Android", BuildConfig.VERSION_NAME));
         this.presenter.performDiscovery(msisdn, mcc, mnc, options, mobileConnectCallback);
     }
 

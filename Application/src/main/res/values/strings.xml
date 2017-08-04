@@ -7,6 +7,7 @@
     <string name="action_about">About</string>
     <string name="demo_app">Demo app</string>
     <string name="without_discovery_app">Without discovery app</string>
+    <string name="indian_demo_app">Indian demo app</string>
     <string name="nav_header_info">Select application\'s type</string>
 
     <!--Dialogs-->
@@ -20,6 +21,7 @@
     <string name="sdk_r_1">Without</string>
     <string name="sdk_r_2">With</string>
     <string name="with_msisdn">With MSISDN</string>
+    <string name="with_mcc_mnc">With MCC_MNC</string>
     <string name="with_x_source_ip">With X-Source Ip</string>
     <string name="ip_address">Ip-address</string>
     <string name="address">address</string>
@@ -101,4 +103,13 @@
     <string name="providermetadata_title">Providermetadata</string>
     <string name="help_provider_metadata">A successful call to the Mobile Connect Discovery endpoint returns the end user’s Mobile Network Operator (MNO) and describes the Mobile Connect services that MNO supports, via a URI to the MNO’s Provider Metadata. The metadata describes the Identity Gateway endpoints (Mobile Connect services) your application or service can use and how those endpoints are configured – for example, the response types an endpoint can return, the subject identifier types supported, or the Identity Services encryption algorithms in use.Although Provider Metadata is the primary source of information detailing the Identity Gateway configuration, it does not change often, so a cached version can be used without risk of expired data causing errors. The Mobile Connect SDK handles both the querying of the Provider Metadata and the caching.\n  1. If the Provider Metadata URI returns no data, the cached metadata is used.\n  2. Where the cached data is out of date (defaulting to 15-minute intervals) a subsequent query of the URI is attempted, and in the event of a second failed response, expired cached data is used.\n  3. Should neither the cached data nor the Provider Metadata URI return data (such as an error upon first user login) default values are used.\n Regardless of the source, the SDK parses the Provider Metadata into a discrete list of properties. See the OpenID Provider Metadata definition for a list of the metadata available, although you should note that Mobile Connect\'s implementation may not be exhaustive.</string>
 
+
+    <!--Indian demo app-->
+    <string name="scope_openid">openid</string>
+    <string name="scope_mc_india_tc">mc_india_tc</string>
+    <string name="scope_mc_mnv_validate">mc_mnv_validate</string>
+    <string name="scope_mc_mnv_validate_plus">mc_mnv_validate_plus</string>
+
+    <string name="indian_app">Indian app</string>
+    <string name="indian">Indian</string>
 </resources>

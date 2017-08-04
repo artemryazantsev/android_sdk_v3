@@ -18,8 +18,11 @@ import android.view.WindowManager;
 import com.gsma.mobileconnect.r2.android.demo.R;
 
 import com.gsma.mobileconnect.r2.android.demo.fragments.DemoAppFragment;
+import com.gsma.mobileconnect.r2.android.demo.fragments.IndianDemoAppFragment;
 import com.gsma.mobileconnect.r2.android.demo.fragments.WithoutDiscoveryAppFragment;
 import com.gsma.mobileconnect.r2.android.demo.interfaces.OnBackPressedListener;
+
+import java.util.List;
 
 public class MainActivity extends BaseActivity {
 
@@ -27,7 +30,6 @@ public class MainActivity extends BaseActivity {
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
-    private boolean isDemoApp = true;
     private FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +39,7 @@ public class MainActivity extends BaseActivity {
         init();
         setSupportActionBar(toolbar);
 
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         fragmentManager = getSupportFragmentManager();
 
@@ -110,9 +111,6 @@ public class MainActivity extends BaseActivity {
 
     public void selectToolbarItem (MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.menu_switch:
-                selectApp();
-                break;
             case R.id.action_help:
                 openActivity(HelpActivity.class);
                 break;
@@ -125,41 +123,18 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void selectApp () {
-        Fragment fragment = null;
-        Class fragmentClass;
-        if (!isDemoApp) {
-            fragmentClass = DemoAppFragment.class;
-            isDemoApp = true;
-            setTitle(getResources().getString(R.string.demo_app));
-        } else {
-            fragmentClass = WithoutDiscoveryAppFragment.class;
-            isDemoApp = false;
-            setTitle(getResources().getString(R.string.without_discovery_app));
-        }
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-        transaction.replace(R.id.flContent, fragment);
-        transaction.commit();
-    }
-
     public void selectDrawerItem(MenuItem menuItem) {
 
         Fragment fragment = null;
         switch(menuItem.getItemId()) {
             case R.id.nav_demo_app:
                 openFragment(fragment, DemoAppFragment.class, menuItem);
-                isDemoApp = true;
+                break;
+            case R.id.nav_indian_demo_app:
+                openFragment(fragment, IndianDemoAppFragment.class, menuItem);
                 break;
             case R.id.nav_without_discovery_app:
                 openFragment(fragment, WithoutDiscoveryAppFragment.class, menuItem);
-                isDemoApp = false;
                 break;
             case R.id.nav_help:
                 openActivity(HelpActivity.class);
@@ -222,12 +197,11 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
 
 }

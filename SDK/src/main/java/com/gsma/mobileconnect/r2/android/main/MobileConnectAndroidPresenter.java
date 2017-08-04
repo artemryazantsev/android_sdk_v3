@@ -134,7 +134,6 @@ public class MobileConnectAndroidPresenter implements IMobileConnectContract.IUs
                                                                                                   options);
             }
         };
-
         this.view.performAsyncTask(mobileConnectOperation, mobileConnectCallback);
     }
 
