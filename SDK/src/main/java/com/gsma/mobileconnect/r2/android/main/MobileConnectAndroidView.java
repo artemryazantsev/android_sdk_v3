@@ -427,7 +427,6 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         Log.i(TAG, String.format("Attempt Discovery for msisdn=%s, mcc=%s, mnc=%s", LogUtils.mask(msisdn), mcc, mnc));
-        VersionUtils.setCurrentSdkVersion(VersionUtils.prepareVersionFormat("Android", BuildConfig.VERSION_NAME));
         this.presenter.performDiscovery(msisdn, mcc, mnc, options, mobileConnectCallback);
     }
 
@@ -435,7 +434,7 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
      * Asynchronously manually attempt discovery using the supplied parameters
      * @param secretKey - consumer secret
      * @param clientKey - consumer key
-     * @param subscriberId - subsriber id
+     * @param subscriberId - subscriber id
      * @param name - client name
      * @param operatorUrls Operator URLS
      * @param mobileConnectCallbackManually The callback in which a {@link MobileConnectStatus} shall be provided after
