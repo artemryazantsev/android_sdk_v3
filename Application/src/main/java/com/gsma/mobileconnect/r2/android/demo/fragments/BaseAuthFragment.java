@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gsma.mobileconnect.r2.MobileConnect;
@@ -17,9 +17,9 @@ import com.gsma.mobileconnect.r2.MobileConnectRequestOptions;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
 import com.gsma.mobileconnect.r2.MobileConnectWebInterface;
 import com.gsma.mobileconnect.r2.android.compatibility.AndroidMobileConnectEncodeDecoder;
-import com.gsma.mobileconnect.r2.android.demo.BuildConfig;
 import com.gsma.mobileconnect.r2.android.demo.R;
 import com.gsma.mobileconnect.r2.android.demo.activity.ResultsActivity;
+import com.gsma.mobileconnect.r2.android.demo.utils.StatisticsUtils;
 import com.gsma.mobileconnect.r2.android.interfaces.AuthenticationListener;
 import com.gsma.mobileconnect.r2.android.interfaces.DiscoveryListener;
 import com.gsma.mobileconnect.r2.android.main.IMobileConnectContract;
@@ -28,11 +28,9 @@ import com.gsma.mobileconnect.r2.authentication.AuthenticationOptions;
 import com.gsma.mobileconnect.r2.discovery.DiscoveryOptions;
 import com.gsma.mobileconnect.r2.discovery.OperatorUrls;
 import com.gsma.mobileconnect.r2.utils.StringUtils;
-import com.gsma.mobileconnect.r2.utils.VersionUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.UUID;
 
 public abstract class BaseAuthFragment extends Fragment implements DiscoveryListener,
@@ -40,12 +38,14 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
         IMobileConnectContract.IMobileConnectCallback,
         IMobileConnectContract.IMobileConnectCallbackManually
 {
+    private static final String TAG = MobileConnectAndroidView.class.getSimpleName();
 
     public static MobileConnectAndroidView mobileConnectAndroidView;
     protected MobileConnectConfig mobileConnectConfig;
     public static MobileConnectStatus mobileConnectStatus;
 
     protected StringBuilder scopes;
+
 
     public void connectMobileWithoutDiscovery() {
         mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_id))
@@ -85,7 +85,6 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
         URI uri = null;
         try {
             uri = new URI(str);
-
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -157,6 +156,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                 break;
             }
             case START_AUTHENTICATION: {
+                StatisticsUtils.sendDiscoveryElapsedTime(this.getContext(), mobileConnectAndroidView.getDiscoveryStartTime(), System.currentTimeMillis());
                 AuthenticationOptions.Builder authenticationOptionsBuilder;
                 if (!StringUtils.isNullOrEmpty(mobileConnectStatus.getDiscoveryResponse().getClientName())) {
                     authenticationOptionsBuilder = new AuthenticationOptions.Builder()
@@ -232,7 +232,6 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                 .withDiscoveryOptions(
                         discoveryOptionsBuilder.withMsisdn(msisdn).build()).build();
 
-
         mobileConnectAndroidView.attemptDiscovery(msisdn, null, null, requestOptions, BaseAuthFragment.this);
     }
 
@@ -289,7 +288,6 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
      * Launch the {@link ResultsActivity} to display the result
      */
     protected void displayResult() {
-
         final Intent intent = new Intent(getActivity(), ResultsActivity.class);
         startActivity(intent);
     }
@@ -303,6 +301,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
     @Override
     public void onDiscoveryResponse(final MobileConnectStatus mobileConnectStatus) {
         handleRedirect(mobileConnectStatus);
+        Log.d(TAG, "Discovery end time: " + System.currentTimeMillis());
     }
 
     /**

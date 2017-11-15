@@ -56,6 +56,8 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
 
     private static boolean isRegistered;
 
+    private long discoveryStartTime = System.currentTimeMillis();
+
     /**
      * @param mobileConnectInterface The {@link MobileConnectConfig} containing the necessary set-up.
      */
@@ -427,6 +429,8 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
                                  @NonNull final IMobileConnectCallback mobileConnectCallback)
     {
         Log.i(TAG, String.format("Attempt Discovery for msisdn=%s, mcc=%s, mnc=%s", LogUtils.mask(msisdn), mcc, mnc));
+        discoveryStartTime = System.currentTimeMillis();
+        Log.d(TAG, "Discovery start time: " + discoveryStartTime);
         this.presenter.performDiscovery(msisdn, mcc, mnc, options, mobileConnectCallback);
     }
 
@@ -625,5 +629,12 @@ public class MobileConnectAndroidView implements IMobileConnectContract.IView
     {
         Log.i(TAG, String.format("Request User Info for accessToken=%s", LogUtils.mask(accessToken)));
         this.presenter.performRequestUserInfo(accessToken, mobileConnectCallback);
+    }
+
+    /**
+     * @return discovery start time
+     */
+    public long getDiscoveryStartTime() {
+        return discoveryStartTime;
     }
 }

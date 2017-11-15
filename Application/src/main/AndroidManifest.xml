@@ -3,7 +3,8 @@
     package="com.gsma.mobileconnect.r2.android.demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"

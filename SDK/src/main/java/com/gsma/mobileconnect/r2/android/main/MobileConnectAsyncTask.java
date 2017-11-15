@@ -1,8 +1,10 @@
 package com.gsma.mobileconnect.r2.android.main;
 
 import android.os.AsyncTask;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.gsma.mobileconnect.r2.MobileConnectInterface;
 import com.gsma.mobileconnect.r2.MobileConnectStatus;
