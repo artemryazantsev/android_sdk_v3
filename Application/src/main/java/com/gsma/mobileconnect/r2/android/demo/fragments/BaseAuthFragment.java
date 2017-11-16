@@ -156,7 +156,7 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
                 break;
             }
             case START_AUTHENTICATION: {
-                StatisticsUtils.sendDiscoveryElapsedTime(this.getContext(), mobileConnectAndroidView.getDiscoveryStartTime(), System.currentTimeMillis());
+                StatisticsUtils.sendDiscoveryStatistic(this.getContext(), mobileConnectAndroidView.getDiscoveryStartTime(), System.currentTimeMillis());
                 AuthenticationOptions.Builder authenticationOptionsBuilder;
                 if (!StringUtils.isNullOrEmpty(mobileConnectStatus.getDiscoveryResponse().getClientName())) {
                     authenticationOptionsBuilder = new AuthenticationOptions.Builder()
