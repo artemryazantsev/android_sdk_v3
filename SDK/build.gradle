@@ -6,7 +6,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 3
-        versionName "3.1.1"
+        versionName "3.1.2"
         resConfigs "en", "hdpi"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -116,5 +116,5 @@ task jacocoCombinedTestReport(type: JacocoReport, dependsOn: ["testDebugUnitTest
     }
 }
 dependencies {
-    compile files('lib/mobile-connect-sdk-2.4.3.jar')
+    compile files('lib/mobile-connect-sdk-2.4.5.jar')
 }
