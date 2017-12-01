@@ -65,7 +65,8 @@ public class IndianDemoAppFragment extends BaseAuthFragment implements OnBackPre
 
         final View view = inflater.inflate(R.layout.fragment_indian_demo_app, container, false);
         init(view);
-        connectMobileIndian();
+        connectMobileIndian(etIndianClientId.getText().toString(), etIndianClientSecret.getText().toString(),
+                etIndianDiscoveryUrl.getText().toString(), etIndianRedirectUrl.getText().toString());
         btnIndianRequestOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,12 +219,20 @@ public class IndianDemoAppFragment extends BaseAuthFragment implements OnBackPre
     private void sendRequest() {
         scopes = getScopes();
         if (rbIndianMsisdn.isChecked()) {
+            connect();
             makeDiscoveryDemo(tvIndianMsisdn.getText().toString());
         } else if (rbIndianMccMnc.isChecked()) {
+            connect();
             makeDiscoveryDemo(tvIndianMcc.getText().toString(), tvIndianMnc.getText().toString());
         } else {
+           connect();
            makeDiscoveryDemo(null);
         }
+    }
+
+    private void connect() {
+        connectMobileIndian(etIndianClientId.getText().toString(), etIndianClientSecret.getText().toString(),
+                etIndianDiscoveryUrl.getText().toString(), etIndianRedirectUrl.getText().toString());
     }
 
     private StringBuilder getScopes() {

@@ -47,9 +47,9 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
     protected StringBuilder scopes;
 
 
-    public void connectMobileWithoutDiscovery() {
-        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_id))
-                .withClientSecret(getString(R.string.client_secret))
+    public void connectMobileWithoutDiscovery(String clientId, String clientSecret) {
+        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(clientId)
+                .withClientSecret(clientSecret)
                 .withDiscoveryUrl(setupUri(getString(R.string.discovery_url)))
                 .withRedirectUrl(setupUri(getString(R.string.redirect_url)))
                 .withCacheResponsesWithSessionId(false)
@@ -58,24 +58,24 @@ public abstract class BaseAuthFragment extends Fragment implements DiscoveryList
         setupMobileConnect(true);
     }
 
-    protected void connectMobileIndian() {
+    protected void connectMobileIndian(String clientId, String clientSecret, String discoveryURL, String redirectURI) {
         mobileConnectConfig = new MobileConnectConfig.Builder()
-                .withClientId(getString(R.string.indian_client_id))
-                .withClientSecret(getString(R.string.indian_client_secret))
-                .withDiscoveryUrl(setupUri(getString(R.string.indian_discovery_url)))
-                .withRedirectUrl(setupUri(getString(R.string.indian_redirect_url)))
+                .withClientId(clientId)
+                .withClientSecret(clientSecret)
+                .withDiscoveryUrl(setupUri(discoveryURL))
+                .withRedirectUrl(setupUri(redirectURI))
                 .withCacheResponsesWithSessionId(false)
                 .build();
         setupMobileConnect(false);
     }
 
-    public void connectMobileDemo () {
-        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(getString(R.string.client_id))
-                .withClientSecret(getString(R.string.client_secret))
-                .withDiscoveryUrl(setupUri(getString(R.string.discovery_url)))
-                .withRedirectUrl(setupUri(getString(R.string.redirect_url)))
+    public void connectMobileDemo (String clientId, String clientSecret, String discoveryURL, String redirectUri, String xRedirectValue) {
+        mobileConnectConfig = new MobileConnectConfig.Builder().withClientId(clientId)
+                .withClientSecret(clientSecret)
+                .withDiscoveryUrl(setupUri(discoveryURL))
+                .withRedirectUrl(setupUri(redirectUri))
                 .withCacheResponsesWithSessionId(false)
-                .withXRedirect(getResources().getString(R.string.x_redirect))
+                .withXRedirect(xRedirectValue)
                 .build();
 
         setupMobileConnect(false);

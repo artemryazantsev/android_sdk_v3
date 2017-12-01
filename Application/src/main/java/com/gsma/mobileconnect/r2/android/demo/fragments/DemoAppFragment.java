@@ -69,8 +69,7 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
         final View view = inflater.inflate(R.layout.fragment_demo_app, container, false);
 
         init(view);
-        connectMobileDemo();
-
+        connect();
         checkVisibilityOfSwitchesAndAuthType();
 
         btnRequestOptions.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +136,10 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
         return view;
     }
 
-
+    private void connect() {
+        connectMobileDemo(etClientId.getText().toString(), etClientSecret.getText().toString(), etDiscoveryUrl.getText().toString(),
+                etRedirectUrl.getText().toString(), etXRedirect.getText().toString());
+    }
 
     private void init(View view) {
 
@@ -196,7 +198,7 @@ public class DemoAppFragment extends BaseAuthFragment implements OnBackPressedLi
         }
 
         scopes = scopesStringBuilder;
-
+        connect();
         makeDiscoveryDemo(msisdn);
     }
 

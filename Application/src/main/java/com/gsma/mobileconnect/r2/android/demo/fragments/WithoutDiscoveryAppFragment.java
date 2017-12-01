@@ -134,7 +134,7 @@ public class WithoutDiscoveryAppFragment extends BaseAuthFragment implements OnB
 
         setupHelpListeners();
 
-        connectMobileWithoutDiscovery();
+        connectMobileWithoutDiscovery(etClientId.getText().toString(), etClientSecret.getText().toString());
 
         return view;
     }
